@@ -26,6 +26,6 @@ public class Groups {
     boolean isPrivate;
 
     @ManyToMany(mappedBy = "userGroups", cascade = CascadeType.MERGE)
-    @JsonBackReference
+//    @JsonBackReference
     private List<Users> members;
 }
