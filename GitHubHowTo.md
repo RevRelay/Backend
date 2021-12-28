@@ -31,7 +31,7 @@
    - the head branch is *main*
 7. Pull the current GitHub main branch to your local branch that you are merging with:
    ```
-   $ git pull https://github.com/RevRelay/Backend.git <branching_off_of_name>
+   $ git pull
    ```
    - the head branch is *main*
 8. Go to your local new branch:
