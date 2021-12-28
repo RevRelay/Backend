@@ -38,8 +38,8 @@ public class UserService implements UserDetailsService {
     public User createUser(User user) {
         return createUser(new UserLoginAuthRequest(user.getUsername(),user.getPassword()));
     }
-  
-     /**
+
+    /**
      *Logs in the user with the given username and password, then returns that User.
      * @param username the username to match.
      * @param password the password to match.
@@ -73,6 +73,18 @@ public class UserService implements UserDetailsService {
             User user = new User();
             user.setDisplayName(userAuthRequest.getDisplayName());
             user.setEmail(userAuthRequest.getEmail());
+            user.setUsername(userAuthRequest.getUsername());
+            user.setPassword(userAuthRequest.getPassword());
+            return userRepository.save(user);
+        }
+    }
+
+    private User createUser(UserLoginAuthRequest userAuthRequest) throws IllegalArgumentException {
+        if (userRepository.existsByUsername(userAuthRequest.getUsername()) || userAuthRequest.getUsername() == null) {
+            throw new IllegalArgumentException("Username Not Valid");
+        }
+        else {
+            User user = new User();
             user.setUsername(userAuthRequest.getUsername());
             user.setPassword(userAuthRequest.getPassword());
             return userRepository.save(user);
