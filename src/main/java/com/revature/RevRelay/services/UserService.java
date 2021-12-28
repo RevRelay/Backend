@@ -49,10 +49,10 @@ public class UserService implements UserDetailsService {
     {
         try
         {
-            User user = findUserByUsername(username);
+            User user = loadUserByUsername(username);
             if (user.getPassword().equals(password)) return user;
         }
-        catch (NotFound e)
+        catch (Exception e)
         {
             throw new AccessDeniedException("Incorrect username/password");
         }
@@ -119,7 +119,7 @@ public class UserService implements UserDetailsService {
      * @return List<User> for all users in the database ordered by UserID in descending order.
      */
     public Page<User> findAllUsers(Pageable pageable) {
-        return userRepository.findAllByOrderByDisplayName(pageable);
+        return userRepository.findAllOrderByDisplayName(pageable);
     }
 
     /**
