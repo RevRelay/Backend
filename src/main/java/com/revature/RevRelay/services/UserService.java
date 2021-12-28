@@ -62,6 +62,7 @@ public class UserService {
         throw new AccessDeniedException("Incorrect username/password");
     }
 
+
     /**
      * Update password by the provided username.
      * @param username the username that already exists on the repository.
