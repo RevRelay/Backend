@@ -8,8 +8,6 @@ import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.security.acl.Group;
-
 @NoArgsConstructor
 @RestController
 @RequestMapping(value="/groups")
@@ -21,11 +19,15 @@ public class GroupsController {
         this.groupsService = groupsService;
     }
 
-
+    @GetMapping
+    public Groups getTestGroup(){
+        return new Groups();
+    }
     //CREATE
     @PostMapping
-    public ResponseEntity<?> createGroup(@RequestBody Groups groups){
-        return ResponseEntity.ok(groupsService.createGroup(groups));
+    public Groups createGroup(@RequestBody Groups groups){
+        return groupsService.createGroup(groups);
+//        return ResponseEntity.ok(groupsService.createGroup(groups));
     }
     //READ
     @GetMapping("/all/{userOwnerID}")
