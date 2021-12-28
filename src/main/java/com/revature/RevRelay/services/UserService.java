@@ -4,7 +4,6 @@ import com.revature.RevRelay.persistence.UserRepository;
 import com.revature.RevRelay.models.User;
 import com.revature.RevRelay.models.dtos.UserLoginAuthRequest;
 import com.revature.RevRelay.models.dtos.UserRegisterAuthRequest;
-import com.revature.RevRelay.persistence.UserRepository;
 import com.revature.RevRelay.utils.JwtUtil;
 import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;
@@ -14,11 +13,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.security.access.AccessDeniedException;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
-import org.springframework.beans.factory.annotation.Autowired;
 import java.util.Optional;
 //return to this later - NL
 import org.omg.CosNaming.NamingContextPackage.NotFound;
@@ -34,10 +33,8 @@ public class UserService implements UserDetailsService {
     private UserRepository userRepository;
     @Autowired
     private JwtUtil jwtUtil;
-  
-    public User createUser(User user) {
-        return createUser(new UserLoginAuthRequest(user.getUsername(),user.getPassword()));
-    }
+    @Autowired
+    private PasswordEncoder passwordEncoder;
 
     /**
      *Logs in the user with the given username and password, then returns that User.
@@ -74,19 +71,7 @@ public class UserService implements UserDetailsService {
             user.setDisplayName(userAuthRequest.getDisplayName());
             user.setEmail(userAuthRequest.getEmail());
             user.setUsername(userAuthRequest.getUsername());
-            user.setPassword(userAuthRequest.getPassword());
-            return userRepository.save(user);
-        }
-    }
-
-    private User createUser(UserLoginAuthRequest userAuthRequest) throws IllegalArgumentException {
-        if (userRepository.existsByUsername(userAuthRequest.getUsername()) || userAuthRequest.getUsername() == null) {
-            throw new IllegalArgumentException("Username Not Valid");
-        }
-        else {
-            User user = new User();
-            user.setUsername(userAuthRequest.getUsername());
-            user.setPassword(userAuthRequest.getPassword());
+            user.setPassword(passwordEncoder.encode(userAuthRequest.getPassword()));
             return userRepository.save(user);
         }
     }
@@ -133,21 +118,9 @@ public class UserService implements UserDetailsService {
      * Gets a list of all users.
      * @return List<User> for all users in the database ordered by UserID in descending order.
      */
-    public Page<User> findAllUsers(Pageable pageable) {
-        return userRepository.findAllOrderByDisplayName(pageable);
-    }
-
-    /**
-     * Takes a user and returns a boolean if the username AND password matched what is in the database
-     * @param user the User to check against the persisted database
-     * @return True if the user is in the system, false otherwise
-     * @throws BadCredentialsException Throws an error if the username does not exist
-     */
-    public boolean validate(User user) throws Exception {
-        return userRepository.findByUsername(user.getUsername()).orElseThrow(Exception::new)
-                .getPassword()
-                .equals(user.getPassword());
-    }
+//    public Page<User> findAllUsers(Pageable pageable) {
+//        return userRepository.findAllOrderByDisplayName(pageable);
+//    }
      
      /**
      * Update password by the provided username.
@@ -161,7 +134,7 @@ public class UserService implements UserDetailsService {
         User user = userRepository.findByUsername(username).orElse(null);
         if(user != null) {
             if(user.getPassword().equals(oldPassword)) {
-                user.setPassword(newPassword);
+                user.setPassword(passwordEncoder.encode(newPassword));
                 userRepository.save(user);
                 return true;
             }

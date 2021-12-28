@@ -4,7 +4,6 @@ import com.revature.RevRelay.models.User;
 import com.revature.RevRelay.models.dtos.UserLoginAuthRequest;
 import com.revature.RevRelay.models.dtos.UserAuthResponse;
 import com.revature.RevRelay.models.dtos.UserRegisterAuthRequest;
-import com.revature.RevRelay.security.TokenAuthProvider;
 import com.revature.RevRelay.services.UserService;
 import com.revature.RevRelay.utils.JwtUtil;
 import org.springframework.beans.factory.annotation.Autowired;
