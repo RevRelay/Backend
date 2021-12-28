@@ -20,8 +20,7 @@ public class Chatroom {
     private int chatID;
 
     @ManyToMany(mappedBy = "chatRooms", cascade = CascadeType.MERGE)
-    @JsonBackReference
-    private List<Users> members;
+    private List<User> members;
 
     @Column(nullable = false)
     private boolean isPrivate;

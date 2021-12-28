@@ -3,7 +3,6 @@ import com.fasterxml.jackson.annotation.JsonManagedReference;
 import lombok.*;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
-
 import javax.persistence.*;
 import java.util.Collection;
 import java.util.Date;
@@ -14,7 +13,8 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
-public class Users implements UserDetails {
+@Table(name = "users")
+public class User implements UserDetails {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO, generator = "user_generator")
@@ -43,8 +43,7 @@ public class Users implements UserDetails {
     private String displayName;
 
     @ManyToMany(cascade = CascadeType.MERGE)
-    @JsonManagedReference
-    private List<Groups> userGroups;
+    private List<Group> userGroups;
 
     @ElementCollection
     @CollectionTable(name = "groupList")
@@ -55,7 +54,6 @@ public class Users implements UserDetails {
     private List<Integer> userPageID;
 
     @ManyToMany(cascade = CascadeType.MERGE)
-    @JsonManagedReference
     private List<Chatroom> chatRooms;
 
 

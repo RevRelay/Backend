@@ -9,7 +9,8 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
-public class Groups {
+@Table(name = "groups")
+public class Group {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO, generator = "group_generator")
@@ -26,6 +27,5 @@ public class Groups {
     boolean isPrivate;
 
     @ManyToMany(mappedBy = "userGroups", cascade = CascadeType.MERGE)
-    @JsonBackReference
-    private List<Users> members;
+    private List<User> members;
 }
