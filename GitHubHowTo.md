@@ -1,6 +1,8 @@
 ## Jennica's Rules to the GitHub
 - To merge to the main repository you need permission from three others.
-  -  
+  -  Testing: someone from testing team must approve of the pull request and then label that pull "Test"
+  -  Documentation: someone from the testing team must approve of the pull request and then label that pull "Documentation"
+  -  GitHub: once both Testing and Documentation has approved the pull request, they must approve it and the push to the intended branch
 - To merge you must have all conversations on your code resolved.
 - Commits should be logical and/or informative.
 
@@ -13,7 +15,7 @@
 3. Create new Branch in GitHub
 4. Pull the current GitHub main branch locally:
    ```
-   $ git pull https://github.com/JennicaLeClerc/Synergy_Project2.git <new_branch_name>
+   $ git pull https://github.com/RevRelay/Backend.git <new_branch_name>
    ```
 5. DO WHAT YOU NEED TO DO! (your current task) Committing as you go... I see you Ryan and John...
 6. Checkout the your local main branch:
@@ -22,29 +24,30 @@
    ```
 7. Pull the current GitHub main branch to your local main branch:
    ```
-   $ git pull https://github.com/JennicaLeClerc/Synergy_Project2.git main
+   $ git pull https://github.com/RevRelay/Backend.git main
    ```
 8. Go to your local new branch:
    ```
-   $ git checkout <new_branch_name>
+   $ git checkout -b <new_branch_name>
    ```
-9. From your local new branch, merge your two local branches:
+   If you want to create a branch from a branch:
    ```
-   $ git merge main
+   $ git checkout -b <new_branch_name> <branching_off_of_name>
    ```
-10. FIX ALL MERGING PROBLEMS!
-11. Commit all changes to your local new branch:
+9. Commit all changes to your local new branch:
    ```
    $ git add .
-   $ git commit -m "Merged to main branch"
+   $ git commit -m "Merged to <name_of_branch> branch"
    ```
-12. Push to your local new branch branch to your branch on the repo: (this is where you should be committing during 4)
+10. Push to your local new branch branch to your branch on the repo: (this is where you should be committing during 4)
    ```
-   $ git push --set-upstream https://github.com/JennicaLeClerc/Synergy_Project2.git <new_branch name>
+   $ git push https://github.com/RevRelay/Backend.git <new_branch name>
    ```
-13. Submit a pull request on GitHub asking to merge the branch into main.
-14. A teammate reviews the code for quality and functionality.
-15. The teammate merges the pull request.
+11. Submit a pull request on GitHub asking to merge the branch into your intendend branch.
+12. Three teammates reviews the code for quality and functionality.
+  - Testing, Documentation, and Github Masters must approve of this
+  - If any other teammate has question or concerns about a pull they may leave a comment, which must be resolved by the user pushing before the merge will be completed.
+13. The teammate merges the pull request.
 
 ### Some ways to not run into merging problems:
 - `git status`: displays the state of the working directory and the staging area.
