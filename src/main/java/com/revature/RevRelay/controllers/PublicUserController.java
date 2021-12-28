@@ -36,7 +36,7 @@ public class PublicUserController {
     public ResponseEntity<?> createUser(@RequestBody UserRegisterAuthRequest userAuthRequest) throws IllegalArgumentException {
         try {
             if (userAuthRequest.getPassword() != null && userAuthRequest.getPassword().length() > 6) {
-                User user = userService.createUser(userAuthRequest);
+                userService.createUser(userAuthRequest);
                 return login(new UserLoginAuthRequest(userAuthRequest.getUsername(), userAuthRequest.getPassword()));
             }
             else {
@@ -55,6 +55,7 @@ public class PublicUserController {
      */
     @PostMapping(value = "/login")
     public ResponseEntity<?> login(@RequestBody UserLoginAuthRequest userAuthRequest) {
+        //Refactor tokenAuthProvider to call Login for users
         try {
             tokenAuthProvider.authenticate(
                     new UsernamePasswordAuthenticationToken(userAuthRequest.getUsername(), userAuthRequest.getPassword())
