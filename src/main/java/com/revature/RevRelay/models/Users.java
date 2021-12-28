@@ -45,7 +45,6 @@ public class Users implements UserDetails {
     private String displayName;
 
     @ManyToMany(cascade = CascadeType.MERGE)
-//  @JsonManagedReference
     private List<Groups> userGroups;
 
     @ElementCollection
