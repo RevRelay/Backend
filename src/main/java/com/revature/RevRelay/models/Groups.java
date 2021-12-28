@@ -27,5 +27,5 @@ public class Groups {
 
     @ManyToMany(mappedBy = "userGroups", cascade = CascadeType.MERGE)
     @JsonBackReference
-    private List<Users> members;
+    private List<User> members;
 }
