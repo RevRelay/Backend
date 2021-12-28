@@ -10,7 +10,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.web.bind.annotation.*;
@@ -24,7 +23,7 @@ public class PublicUserController {
     @Autowired
     private JwtUtil jwtTokenUtil;
     @Autowired
-    private AuthenticationProvider tokenAuthProvider;
+    private TokenAuthProvider tokenAuthProvider;
 
     /**
      * Creates user in database from RequestBody, then passes RequestBody to login.
