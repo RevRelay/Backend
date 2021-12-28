@@ -1,8 +1,9 @@
 package com.revature.RevRelay.controllers;
 
 import com.revature.RevRelay.models.User;
-import com.revature.RevRelay.models.dtos.UserAuthRequest;
+import com.revature.RevRelay.models.dtos.UserLoginAuthRequest;
 import com.revature.RevRelay.models.dtos.UserAuthResponse;
+import com.revature.RevRelay.models.dtos.UserRegisterAuthRequest;
 import com.revature.RevRelay.security.TokenAuthProvider;
 import com.revature.RevRelay.services.UserService;
 import com.revature.RevRelay.utils.JwtUtil;
@@ -32,7 +33,7 @@ public class PublicUserController {
      * @throws Exception Throws BadCredentialsException on login failure.
      */
     @PostMapping(value = "/register")
-    public ResponseEntity<?> createUser(@RequestBody UserAuthRequest userAuthRequest) throws IllegalArgumentException {
+    public ResponseEntity<?> createUser(@RequestBody UserRegisterAuthRequest userAuthRequest) throws IllegalArgumentException {
         try {
             if (userAuthRequest.getPassword() != null && userAuthRequest.getPassword().length() > 6) {
                 User user = userService.createUser(userAuthRequest);
@@ -53,7 +54,7 @@ public class PublicUserController {
      * @throws Exception Throws BadCredentialsException on login failure.
      */
     @PostMapping(value = "/login")
-    public ResponseEntity<?> login(@RequestBody UserAuthRequest userAuthRequest) {
+    public ResponseEntity<?> login(@RequestBody UserLoginAuthRequest userAuthRequest) {
         try {
             tokenAuthProvider.authenticate(
                     new UsernamePasswordAuthenticationToken(userAuthRequest.getUsername(), userAuthRequest.getPassword())

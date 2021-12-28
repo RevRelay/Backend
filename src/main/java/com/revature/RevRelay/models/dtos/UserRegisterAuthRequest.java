@@ -6,7 +6,9 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 @Getter @Setter @AllArgsConstructor @NoArgsConstructor
-public class UserAuthRequest {
+public class UserRegisterAuthRequest {
     private String username;
+    private String email;
+    private String displayName;
     private String password;
 }

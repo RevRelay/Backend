@@ -1,7 +1,8 @@
 package com.revature.RevRelay.services;
 
 import com.revature.RevRelay.models.User;
-import com.revature.RevRelay.models.dtos.UserAuthRequest;
+import com.revature.RevRelay.models.dtos.UserLoginAuthRequest;
+import com.revature.RevRelay.models.dtos.UserRegisterAuthRequest;
 import com.revature.RevRelay.persistence.UserRepository;
 import com.revature.RevRelay.utils.JwtUtil;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,7 +31,7 @@ public class UserService implements UserDetailsService {
     }
 
     public User createUser(User user) {
-        return createUser(new UserAuthRequest(user.getUsername(),user.getPassword()));
+        return createUser(new UserLoginAuthRequest(user.getUsername(),user.getPassword()));
     }
 
     /**
@@ -38,12 +39,14 @@ public class UserService implements UserDetailsService {
      * @param userAuthRequest The Auth Request corresponding to the user that is going to be created
      * @return the full user object that was persisted is returned.
      */
-    public User createUser(UserAuthRequest userAuthRequest) throws IllegalArgumentException {
+    public User createUser(UserRegisterAuthRequest userAuthRequest) throws IllegalArgumentException {
         if (userRepository.existsByUsername(userAuthRequest.getUsername()) || userAuthRequest.getUsername() == null) {
             throw new IllegalArgumentException("Username Not Valid");
         }
         else {
             User user = new User();
+            user.setDisplayName(userAuthRequest.getDisplayName());
+            user.setEmail(userAuthRequest.getEmail());
             user.setUsername(userAuthRequest.getUsername());
             user.setPassword(userAuthRequest.getPassword());
             return userRepository.save(user);
