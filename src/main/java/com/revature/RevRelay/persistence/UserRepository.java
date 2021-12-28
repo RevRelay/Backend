@@ -1,4 +1,4 @@
-package com.revature.RevRelay.repositories;
+package com.revature.RevRelay.persistence;
 
 import com.revature.RevRelay.models.User;
 import org.springframework.data.domain.Page;

@@ -2,7 +2,7 @@ package com.revature.RevRelay.services;
 
 import com.revature.RevRelay.models.User;
 import com.revature.RevRelay.models.dtos.UserAuthRequest;
-import com.revature.RevRelay.repositories.UserRepository;
+import com.revature.RevRelay.persistence.UserRepository;
 import com.revature.RevRelay.utils.JwtUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.BadCredentialsException;
@@ -56,7 +56,7 @@ public class UserService implements UserDetailsService {
      * @return Either returns a user or returns a null object if no user was found
      */
     public User findUserById(Integer userId){
-        return userRepository.findById(userId).orElse(null);
+        return userRepository.findByUserID(userId).orElse(null);
     }
 
     public User findByToken(String token) throws Exception {
