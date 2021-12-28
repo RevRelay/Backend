@@ -21,6 +21,8 @@ public class GroupsController {
         this.groupsService = groupsService;
     }
 
+	@GetMapping
+	public Groups test(){return new Groups();}
 
     //CREATE
     @PostMapping
