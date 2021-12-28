@@ -8,49 +8,53 @@ import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.security.acl.Group;
-
 @NoArgsConstructor
 @RestController
-@RequestMapping(value="/groups")
+@RequestMapping(value = "/groups")
 public class GroupsController {
     GroupsService groupsService;
 
     @Autowired
-    public GroupsController(GroupsService groupsService){
+    public GroupsController(GroupsService groupsService) {
         this.groupsService = groupsService;
     }
 
-	@GetMapping
-	public Groups test(){return new Groups();}
+    @GetMapping
+    public Groups test() {
+        return new Groups();
+    }
 
     //CREATE
     @PostMapping
-    public ResponseEntity<?> createGroup(@RequestBody Groups groups){
+    public ResponseEntity<?> createGroup(@RequestBody Groups groups) {
         return ResponseEntity.ok(groupsService.createGroup(groups));
     }
+
     //READ
     @GetMapping("/all/{userOwnerID}")
-    public Page<Groups> getGroupByUserId(@PathVariable Integer userOwnerID){
-        return groupsService.findAllByUserId(userOwnerID);
+    public Page<Groups> getGroupByUserOwnerID(@PathVariable Integer userOwnerID) {
+        return groupsService.findAllByUserOwnerID(userOwnerID);
     }
+
     @GetMapping("/all")
-    public Page<Groups> getAll(){
+    public Page<Groups> getAll() {
         return groupsService.getAll();
     }
-    @GetMapping("/{groupsId}")
-    public Groups getGroupsByGroupID(@PathVariable Integer groupsID){
-        return groupsService.getGroupByGroupId(groupsID);
+
+    @GetMapping("/{groupsID}")
+    public Groups getGroupsByGroupID(@PathVariable Integer groupID) {
+        return groupsService.getGroupByGroupID(groupID);
     }
+
     //UPDATE
     @PutMapping
-    public Groups updateGroups(@RequestBody Groups groups){
+    public Groups updateGroups(@RequestBody Groups groups) {
         return groupsService.updateGroups(groups);
     }
 
     //DELETE
-    @DeleteMapping("{groupID}")
-    public void deleteGroupsById(@PathVariable Integer groupID){
-        groupsService.deleteGroupsById(groupID);
+    @DeleteMapping("/{groupID}")
+    public void deleteGroupsByID(@PathVariable Integer groupID) {
+        groupsService.deleteGroupsByID(groupID);
     }
 }

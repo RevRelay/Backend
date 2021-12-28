@@ -32,14 +32,14 @@ public class GroupsService {
         return groupsRepository.findAll(pageable);
     }
 
-    public Page<Groups> findAllByUserId(Integer userOwnerID, Pageable pageable){
+    public Page<Groups> findAllByUserOwnerID(Integer userOwnerID, Pageable pageable){
         return groupsRepository.findGroupsByUserOwnerID(userOwnerID, pageable);
     }
-    public Page<Groups> findAllByUserId(Integer userOwnerID){
+    public Page<Groups> findAllByUserOwnerID(Integer userOwnerID){
         return groupsRepository.findGroupsByUserOwnerID(userOwnerID,Pageable.unpaged());
     }
 
-    public Groups getGroupByGroupId(Integer groupID) {
+    public Groups getGroupByGroupID(Integer groupID) {
         return groupsRepository.getGroupsByGroupID(groupID).orElse(null);
         //TODO Custom exception
     }
@@ -50,7 +50,7 @@ public class GroupsService {
     }
 
     //DELETE
-    public void deleteGroupsById(Integer groupID) {
+    public void deleteGroupsByID(Integer groupID) {
         groupsRepository.deleteById(groupID);
     }
 }
