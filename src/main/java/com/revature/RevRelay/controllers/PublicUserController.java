@@ -4,13 +4,13 @@ import com.revature.RevRelay.models.User;
 import com.revature.RevRelay.models.dtos.UserLoginAuthRequest;
 import com.revature.RevRelay.models.dtos.UserAuthResponse;
 import com.revature.RevRelay.models.dtos.UserRegisterAuthRequest;
-import com.revature.RevRelay.security.TokenAuthProvider;
 import com.revature.RevRelay.services.UserService;
 import com.revature.RevRelay.utils.JwtUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.web.bind.annotation.*;
@@ -24,7 +24,7 @@ public class PublicUserController {
     @Autowired
     private JwtUtil jwtTokenUtil;
     @Autowired
-    private TokenAuthProvider tokenAuthProvider;
+    private AuthenticationProvider tokenAuthProvider;
 
     /**
      * Creates user in database from RequestBody, then passes RequestBody to login.
