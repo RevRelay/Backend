@@ -11,7 +11,6 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 @ControllerAdvice
 public class ExceptionController
 {
-
     @ExceptionHandler(NotFound.class)
     public ResponseEntity<?> handleNonexistantEntity(NotFound e){
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());

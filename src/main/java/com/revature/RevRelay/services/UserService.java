@@ -18,8 +18,7 @@ import org.omg.CosNaming.NamingContextPackage.NotFound;
 @Getter
 @Setter
 @AllArgsConstructor
-public class UserService
-{
+public class UserService {
     @Autowired
     private UserRepository userRepository;
 
