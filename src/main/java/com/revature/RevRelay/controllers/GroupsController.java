@@ -81,7 +81,7 @@ public class GroupsController {
      * @param groupID
      * @return Group
      */
-    @GetMapping("/{groupsID}")
+    @GetMapping("/{groupID}")
     public Group getGroupsByGroupID(@PathVariable Integer groupID) {
         return groupService.getGroupByGroupID(groupID);
     }
