@@ -82,6 +82,12 @@ public class UserService implements UserDetailsService {
         }
     }
 
+    /** Searches for a user by extracting the username from the jwtUtil
+     *
+     * @param token Token with information about the username inside the token
+     * @return  returns optional user
+     * @throws Exception Throws exception if token does not exist OR optional is null
+     */
     public User findByToken(String token) throws Exception {
         Optional<User> user = userRepository.findByUsername(jwtUtil.extractUsername(token));
         if (user.isPresent()) {
