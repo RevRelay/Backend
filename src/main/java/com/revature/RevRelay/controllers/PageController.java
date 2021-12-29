@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 /**
-* This controller handles pages CRUD functionality
+* This controller handles pages CRUD functionality relating to page model
 */
 @NoArgsConstructor
 @RestController
@@ -25,10 +25,8 @@ public class PageController {
         this.pageService = pageService;
     }
 
-    //CREATE
-    
     /**
-    * @param Page page to be created
+    * @param page to be created
     * @return ResponseEntity<Page> Returns the created Page is successful
     */
     @PostMapping
@@ -36,10 +34,8 @@ public class PageController {
         return ResponseEntity.ok(pageService.createPage(page));
     }
 
-    //READ
-    
     /**
-    * @return List<Page>
+    * @return List<Page> of all pages
     */
     @GetMapping("/all")
     public List<Page> getAll() {
@@ -56,7 +52,7 @@ public class PageController {
     }
 
     /**
-    * @param groupOwnerID groupOwnerID to be searched and returned
+    * @param groupID to be searched and returned
     * @return Page single page matching provided groupID
     */
     @GetMapping("/groups/{groupID}")
@@ -73,7 +69,6 @@ public class PageController {
         return pageService.getPageByPageID(pageID);
     }
 
-    //UPDATE
     /**
     * @param page the page to be updated
     * @return Page single page with the updated values
@@ -83,7 +78,6 @@ public class PageController {
         return pageService.updatePage(page);
     }
 
-    //DELETE
     /**
     * @param pageID the pageID to be deleted from database
     */
