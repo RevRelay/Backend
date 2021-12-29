@@ -16,14 +16,12 @@ import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
-
 import java.util.ArrayList;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
-
 
 @AutoConfigureMockMvc
 @TestPropertySource(locations = "classpath:test-application.properties")
@@ -44,6 +42,7 @@ public class GroupServiceTest {
 		assertEquals(group,group1);
 		assertEquals(group1.getGroupID(),groupService.getGroupByGroupID(group1.getGroupID()).getGroupID());
 	}
+	
 	@Test
 	public void NoArgsTest(){
 		GroupService gr = new GroupService();
@@ -69,6 +68,7 @@ public class GroupServiceTest {
 			assertEquals(groups.get(i).getGroupID(),p2.getContent().get(i).getGroupID());
 		}
 	}
+	
 	@Test
 	public void findAllByOwnerIDTest(){
 		groupRepository.deleteAll();
@@ -89,8 +89,8 @@ public class GroupServiceTest {
 		for (Group g:p2.getContent()) {
 			assertEquals(1,g.getUserOwnerID());
 		}
-
 	}
+	
 	@Test
 	public void updateGroupsTestTest(){
 		groupRepository.deleteAll();
@@ -100,8 +100,8 @@ public class GroupServiceTest {
 		Group group1 = groupService.createGroup(group);
 		group1.setGroupName("Test2");
 		assertEquals(group1.getGroupName(),groupService.updateGroups(group1).getGroupName());
-
 	}
+	
 	@Test
 	public void deleteGroupsByIDTest(){
 		groupRepository.deleteAll();
@@ -113,5 +113,4 @@ public class GroupServiceTest {
 		Group g = groupService.getGroupByGroupID(10000);
 		assertNull(g);
 	}
-
 }
