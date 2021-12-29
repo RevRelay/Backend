@@ -7,7 +7,6 @@ import io.jsonwebtoken.MalformedJwtException;
 import io.jsonwebtoken.SignatureAlgorithm;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
-
 import javax.annotation.PostConstruct;
 import javax.crypto.spec.SecretKeySpec;
 import javax.xml.bind.DatatypeConverter;
@@ -95,6 +94,7 @@ public class JwtUtil {
 
     /**
      * Extracts Expiration claim via extractExpiration and compares to current Date().
+     * 
      * @param token JWT
      * @return True if Expiration is before current Date(), false otherwise.
      */
@@ -104,6 +104,7 @@ public class JwtUtil {
 
     /**
      * Generates a token with a User object using an empty map of claims via createToken.
+     * 
      * @param user User object.
      * @return A JWT as a string via CreateToken.
      */
@@ -115,6 +116,7 @@ public class JwtUtil {
 
     /**
      * Generates a token with a User object using a defined map of claims via createToken.
+     * 
      * @param user User object.
      * @return A JWT as a string via CreateToken.
      */
@@ -125,6 +127,7 @@ public class JwtUtil {
 
     /**
      * Creates a JWT using provided claims and subject.
+     * 
      * @param claims A Map of Claims provided by generateToken.
      * @param subject A Subject (here always a User object).
      * @return A JWT as a string via Jwts.builder()...
@@ -139,6 +142,7 @@ public class JwtUtil {
 
     /**
      * Validates a token against a provided User object.
+     * 
      * @param token JWT of unverified validity and source.
      * @param user User object supposedly corresponding to the above JWT.
      * @return True if token can be parsed correctly, token is accurate to User, and token is not expired; else false.
