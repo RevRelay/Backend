@@ -1,7 +1,6 @@
 package com.revature.RevRelay.models;
 
 import lombok.*;
-
 import javax.persistence.*;
 import java.util.List;
 
