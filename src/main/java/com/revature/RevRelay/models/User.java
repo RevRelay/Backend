@@ -1,6 +1,8 @@
 package com.revature.RevRelay.models;
-import com.fasterxml.jackson.annotation.JsonManagedReference;
+
 import lombok.*;
+
+
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
@@ -43,8 +45,7 @@ public class User implements UserDetails {
     private String displayName;
 
     @ManyToMany(cascade = CascadeType.MERGE)
-    @JsonManagedReference
-    private List<Groups> userGroups;
+    private List<Group> userGroups;
 
     @ElementCollection
     @CollectionTable(name = "groupList")
@@ -55,9 +56,7 @@ public class User implements UserDetails {
     private List<Integer> userPageID;
 
     @ManyToMany(cascade = CascadeType.MERGE)
-    @JsonManagedReference
     private List<Chatroom> chatRooms;
-
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {

@@ -1,6 +1,7 @@
 package com.revature.RevRelay.models;
-import com.fasterxml.jackson.annotation.JsonBackReference;
+
 import lombok.*;
+
 import javax.persistence.*;
 import java.util.List;
 
@@ -9,7 +10,8 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
-public class Groups {
+@Table(name = "groups")
+public class Group {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO, generator = "group_generator")
@@ -26,6 +28,5 @@ public class Groups {
     boolean isPrivate;
 
     @ManyToMany(mappedBy = "userGroups", cascade = CascadeType.MERGE)
-    @JsonBackReference
     private List<User> members;
 }
