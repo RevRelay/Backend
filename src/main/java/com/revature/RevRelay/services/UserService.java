@@ -153,7 +153,7 @@ public class UserService implements UserDetailsService {
         User user = userRepository.findByUserID(userID).orElse(null);
         if (user != null) {
             if ((user.getPassword().equals(oldPassword)) && (newPassword.equals(confirmPassword))) {
-                user.setPassword(newPassword);
+                user.setPassword(passwordEncoder.encode(newPassword));
                 userRepository.save(user);
                 return true;
             }
