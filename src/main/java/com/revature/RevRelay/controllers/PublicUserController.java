@@ -29,6 +29,7 @@ public class PublicUserController {
 
     /**
      * Creates user in database from RequestBody, then passes RequestBody to login.
+     * 
      * @param userAuthRequest UserAuthRequest object containing Username and Password.
      * @return Returns ResponseEntity from login containing JWT.
      * @throws Exception Throws BadCredentialsException on login failure.
@@ -50,6 +51,7 @@ public class PublicUserController {
 
     /**
      * Returns JWT when provided correct credentials.
+     * 
      * @param userAuthRequest UserAuthRequest object containing Username and Password.
      * @return Returns ResponseEntity containing JWT.
      * @throws Exception Throws BadCredentialsException on login failure.

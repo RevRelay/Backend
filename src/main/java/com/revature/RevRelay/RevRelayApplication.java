@@ -9,5 +9,4 @@ public class RevRelayApplication {
 	public static void main(String[] args) {
 		SpringApplication.run(RevRelayApplication.class, args);
 	}
-
 }

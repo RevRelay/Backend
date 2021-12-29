@@ -1,4 +1,5 @@
 package com.revature.RevRelay.models;
+
 import lombok.*;
 import javax.persistence.*;
 
@@ -30,5 +31,5 @@ public class Page {
     private int userOwnerID;
 
     @Column
-    private int groupOwnerID;
+    private int groupID;
 }

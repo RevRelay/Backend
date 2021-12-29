@@ -1,11 +1,8 @@
 package com.revature.RevRelay.models;
 
 import lombok.*;
-
-
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
-
 import javax.persistence.*;
 import java.util.Collection;
 import java.util.Date;
@@ -72,6 +69,7 @@ public class User implements UserDetails {
 
     /**
      * Methods used for Spring Security for a secure user login
+     * 
      * @return booleans for corresponding security functions
      */
     @Override

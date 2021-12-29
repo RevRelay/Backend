@@ -1,4 +1,5 @@
 package com.revature.RevRelay.services;
+
 import com.revature.RevRelay.models.User;
 import com.revature.RevRelay.models.dtos.UserRegisterAuthRequest;
 import com.revature.RevRelay.repositories.UserRepository;
@@ -18,6 +19,7 @@ import java.time.Instant;
 import java.time.LocalDate;
 import java.util.Date;
 import java.util.Optional;
+
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
@@ -250,7 +252,6 @@ class UserServiceTest {
         }
     }
 
-
     @Test
     void updateBirthDate() {
         when(mockUserRepository.findByUserID(anyInt())).thenReturn(Optional.ofNullable(user));
@@ -262,7 +263,6 @@ class UserServiceTest {
             e.printStackTrace();
         }
     }
-
 
     @Test
     void updateBirthDateButFail() {
@@ -276,7 +276,6 @@ class UserServiceTest {
         }
     }
 
-
     @Test
     void updatePasswordTo12345AndReturnTrue(){
         when(mockUserRepository.findByUserID(anyInt())).thenReturn(Optional.ofNullable(user));
@@ -289,7 +288,6 @@ class UserServiceTest {
         }
     }
 
-
     @Test
     void updatePasswordTo12345ButFailBecauseConfirmAndNewPasswordDoNotMatchAndReturnFalse(){
         when(mockUserRepository.findByUserID(anyInt())).thenReturn(Optional.ofNullable(user));
@@ -301,7 +299,6 @@ class UserServiceTest {
         }
     }
 
-
     @Test
     void updatePasswordTo12345ButFailBecauseOldPasswordWasWrongAndReturnFalse(){
         when(mockUserRepository.findByUserID(anyInt())).thenReturn(Optional.ofNullable(user));
@@ -312,6 +309,4 @@ class UserServiceTest {
             e.printStackTrace();
         }
     }
-
 }
-
