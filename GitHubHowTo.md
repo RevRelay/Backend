@@ -1,8 +1,10 @@
 ## Jennica's Rules to the GitHub
 - To merge to the main repository you need permission from three others.
-  -  Testing: someone from testing team must approve of the pull request and then label that pull "Test"
-  -  Documentation: someone from the testing team must approve of the pull request and then label that pull "Documentation"
-  -  GitHub: once both Testing and Documentation has approved the pull request, they must approve it and the push to the intended branch
+  - **MESSAGE THOSE IN THESE GROUPS SO THAT YOU AREN'T WAITING FOR YOUR MERGE** (some of us sleep so it might not be done right away)
+  - Testing: someone from testing team must approve of the pull request and then label that pull "Test"
+  - Documentation: someone from the testing team must approve of the pull request and then label that pull "Documentation"
+  - GitHub: once both Testing and Documentation has approved the pull request, they must approve it and the push to the intended branch
+    - **MESSAGE:** those with the pull request if there are any problems 
 - To merge you must have all conversations on your code resolved.
 - Commits should be logical and/or informative.
 
