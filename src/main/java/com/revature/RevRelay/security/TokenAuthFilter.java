@@ -34,6 +34,12 @@ final class TokenAuthFilter extends AbstractAuthenticationProcessingFilter {
         super(requiresAuth);
     }
 
+    /**
+     *
+     * @param request
+     * @param response
+     * @return
+     */
     @Override
     public Authentication attemptAuthentication(
             HttpServletRequest request,

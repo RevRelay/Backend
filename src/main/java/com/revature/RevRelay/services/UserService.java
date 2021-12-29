@@ -1,5 +1,6 @@
 package com.revature.RevRelay.services;
 
+import com.revature.RevRelay.models.dtos.UserAuthResponse;
 import com.revature.RevRelay.repositories.UserRepository;
 import com.revature.RevRelay.models.User;
 import com.revature.RevRelay.models.dtos.UserRegisterAuthRequest;
@@ -18,18 +19,22 @@ import java.util.Optional;
 //return to this later - NL
 
 
-@Service @NoArgsConstructor @Getter @Setter @AllArgsConstructor
+@Service @NoArgsConstructor @Getter @Setter
 public class UserService implements UserDetailsService {
 
-    @Autowired
     private UserRepository userRepository;
-    @Autowired
     private JwtUtil jwtUtil;
-    @Autowired
     private PasswordEncoder passwordEncoder;
 
+    @Autowired
+    UserService (UserRepository userRepository, JwtUtil jwtUtil, PasswordEncoder passwordEncoder) {
+        this.userRepository = userRepository;
+        this.jwtUtil = jwtUtil;
+        this.passwordEncoder = passwordEncoder;
+    }
+
     /**
-     *Logs in the user with the given username and password, then returns that User.
+     * Logs in the user with the given username and password, then returns that User.
      * @param username the username to match.
      * @param password the password to match.
      * @return User of the given username AND password.
@@ -41,7 +46,9 @@ public class UserService implements UserDetailsService {
             if (user.getPassword().equals(password)) return user;
         }
         catch (Exception e) {}
-        throw new AccessDeniedException("Incorrect username/password");
+        finally {
+            throw new AccessDeniedException("Incorrect username/password");
+        }
     }
 
     /**
@@ -64,8 +71,8 @@ public class UserService implements UserDetailsService {
         }
     }
   
-     /** implementation of UserDetailsService method for Spring Security.
-     *
+     /**
+     * implementation of UserDetailsService method for Spring Security.
      * @param username Username expected to be in database.
      * @return User object from database.
      * @throws UsernameNotFoundException Throws exception on empty optional from repository.
@@ -82,8 +89,8 @@ public class UserService implements UserDetailsService {
         }
     }
 
-    /** Searches for a user by extracting the username from the jwtUtil
-     *
+    /**
+     * Searches for a user by extracting the username from the jwtUtil
      * @param token Token with information about the username inside the token
      * @return  returns optional user
      * @throws Exception Throws exception if token does not exist OR optional is null
