@@ -2,12 +2,14 @@ package com.revature.RevRelay.services;
 
 import com.revature.RevRelay.models.Page;
 import com.revature.RevRelay.repositories.PageRepository;
+import lombok.NoArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 
 @Service
+@NoArgsConstructor
 public class PageService {
     PageRepository pageRepository;
 
