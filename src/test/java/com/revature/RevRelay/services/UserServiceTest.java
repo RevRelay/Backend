@@ -4,6 +4,7 @@ import com.revature.RevRelay.models.User;
 import com.revature.RevRelay.models.dtos.UserRegisterAuthRequest;
 import com.revature.RevRelay.repositories.UserRepository;
 import com.revature.RevRelay.utils.JwtUtil;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.function.Executable;
@@ -62,6 +63,10 @@ class UserServiceTest {
         userService.setUserRepository(mockUserRepository);
         userService.setJwtUtil(mockJwtUtil);
         userService.setPasswordEncoder(mockPasswordEncoder);
+        assertTrue(userService.getUserRepository()==mockUserRepository
+                        &&userService.getJwtUtil()==mockJwtUtil
+                        &&userService.getPasswordEncoder()==mockPasswordEncoder
+        );
     }
 
     //Test User creation. Should return user and then user should equal user
