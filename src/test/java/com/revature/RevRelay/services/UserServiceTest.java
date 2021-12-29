@@ -13,6 +13,7 @@ import org.springframework.security.access.AccessDeniedException;
 
 import static org.junit.Assert.assertTrue;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.test.util.ReflectionTestUtils;
 
 import java.time.Instant;
@@ -27,6 +28,7 @@ import static org.mockito.Mockito.when;
 
 class UserServiceTest {
     UserRepository mockUserRepository;
+    PasswordEncoder passwordEncoder;
     JwtUtil mockJwtUtil;
     UserService userService;
     User user;
@@ -36,12 +38,15 @@ class UserServiceTest {
 
     @BeforeEach
     public void setup(){
+        //Making a mock PasswordEncoder
+        passwordEncoder = Mockito.mock(PasswordEncoder.class);
         //Making a mock UserRepository
         mockUserRepository = Mockito.mock(UserRepository.class);
         //Making a mock JwtUtil
         mockJwtUtil = Mockito.mock(JwtUtil.class);
         //Setting up the userservice
         userService = new UserService();
+        userService.setPasswordEncoder(passwordEncoder);
         //Setting the userRepository field with reflections
         ReflectionTestUtils.setField(
                 userService,
@@ -231,16 +236,41 @@ class UserServiceTest {
         }
     }*/
 
-    /*
+
     @Test
-    void updatePasswordTo12345(){
+    void updatePasswordTo12345AndReturnTrue(){
         when(mockUserRepository.findByUserID(anyInt())).thenReturn(Optional.ofNullable(user));
+        when(passwordEncoder.matches(any(),any())).thenReturn(true);
         try{
-            userService.updatePassword(0,"testpassword","12345","12345");
-            Assertions.assertEquals("12345",user.getPassword());
+            Assertions.assertTrue(userService.updatePassword(0,"testpassword","1234567890","1234567890"));
+
         }catch (Exception e){
             e.printStackTrace();
         }
-    }*/
+    }
+
+
+    @Test
+    void updatePasswordTo12345ButFailBecauseConfirmAndNewPasswordDoNotMatchAndReturnFalse(){
+        when(mockUserRepository.findByUserID(anyInt())).thenReturn(Optional.ofNullable(user));
+        when(passwordEncoder.matches(any(),any())).thenReturn(true);
+        try{
+            Assertions.assertFalse(userService.updatePassword(0,"testpassword","1234567890","123456789"));
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+    }
+
+
+    @Test
+    void updatePasswordTo12345ButFailBecauseOldPasswordWasWrongAndReturnFalse(){
+        when(mockUserRepository.findByUserID(anyInt())).thenReturn(Optional.ofNullable(user));
+        when(passwordEncoder.matches(any(),any())).thenReturn(false);
+        try{
+            Assertions.assertFalse(userService.updatePassword(0,"testpassword0","1234567890","1234567890"));
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+    }
 
 }
