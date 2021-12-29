@@ -152,7 +152,7 @@ public class UserService implements UserDetailsService {
     public boolean updatePassword(int userID, String oldPassword, String newPassword, String confirmPassword) {
         User user = userRepository.findByUserID(userID).orElse(null);
         if (user != null) {
-            if ((user.getPassword().equals(oldPassword)) && (newPassword.equals(confirmPassword))) {
+            if (passwordEncoder.matches(oldPassword,user.getPassword()) && (newPassword.equals(confirmPassword))) {
                 user.setPassword(passwordEncoder.encode(newPassword));
                 userRepository.save(user);
                 return true;

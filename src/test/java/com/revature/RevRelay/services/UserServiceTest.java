@@ -231,6 +231,7 @@ class UserServiceTest {
         }
     }*/
 
+    /*
     @Test
     void updatePasswordTo12345(){
         when(mockUserRepository.findByUserID(anyInt())).thenReturn(Optional.ofNullable(user));
@@ -240,6 +241,6 @@ class UserServiceTest {
         }catch (Exception e){
             e.printStackTrace();
         }
-    }
+    }*/
 
 }
