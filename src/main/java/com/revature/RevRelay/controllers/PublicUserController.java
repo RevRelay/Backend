@@ -1,8 +1,9 @@
 package com.revature.RevRelay.controllers;
 
 import com.revature.RevRelay.models.User;
-import com.revature.RevRelay.models.dtos.UserAuthRequest;
+import com.revature.RevRelay.models.dtos.UserLoginAuthRequest;
 import com.revature.RevRelay.models.dtos.UserAuthResponse;
+import com.revature.RevRelay.models.dtos.UserRegisterAuthRequest;
 import com.revature.RevRelay.security.TokenAuthProvider;
 import com.revature.RevRelay.services.UserService;
 import com.revature.RevRelay.utils.JwtUtil;
@@ -32,11 +33,11 @@ public class PublicUserController {
      * @throws Exception Throws BadCredentialsException on login failure.
      */
     @PostMapping(value = "/register")
-    public ResponseEntity<?> createUser(@RequestBody UserAuthRequest userAuthRequest) throws IllegalArgumentException {
+    public ResponseEntity<?> createUser(@RequestBody UserRegisterAuthRequest userAuthRequest) throws IllegalArgumentException {
         try {
             if (userAuthRequest.getPassword() != null && userAuthRequest.getPassword().length() > 6) {
-                User user = userService.createUser(userAuthRequest);
-                return login(userAuthRequest);
+                userService.createUser(userAuthRequest);
+                return login(new UserLoginAuthRequest(userAuthRequest.getUsername(), userAuthRequest.getPassword()));
             }
             else {
                 return new ResponseEntity<>("Minimum Password Length 7 Characters", new HttpHeaders(), HttpStatus.BAD_REQUEST);
@@ -53,7 +54,8 @@ public class PublicUserController {
      * @throws Exception Throws BadCredentialsException on login failure.
      */
     @PostMapping(value = "/login")
-    public ResponseEntity<?> login(@RequestBody UserAuthRequest userAuthRequest) {
+    public ResponseEntity<?> login(@RequestBody UserLoginAuthRequest userAuthRequest) {
+        //Refactor tokenAuthProvider to call Login for users
         try {
             tokenAuthProvider.authenticate(
                     new UsernamePasswordAuthenticationToken(userAuthRequest.getUsername(), userAuthRequest.getPassword())
@@ -65,8 +67,6 @@ public class PublicUserController {
                 .loadUserByUsername(userAuthRequest.getUsername());
         final String jwt = jwtTokenUtil.generateToken(user);
         return ResponseEntity.ok(new UserAuthResponse(jwt));
-//        return userService.login(userAuthRequest.getUsername(),userAuthRequest.getPassword())
-//                .orElseThrow(() -> new RuntimeException("invalid login and/or password"));
     }
 
 }
