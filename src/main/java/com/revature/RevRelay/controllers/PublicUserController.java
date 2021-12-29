@@ -15,6 +15,7 @@ import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.web.bind.annotation.*;
 
+//For hitting this endpoint *No authentication needed* use <url>/public/users/*  (login/register)
 @RestController @CrossOrigin("*")
 @RequestMapping(value = "/public/users")
 public class PublicUserController {
@@ -68,5 +69,4 @@ public class PublicUserController {
         final String jwt = jwtTokenUtil.generateToken(user);
         return ResponseEntity.ok(new UserAuthResponse(jwt));
     }
-
 }

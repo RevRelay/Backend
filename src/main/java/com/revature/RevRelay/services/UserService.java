@@ -4,7 +4,6 @@ import com.revature.RevRelay.repositories.UserRepository;
 import com.revature.RevRelay.models.User;
 import com.revature.RevRelay.models.dtos.UserRegisterAuthRequest;
 import com.revature.RevRelay.utils.JwtUtil;
-import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
@@ -14,7 +13,6 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
-
 import java.util.Date;
 import java.util.Optional;
 
@@ -25,15 +23,25 @@ import java.util.Optional;
 @NoArgsConstructor
 @Getter
 @Setter
-@AllArgsConstructor
 public class UserService implements UserDetailsService {
 
-    @Autowired
     private UserRepository userRepository;
-    @Autowired
     private JwtUtil jwtUtil;
-    @Autowired
     private PasswordEncoder passwordEncoder;
+
+    /**
+     * All args constructor
+     *
+     * @param userRepository UserRepository object autowired
+     * @param jwtUtil  JwtUtil object autowired
+     * @param passwordEncoder PasswordEncoder object autowired
+     */
+    @Autowired
+    UserService(UserRepository userRepository, JwtUtil jwtUtil, PasswordEncoder passwordEncoder) {
+        this.userRepository = userRepository;
+        this.jwtUtil = jwtUtil;
+        this.passwordEncoder = passwordEncoder;
+    }
 
     /**
      * Logs in the user with the given username and password, then returns that User.
@@ -47,9 +55,10 @@ public class UserService implements UserDetailsService {
         try {
             User user = loadUserByUsername(username);
             if (user.getPassword().equals(password)) return user;
-        } catch (Exception e) {
+        } catch (Exception e) {}
+        finally {
+            throw new AccessDeniedException("Incorrect username/password");
         }
-        throw new AccessDeniedException("Incorrect username/password");
     }
 
     /**
@@ -58,7 +67,6 @@ public class UserService implements UserDetailsService {
      * @param userAuthRequest The Auth Request corresponding to the user that is going to be created
      * @return the full user object that was persisted is returned.
      */
-
     public User createUser(UserRegisterAuthRequest userAuthRequest) throws IllegalArgumentException {
         if (userRepository.existsByUsername(userAuthRequest.getUsername()) || userAuthRequest.getUsername() == null) {
             throw new IllegalArgumentException("Username Not Valid");
@@ -73,14 +81,13 @@ public class UserService implements UserDetailsService {
     }
 
     /**
-     * implementation of UserDetailsService method for Spring Security.
+     * Implementation of UserDetailsService method for Spring Security.
      *
      * @param username Username expected to be in database.
      * @return User object from database.
      * @throws UsernameNotFoundException Throws exception on empty optional from repository.
      */
     @Override
-
     public User loadUserByUsername(String username) throws UsernameNotFoundException {
         Optional<User> user = userRepository.findByUsername(username);
         if (user.isPresent()) {
