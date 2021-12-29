@@ -1,6 +1,5 @@
 package com.revature.RevRelay.services.controllerTest;
 
-
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.revature.RevRelay.controllers.GroupsController;
 import com.revature.RevRelay.models.Group;
@@ -63,7 +62,6 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
         mockMvc.perform(MockMvcRequestBuilders.get("/groups/all/{userOwnerID}", 1)
                 ).andExpect(status().isOk()).andExpect(jsonPath("$.totalPages").exists())
                 .andDo(print());
-
     }
 
     @Test
