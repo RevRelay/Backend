@@ -35,10 +35,11 @@ final class TokenAuthFilter extends AbstractAuthenticationProcessingFilter {
     }
 
     /**
+     * Takes a request & Response and returns an Authentication object
      *
-     * @param request
-     * @param response
-     * @return
+     * @param request the http request to check for an authorization header
+     * @param response http response taken as a param
+     * @return returns an Authentication object
      */
     @Override
     public Authentication attemptAuthentication(
@@ -61,6 +62,16 @@ final class TokenAuthFilter extends AbstractAuthenticationProcessingFilter {
         return auth;
     }
 
+    /**
+     * Function for successful Authentication
+     *
+     * @param request  the HttpRequest
+     * @param response The HttpResponse
+     * @param chain The filter chain used by spring security
+     * @param authResult the result of Authentication
+     * @throws IOException both successfulAuthentication and doFilter propagate IOExceptions
+     * @throws ServletException both successfulAuthentication and doFilter propagate ServletExceptions
+     */
     @Override
     protected void successfulAuthentication(
             final HttpServletRequest request,
