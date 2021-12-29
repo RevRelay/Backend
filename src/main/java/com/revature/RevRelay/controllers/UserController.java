@@ -1,4 +1,5 @@
 package com.revature.RevRelay.controllers;
+
 import com.google.gson.Gson;
 import com.revature.RevRelay.models.User;
 import com.revature.RevRelay.models.dtos.UserRegisterAuthRequest;
@@ -61,7 +62,4 @@ public class UserController {
         Date s = user.getBirthDate();
         return ResponseEntity.ok(userService.updateBirthDate(userID,s));
     }
-
-
-
 }
