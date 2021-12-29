@@ -1,4 +1,5 @@
 package com.revature.RevRelay.models;
+
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -23,5 +24,4 @@ public class Chatroom {
 
     @Column(nullable = false)
     private boolean isPrivate;
-
 }

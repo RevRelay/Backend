@@ -5,7 +5,6 @@ import com.revature.RevRelay.repositories.PageRepository;
 import lombok.NoArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
 import java.util.List;
 
 @Service
@@ -31,6 +30,7 @@ public class PageService {
     public Page createPage(Page page) {
         return pageRepository.save(page);
     }
+    
     //READ
 
     /**
@@ -67,6 +67,7 @@ public class PageService {
     public Page getPageByPageID(Integer pageID) {
         return pageRepository.getPageByPageID(pageID);
     }
+    
     //UPDATE
 
     /**
@@ -77,6 +78,7 @@ public class PageService {
     public Page updatePage(Page page) {
         return pageRepository.save(page);
     }
+    
     //DELETE
 
     /**

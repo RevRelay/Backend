@@ -1,4 +1,5 @@
 package com.revature.RevRelay.models;
+
 import com.revature.RevRelay.enums.PostType;
 import lombok.*;
 import javax.persistence.*;
