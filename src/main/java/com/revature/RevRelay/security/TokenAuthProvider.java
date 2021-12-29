@@ -17,5 +17,4 @@ public class TokenAuthProvider extends DaoAuthenticationProvider {
         this.setPasswordEncoder(passwordEncoder);
         this.setUserDetailsService(userDetailsService);
     }
-
 }
