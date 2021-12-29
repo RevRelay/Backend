@@ -79,7 +79,7 @@ public class UserService implements UserDetailsService {
     }
 
     /**
-     * implementation of UserDetailsService method for Spring Security.
+     * Implementation of UserDetailsService method for Spring Security.
      *
      * @param username Username expected to be in database.
      * @return User object from database.
