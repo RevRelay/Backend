@@ -31,5 +31,5 @@ public class Page {
     private int userOwnerID;
 
     @Column
-    private int groupOwnerID;
+    private int groupID;
 }
