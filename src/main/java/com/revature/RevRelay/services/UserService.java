@@ -1,8 +1,7 @@
 package com.revature.RevRelay.services;
 
-import com.revature.RevRelay.persistence.UserRepository;
+import com.revature.RevRelay.repository.UserRepository;
 import com.revature.RevRelay.models.User;
-import com.revature.RevRelay.models.dtos.UserLoginAuthRequest;
 import com.revature.RevRelay.models.dtos.UserRegisterAuthRequest;
 import com.revature.RevRelay.utils.JwtUtil;
 import lombok.AllArgsConstructor;
@@ -10,18 +9,15 @@ import lombok.NoArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import java.util.Optional;
 //return to this later - NL
-import org.omg.CosNaming.NamingContextPackage.NotFound;
-  
+
+
 @Service @NoArgsConstructor @Getter @Setter @AllArgsConstructor
 public class UserService implements UserDetailsService {
 

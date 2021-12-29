@@ -2,16 +2,12 @@ package com.revature.RevRelay.services;
 
 import com.revature.RevRelay.models.User;
 import com.revature.RevRelay.models.dtos.UserRegisterAuthRequest;
-import com.revature.RevRelay.persistence.UserRepository;
+import com.revature.RevRelay.repository.UserRepository;
 import com.revature.RevRelay.utils.JwtUtil;
-import org.junit.Before;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.function.Executable;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
 import org.mockito.Mockito;
-import org.mockito.MockitoAnnotations;
 import org.springframework.security.access.AccessDeniedException;
 
 import static org.junit.Assert.assertTrue;
