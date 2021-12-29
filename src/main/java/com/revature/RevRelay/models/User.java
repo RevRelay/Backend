@@ -22,6 +22,8 @@ import java.util.List;
 @Entity
 @Table(name = "users")
 public class User implements UserDetails {
+
+    // User information
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO, generator = "user_generator")
     @SequenceGenerator(name = "user_generator", sequenceName = "user_seq")
@@ -48,6 +50,7 @@ public class User implements UserDetails {
     @Column(nullable = false)
     private String displayName;
 
+    // User Relations to other models
     @ManyToMany(cascade = CascadeType.MERGE)
     private List<Group> userGroups;
 
