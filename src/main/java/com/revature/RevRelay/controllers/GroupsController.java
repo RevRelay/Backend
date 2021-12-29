@@ -38,9 +38,9 @@ public class GroupsController {
     // Create Endpoints
 
     /**
-     * Endpoint for persisting a Group onto the databse
+     * Endpoint for persisting a Group onto the database
      * 
-     * Recieves JSON and maps it into a new Group object. The Group object is passed
+     * Receives JSON and maps it into a new Group object. The Group object is passed
      * to the service layer to be persisted
      * 
      * @param group is the Group object mapped from JSON
@@ -54,7 +54,7 @@ public class GroupsController {
     // Read Endpoints
 
     /**
-     * Endpoint for retrieving Groups from databse by their owner
+     * Endpoint for retrieving Groups from database by their owner
      * 
      * Takes in a path variable, userOwnerID, and queries the database for every
      * group which is owned by that userID

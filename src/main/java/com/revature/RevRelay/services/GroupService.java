@@ -37,7 +37,7 @@ public class GroupService {
     /**
      * Persists a new Group to the database
      * 
-     * Recieves a Group object from the controller and persists it as a new Group
+     * Receives a Group object from the controller and persists it as a new Group
      * record on the database
      * 
      * @param group is the Group object to be persisted
@@ -72,7 +72,7 @@ public class GroupService {
     /**
      * Retrieves all Groups from the database by their OwnerID
      * 
-     * Recieves a OwnerID from the controller and queries the database for
+     * Receives a OwnerID from the controller and queries the database for
      * every Group which has that OwnerID
      * 
      * @param userOwnerID is the ID of the owner used when querying the database
@@ -85,7 +85,7 @@ public class GroupService {
     /**
      * Retrieves all Groups from the database by their OwnerID
      * 
-     * Recieves a OwnerID from the controller and queries the database for
+     * Receives a OwnerID from the controller and queries the database for
      * every Group which has that OwnerID. Also receives a pageable, that specifies
      * a specific page to return from Page<Group>
      * 
@@ -100,7 +100,7 @@ public class GroupService {
     /**
      * Retrieves all Groups from the database by their ID
      * 
-     * Recieves a Group ID from the controller and queries the database for
+     * Receives a Group ID from the controller and queries the database for
      * that group
      * 
      * @param groupID
@@ -114,7 +114,7 @@ public class GroupService {
     /**
      * Updates a Group
      * 
-     * Recieves a Group object from the controller and updates that Group on the
+     * Receives a Group object from the controller and updates that Group on the
      * database
      * 
      * @param group is the Group object to be persisted
@@ -127,7 +127,7 @@ public class GroupService {
     /**
      * Deletes a Group
      * 
-     * Recieves a Group ID from the controller and deletes the Group with that ID
+     * Receives a Group ID from the controller and deletes the Group with that ID
      * from the database
      * 
      * @param groupID
