@@ -16,7 +16,7 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.web.bind.annotation.*;
 
 
-//For hitting this endpoint *No authentication
+//For hitting this endpoint *No authentication needed* use <url>/public/users/*  (login/register)
 @RestController @CrossOrigin("*")
 @RequestMapping(value = "/public/users")
 public class PublicUserController {
