@@ -56,6 +56,13 @@ class UserServiceTest {
         fakeUser.setPassword("testpassword");
     }
 
+    @Test
+    void getAndSetTest(){
+        UserService userService = new UserService();
+        userService.setUserRepository(mockUserRepository);
+        userService.setJwtUtil(mockJwtUtil);
+        userService.setPasswordEncoder(mockPasswordEncoder);
+    }
 
     //Test User creation. Should return user and then user should equal user
     @Test

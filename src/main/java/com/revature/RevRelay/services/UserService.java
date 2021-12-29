@@ -19,7 +19,10 @@ import java.util.Optional;
 //return to this later - NL
 
 
-@Service @NoArgsConstructor @Getter @Setter
+@Service
+@NoArgsConstructor
+@Getter
+@Setter
 public class UserService implements UserDetailsService {
 
     private UserRepository userRepository;
