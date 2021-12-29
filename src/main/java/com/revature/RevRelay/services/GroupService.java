@@ -45,7 +45,7 @@ public class GroupService {
      */
     public Group createGroup(Group group) {
         return groupRepository.save(group);
-    }
+    }//tested
 
     /**
      * Retrieves all Groups from the database
