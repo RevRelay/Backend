@@ -2,7 +2,7 @@ package com.revature.RevRelay.services;
 
 import com.revature.RevRelay.models.User;
 import com.revature.RevRelay.models.dtos.UserRegisterAuthRequest;
-import com.revature.RevRelay.repository.UserRepository;
+import com.revature.RevRelay.repositories.UserRepository;
 import com.revature.RevRelay.utils.JwtUtil;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;

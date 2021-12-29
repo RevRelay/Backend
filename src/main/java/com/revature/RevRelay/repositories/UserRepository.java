@@ -1,4 +1,4 @@
-package com.revature.RevRelay.repository;
+package com.revature.RevRelay.repositories;
 
 import com.revature.RevRelay.models.User;
 import org.springframework.data.jpa.repository.JpaRepository;
