@@ -4,7 +4,6 @@ import com.revature.RevRelay.persistence.UserRepository;
 import com.revature.RevRelay.models.User;
 import com.revature.RevRelay.models.dtos.UserLoginAuthRequest;
 import com.revature.RevRelay.models.dtos.UserRegisterAuthRequest;
-import com.revature.RevRelay.persistence.UserRepository;
 import com.revature.RevRelay.utils.JwtUtil;
 import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;
@@ -14,11 +13,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.security.access.AccessDeniedException;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
-import org.springframework.beans.factory.annotation.Autowired;
 import java.util.Optional;
 //return to this later - NL
 import org.omg.CosNaming.NamingContextPackage.NotFound;
@@ -30,6 +29,8 @@ public class UserService implements UserDetailsService {
     private UserRepository userRepository;
     @Autowired
     private JwtUtil jwtUtil;
+    @Autowired
+    private PasswordEncoder passwordEncoder;
 
     /**
      *Logs in the user with the given username and password, then returns that User.
@@ -62,9 +63,20 @@ public class UserService implements UserDetailsService {
             user.setDisplayName(userAuthRequest.getDisplayName());
             user.setEmail(userAuthRequest.getEmail());
             user.setUsername(userAuthRequest.getUsername());
-            user.setPassword(userAuthRequest.getPassword());
+            user.setPassword(passwordEncoder.encode(userAuthRequest.getPassword()));
             return userRepository.save(user);
         }
+    }
+  
+     /**
+     * Get the user with the given user ID.
+     * @param userID the user ID to match.
+     * @return User with the given userID.
+     * @throws NotFound if the userID is not in the database this will be thrown.
+     */
+    public User findUserByUserID(int userID) throws NotFound
+    {
+        return userRepository.findByUserID(userID).orElseThrow(NotFound::new);
     }
   
      /** implementation of UserDetailsService method for Spring Security.
@@ -93,5 +105,55 @@ public class UserService implements UserDetailsService {
         else {
             throw new Exception("Token Does Not Correspond to User");
         }
+    }
+  
+     /**
+     * Gets a list of all users.
+     * @return List<User> for all users in the database ordered by UserID in descending order.
+     */
+//    public Page<User> findAllUsers(Pageable pageable) {
+//        return userRepository.findAllOrderByDisplayName(pageable);
+//    }
+     
+     /**
+     * Update password by the provided username.
+     * @param username the username that already exists on the repository.
+     * @param oldPassword the password that the user currently uses.
+     * @param newPassword the password that the user wants to switch to.
+     * Get the current username from the user.
+     * If the username is already in the database, then we can update the password
+     */
+    public boolean updatePassword(String username, String oldPassword, String newPassword) {
+        User user = userRepository.findByUsername(username).orElse(null);
+        if(user != null) {
+            if(user.getPassword().equals(oldPassword)) {
+                user.setPassword(passwordEncoder.encode(newPassword));
+                userRepository.save(user);
+                return true;
+            }
+            else {
+                // Username/Password invalid.
+                return false;
+            }
+        }
+        else {return false;}
+    }
+     
+     /**
+     * Updating the last name of the user
+     * @param userID the user to be matched by userID
+     * @param email the email to be changed to.
+     * @return boolean if the userId exits then change the last name of the user
+     * Get the userId from the employee.
+     * If the last name is already in the database, then update the last name
+     */
+    public boolean updateEmail(int userID, String email) {
+        User user = userRepository.findByUserID(userID).orElse(null);
+        if(user != null) {
+            user.setEmail(email);
+            userRepository.save(user);
+            return true;
+        }
+        else {return false;}
     }
 }
