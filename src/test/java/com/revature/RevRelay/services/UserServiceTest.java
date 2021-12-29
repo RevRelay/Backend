@@ -16,6 +16,7 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.test.util.ReflectionTestUtils;
 
+import java.text.SimpleDateFormat;
 import java.time.Instant;
 import java.time.LocalDate;
 import java.util.Date;
@@ -212,29 +213,31 @@ class UserServiceTest {
         }
     }
 
-    /*
+
     @Test
     void updateBirthDate() {
         when(mockUserRepository.findByUserID(anyInt())).thenReturn(Optional.ofNullable(user));
         try{
-            userService.updateBirthDate(0,new Date("2000-12-12"));
-            Assertions.assertEquals(new Date("2000-12-12"),user.getBirthDate());
+            Date date=new SimpleDateFormat("dd/MM/yyyy").parse("12/12/2020");
+            userService.updateBirthDate(0, date);
+            Assertions.assertEquals(date,user.getBirthDate());
         }catch(Exception e){
             e.printStackTrace();
         }
-    }*/
+    }
 
-        /*
+
     @Test
     void updateBirthDateButFail() {
         when(mockUserRepository.findByUserID(anyInt())).thenReturn(Optional.ofNullable(user));
         try{
-            userService.updateBirthDate(0,new Date("2000-12-12"));
-            Assertions.assertEquals(new Date("2000-12-12"),user.getBirthDate());
+            Date date=new SimpleDateFormat("dd/MM/yyyy").parse("12/12/2020");
+            userService.updateBirthDate(0,date);
+            Assertions.assertEquals(date,user.getBirthDate());
         }catch(Exception e){
             e.printStackTrace();
         }
-    }*/
+    }
 
 
     @Test
