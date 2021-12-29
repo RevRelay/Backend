@@ -115,6 +115,7 @@ public class UserService implements UserDetailsService {
 
     /**
      * Updates a User's first name, to be displayed on their profile
+     * 
      * @param userID The User's unique ID
      * @param firstName The User's desired first name
      * @return True if the update succeeds, or else false
@@ -131,6 +132,7 @@ public class UserService implements UserDetailsService {
 
     /**
      * Updates a User's last name, to be displayed on their profile
+     * 
      * @param userID The User's unique ID
      * @param lastName The User's desired last name
      * @return True if the update succeeds, or else false
@@ -150,6 +152,7 @@ public class UserService implements UserDetailsService {
      * Takes in the old password, the desired new password, and another instance of the new password for confirmation
      * If the old password is incorrect, or the new password does not match the confirmation, returns false
      * If a User's password is successfully updated, save the User and return true
+     * 
      * @param userID The User's unique ID
      * @param oldPassword The User's old password
      * @param newPassword The User's desired new password
@@ -170,6 +173,7 @@ public class UserService implements UserDetailsService {
 
     /**
      * Updates a User's birthday
+     * 
      * @param userID The User's unique ID
      * @param birthDate The User's desired birthday
      * @return True if the update succeeds, or else false
@@ -186,6 +190,7 @@ public class UserService implements UserDetailsService {
 
     /**
      * Updates a User's display name, which will be seen by other Users in chat rooms/groups
+     * 
      * @param userID The User's unique ID
      * @param displayName The User's desired display name
      * @return True if the update succeeds, or else false
