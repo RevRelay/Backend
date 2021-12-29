@@ -18,7 +18,6 @@ import org.springframework.web.bind.annotation.*;
  * @author Priest: Ryan Haynes (Intern Devops Engineer)
  * @version 1.17
  */
-
 @NoArgsConstructor
 @RestController
 @RequestMapping(value = "/groups")
