@@ -13,6 +13,7 @@ public class RevRelayConfig {
 
     /**
      * Provides a BCryptPasswordEncoder as an injectable bean.
+     * 
      * @return A new BCryptPasswordEncoder with no other configuration or frills.
      */
     @Bean
