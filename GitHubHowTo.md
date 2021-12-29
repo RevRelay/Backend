@@ -31,7 +31,7 @@
    - the head branch is *main*
 7. Pull the current GitHub main branch to your local branch that you are merging with:
    ```
-   $ git pull https://github.com/RevRelay/Backend.git <branching_off_of_name>
+   $ git pull
    ```
    - the head branch is *main*
 8. Go to your local new branch:
@@ -50,7 +50,7 @@
 11. FIX ALL MERGING PROBLEMS!
 12. Push to your local new branch branch to your branch on the repo: (this is where you should be committing during 4)
    ```
-   $ git push https://github.com/RevRelay/Backend.git <new_branch name>
+   $ git push --set-upstream https://github.com/RevRelay/Backend.git <new_branch name>
    ```
 13. Submit a pull request on GitHub asking to merge the branch into your intendend branch.
 14. Three teammates reviews the code for quality and functionality.
