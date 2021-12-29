@@ -22,7 +22,7 @@ public class GroupService {
     //CREATE
     public Group createGroup(Group group) {
         return groupRepository.save(group);
-    }
+    }//tested
 
     //READ
     public Page<Group> getAll() {
