@@ -54,19 +54,19 @@ public class PageController {
         return pageService.getPageByUserOwnerID(userOwnerID);
     }
 
-    @GetMapping("/groups/{groupOwnerID}")
+    @GetMapping("/groups/{groupID}")
     /**
      * @param groupOwnerID groupOwnerID to be searched and returned
-     * @return Page single page matching provided groupOwnerID
+     * @return Page single page matching provided groupID
      */
-    public Page getPageByGroupOwnerID(@PathVariable Integer groupOwnerID) {
-        return pageService.getPageByGroupOwnerID(groupOwnerID);
+    public Page getPageByGroupOwnerID(@PathVariable Integer groupID) {
+        return pageService.getPageByGroupID(groupID);
     }
 
     @GetMapping("/{pageID}")
     /**
-     * @param
-     * @return Page
+     * @param pageID pageID to be searched and returned
+     * @return Page single page matching provided pageID
      */
     public Page getPageByPageID(@PathVariable Integer pageID) {
         return pageService.getPageByPageID(pageID);
@@ -74,12 +74,19 @@ public class PageController {
 
     //UPDATE
     @PutMapping
+    /**
+     * @param page the page to be updated
+     * @return Page single page with the updated values
+     */
     public Page updatePage(@RequestBody Page page) {
         return pageService.updatePage(page);
     }
 
     //DELETE
     @DeleteMapping("/{pageID}")
+    /**
+     * @param pageID the pageID to be deleted from database
+     */
     public void deletePageByID(@PathVariable Integer pageID) {
         pageService.deletePageByID(pageID);
     }
