@@ -11,12 +11,10 @@ import org.springframework.boot.test.context.SpringBootTest;
 import com.revature.RevRelay.models.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.test.context.TestPropertySource;
-
 import java.util.ArrayList;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
-
 
 @AutoConfigureMockMvc
 @TestPropertySource(locations = "classpath:test-application.properties")
@@ -37,6 +35,7 @@ public class PageServiceTest {
 		assertEquals(page,Page1);
 		assertEquals(Page1.getPageID(), pageService.getPageByPageID(Page1.getPageID()).getPageID());
 	}
+	
 	@Test
 	public void NoArgsTest(){
 		PageService gr = new PageService();
@@ -60,6 +59,7 @@ public class PageServiceTest {
 			assertEquals(Pages.get(i).getPageID(),p1.get(i).getPageID());
 		}
 	}
+	
 	@Test
 	public void updatePagesTestTest(){
 		pageRepository.deleteAll();
@@ -69,8 +69,8 @@ public class PageServiceTest {
 		Page Page1 = pageService.createPage(Page);
 		Page1.setDescription("Test2");
 		assertEquals(Page1.getDescription(), pageService.updatePage(Page1).getDescription());
-
 	}
+	
 	@Test
 	public void deletePagesByIDTest(){
 		pageRepository.deleteAll();
@@ -82,6 +82,7 @@ public class PageServiceTest {
 		Page g = pageService.getPageByPageID(10000);
 		assertNull(g);
 	}
+	
 	@Test
 	public void getPageByUserOwnerIDTest() {
 		pageRepository.deleteAll();
@@ -91,6 +92,7 @@ public class PageServiceTest {
 		assertEquals(page,Page1);
 		assertEquals(Page1.getUserOwnerID(), pageService.getPageByUserOwnerID(Page1.getUserOwnerID()).getUserOwnerID());
 	}
+	
 	@Test
 	public void getPageByGroupIDTest() {
 		pageRepository.deleteAll();
@@ -100,5 +102,4 @@ public class PageServiceTest {
 		assertEquals(page,Page1);
 		assertEquals(Page1.getGroupID(), pageService.getPageByGroupID(Page1.getGroupID()).getGroupID());
 	}
-
 }
