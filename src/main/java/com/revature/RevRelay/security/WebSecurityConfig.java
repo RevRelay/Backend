@@ -39,15 +39,6 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     private static final RequestMatcher PUBLIC_URLS = new OrRequestMatcher(
             //this allows public pages including user creation and login
             new AntPathRequestMatcher("/public/**")
-            //this attempts to let Swagger through
-//            new AntPathRequestMatcher("/v2/api-docs"),
-//            new AntPathRequestMatcher("/configuration/ui"),
-//            new AntPathRequestMatcher("/swagger-resources/**"),
-//            new AntPathRequestMatcher("/configuration/security"),
-//            new AntPathRequestMatcher( "/swagger-ui.html"),
-//            new AntPathRequestMatcher( "/webjars/**"),
-//            new AntPathRequestMatcher( "/swagger-resources/configuration/ui"),
-//            new AntPathRequestMatcher( "/swagger-ui.html")
     );
 
     /**
@@ -196,10 +187,4 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     AuthenticationEntryPoint forbiddenEntryPoint() {
         return new HttpStatusEntryPoint(FORBIDDEN);
     }
-
-//    provided by tutorial, may be unnecessary? (possibly redundant to TokenAuthProvider).
-//    @Bean @Override
-//    public AuthenticationManager authenticationManagerBean() throws Exception {
-//        return super.authenticationManagerBean();
-//    }
 }
