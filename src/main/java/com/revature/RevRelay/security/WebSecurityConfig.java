@@ -52,7 +52,6 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
     /**
      * Autowired constructor providing TokenAuthProvider, PasswordEncoder, and UserDetailsService.
-     *
      * @param provider           TokenAuthProvider from class in the security package.
      * @param passwordEncoder    PasswordEncoder from RevRelayConfig; new BCryptPasswordEncoder().
      * @param userDetailsService UserDetailsService from UserService.
@@ -67,7 +66,6 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
     /**
      * configure override to use TokenAuthProvider in configuration.
-     *
      * @param auth AuthenticationManagerBuilder configured by writing.
      */
     @Override
@@ -88,7 +86,6 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     /**
      * Configures HttpSecurity; this is where the magic happens. Many of these elements add default or disabled
      * configuration elements, which are largely self-explanatory.
-     *
      * @param http Provided/wired HttpSecurity object.
      * @throws Exception Possible untyped exceptions thrown by .cors() and restAuthenticationFilter() elements.
      */
@@ -118,7 +115,6 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
     /**
      * Provides default CorsConfigurationSource using applyPermitDefaultValues().
-     *
      * @return CorsConfigurationSource configured with applyPermitDefaultValues on all endpoints.
      */
     @Bean
@@ -144,7 +140,6 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
     /**
      * Provides a TokenAuthFilter configured on PROTECTED_URLS using authenticationManager() and successHandler().
-     *
      * @return Configured TokenAuthFilter.
      * @throws Exception Catches untyped Exceptions thrown by authenticationManager().
      */
@@ -158,7 +153,6 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
     /**
      * Provides a SimpleUrlAuthenticationSuccessHandler containing an empty NoRedirectStrategy().
-     *
      * @return SuccessHandler as above.
      */
     @Bean
@@ -180,7 +174,6 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
     /**
      * Creates a bean establishing forbidden endpoints as forbidden.
-     *
      * @return AuthenticationEntryPoint defining forbidden endpoints.
      */
     @Bean
