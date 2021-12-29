@@ -4,6 +4,10 @@ import lombok.*;
 import javax.persistence.*;
 import java.util.List;
 
+/**
+ * Group model for group information and relationships. Groups consist of users and group pages are stored in the
+ * User model as users are the ones that own group pages
+ */
 @Getter
 @Setter
 @NoArgsConstructor
@@ -12,6 +16,7 @@ import java.util.List;
 @Table(name = "groups")
 public class Group {
 
+    // group information
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO, generator = "group_generator")
     @SequenceGenerator(name = "group_generator", sequenceName = "group_seq")
@@ -26,6 +31,7 @@ public class Group {
     @Column(nullable = false)
     boolean isPrivate;
 
+    // group relations to other models
     @ManyToMany(mappedBy = "userGroups", cascade = CascadeType.MERGE)
     private List<User> members;
 }

@@ -3,6 +3,9 @@ package com.revature.RevRelay.models;
 import lombok.*;
 import javax.persistence.*;
 
+/**
+ * Page model for page information and relationships. Pages are either owned by a User
+ */
 @Getter
 @Setter
 @NoArgsConstructor
@@ -10,6 +13,7 @@ import javax.persistence.*;
 @Entity
 public class Page {
 
+    // page information
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO, generator = "page_generator")
     @SequenceGenerator(name = "page_generator", sequenceName = "page_seq")
