@@ -1,7 +1,7 @@
-package com.revature.RevRelay.service;
+package com.revature.RevRelay.services;
 
 import com.revature.RevRelay.models.Page;
-import com.revature.RevRelay.repository.PageRepository;
+import com.revature.RevRelay.repositories.PageRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 

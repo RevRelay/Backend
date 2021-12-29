@@ -1,7 +1,7 @@
-package com.revature.RevRelay.controller;
+package com.revature.RevRelay.controllers;
 
 import com.revature.RevRelay.models.Page;
-import com.revature.RevRelay.service.PageService;
+import com.revature.RevRelay.services.PageService;
 import lombok.NoArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
