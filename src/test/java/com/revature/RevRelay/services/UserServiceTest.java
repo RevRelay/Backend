@@ -89,7 +89,7 @@ class UserServiceTest {
     //Test login. Should return true and user should equal user
     @Test
     void loginCorrectUser() {
-        when(mockUserRepository.save(any())).thenReturn(user);
+        when(mockUserRepository.findByUsername(any())).thenReturn(Optional.ofNullable(user));
         try{
             assertTrue(userService.login(user.getUsername(), user.getPassword()).equals(user));
         } catch (Exception ignored) {}
