@@ -1,5 +1,4 @@
 package com.revature.RevRelay.services;
-
 import com.revature.RevRelay.models.User;
 import com.revature.RevRelay.models.dtos.UserRegisterAuthRequest;
 import com.revature.RevRelay.repositories.UserRepository;
@@ -14,15 +13,20 @@ import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.test.util.ReflectionTestUtils;
+import java.text.SimpleDateFormat;
+import java.time.Instant;
+import java.time.LocalDate;
+import java.util.Date;
 import java.util.Optional;
-
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyInt;
 import static org.mockito.Mockito.when;
 
 class UserServiceTest {
     UserRepository mockUserRepository;
+    PasswordEncoder passwordEncoder;
     JwtUtil mockJwtUtil;
     PasswordEncoder mockPasswordEncoder;
     UserService userService;
@@ -32,6 +36,8 @@ class UserServiceTest {
 
     @BeforeEach
     public void setup(){
+        //Making a mock PasswordEncoder
+        passwordEncoder = Mockito.mock(PasswordEncoder.class);
         //Making a mock UserRepository
         mockUserRepository = Mockito.mock(UserRepository.class);
         //Making a mock JwtUtil
@@ -47,6 +53,7 @@ class UserServiceTest {
         user.setUserID(0);
         user.setUsername("testname");
         user.setPassword("testpassword");
+        user.setFirstName("H");
         //User used for incorrect login/registry
         fakeUser = new User();
         fakeUser.setUserID(0);
@@ -180,4 +187,131 @@ class UserServiceTest {
         } catch (Exception ignored) {}
     }
 
+    @Test
+    void updateFirstNameToRobert() {
+        when(mockUserRepository.findByUserID(anyInt())).thenReturn(Optional.ofNullable(user));
+        try{
+            userService.updateFirstName(0,"Robert");
+            Assertions.assertEquals("Robert", user.getFirstName());
+        }catch(Exception e){
+            e.printStackTrace();
+        }
+    }
+
+    @Test
+    void updateFirstNameToRobertButFail() {
+        when(mockUserRepository.findByUserID(anyInt())).thenReturn(Optional.empty());
+        try{
+            Assertions.assertFalse(userService.updateFirstName(10, "Robert"));
+        }catch(Exception e){
+            e.printStackTrace();
+        }
+    }
+
+    @Test
+    void updateLastNameToRobert() {
+        when(mockUserRepository.findByUserID(anyInt())).thenReturn(Optional.ofNullable(user));
+        try{
+            userService.updateLastName(0,"Robert");
+            Assertions.assertEquals("Robert", user.getLastName());
+        }catch(Exception e){
+            e.printStackTrace();
+        }
+    }
+
+    @Test
+    void updateLastNameToRobertButFail() {
+        when(mockUserRepository.findByUserID(anyInt())).thenReturn(Optional.empty());
+        try{
+            Assertions.assertFalse(userService.updateLastName(10, "Robert"));
+        }catch(Exception e){
+            e.printStackTrace();
+        }
+    }
+
+    @Test
+    void updateDisplayNameToRobert() {
+        when(mockUserRepository.findByUserID(anyInt())).thenReturn(Optional.ofNullable(user));
+        try{
+            userService.updateDisplayName(0,"Robert");
+            Assertions.assertEquals("Robert", user.getDisplayName());
+        }catch(Exception e){
+            e.printStackTrace();
+        }
+    }
+
+    @Test
+    void updateDisplayNameToRobertButFail() {
+        when(mockUserRepository.findByUserID(anyInt())).thenReturn(Optional.empty());
+        try{
+            Assertions.assertFalse(userService.updateDisplayName(10, "Robert"));
+        }catch(Exception e){
+            e.printStackTrace();
+        }
+    }
+
+
+    @Test
+    void updateBirthDate() {
+        when(mockUserRepository.findByUserID(anyInt())).thenReturn(Optional.ofNullable(user));
+        try{
+            Date date=new SimpleDateFormat("dd/MM/yyyy").parse("12/12/2020");
+            userService.updateBirthDate(0, date);
+            Assertions.assertEquals(date,user.getBirthDate());
+        }catch(Exception e){
+            e.printStackTrace();
+        }
+    }
+
+
+    @Test
+    void updateBirthDateButFail() {
+        when(mockUserRepository.findByUserID(anyInt())).thenReturn(Optional.ofNullable(user));
+        try{
+            Date date=new SimpleDateFormat("dd/MM/yyyy").parse("12/12/2020");
+            userService.updateBirthDate(0,date);
+            Assertions.assertEquals(date,user.getBirthDate());
+        }catch(Exception e){
+            e.printStackTrace();
+        }
+    }
+
+
+    @Test
+    void updatePasswordTo12345AndReturnTrue(){
+        when(mockUserRepository.findByUserID(anyInt())).thenReturn(Optional.ofNullable(user));
+        when(mockPasswordEncoder.matches(any(),any())).thenReturn(true);
+        try{
+            Assertions.assertTrue(userService.updatePassword(0,"testpassword","1234567890","1234567890"));
+
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+    }
+
+
+    @Test
+    void updatePasswordTo12345ButFailBecauseConfirmAndNewPasswordDoNotMatchAndReturnFalse(){
+        when(mockUserRepository.findByUserID(anyInt())).thenReturn(Optional.ofNullable(user));
+        when(mockPasswordEncoder.matches(any(),any())).thenReturn(true);
+        try{
+            Assertions.assertFalse(userService.updatePassword(0,"testpassword","1234567890","123456789"));
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+    }
+
+
+    @Test
+    void updatePasswordTo12345ButFailBecauseOldPasswordWasWrongAndReturnFalse(){
+        when(mockUserRepository.findByUserID(anyInt())).thenReturn(Optional.ofNullable(user));
+        when(mockPasswordEncoder.matches(any(),any())).thenReturn(false);
+        try{
+            Assertions.assertFalse(userService.updatePassword(0,"testpassword0","1234567890","1234567890"));
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+    }
+
 }
+
