@@ -22,7 +22,6 @@ public interface PageRepository extends JpaRepository<Page, Integer> {
     Page getPageByGroupID(Integer groupID);
 
     /**
-     *
      * @param pageID id to search by
      * @return Page page associated with pageID
      */

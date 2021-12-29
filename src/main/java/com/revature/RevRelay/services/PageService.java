@@ -34,7 +34,6 @@ public class PageService {
     //READ
 
     /**
-     *
      * @return admin method to get all pages that exist
      */
     public List<Page> getAll() {
@@ -42,7 +41,6 @@ public class PageService {
     }
 
     /**
-     *
      * @param userOwnerID the userOwnerID to find the page of
      * @return Page the associated Page with the provided userOwnerID
      */
@@ -51,7 +49,6 @@ public class PageService {
     }
 
     /**
-     *
      * @param groupID the groupID to find the page of
      * @return Page the associated Page with the provided groupID
      */
@@ -60,7 +57,6 @@ public class PageService {
     }
 
     /**
-     *
      * @param pageID the pageID to find the page of
      * @return Page the associated Page with the provided pageID
      */
@@ -71,7 +67,6 @@ public class PageService {
     //UPDATE
 
     /**
-     *
      * @param page the page to be updated
      * @return Page the page that was updated with new values
      */
@@ -82,7 +77,6 @@ public class PageService {
     //DELETE
 
     /**
-     *
      * @param pageID the pageID to delete from the database
      */
     public void deletePageByID(Integer pageID) {
