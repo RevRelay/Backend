@@ -4,6 +4,7 @@ import com.revature.RevRelay.models.User;
 import com.revature.RevRelay.models.dtos.UserRegisterAuthRequest;
 import com.revature.RevRelay.repositories.UserRepository;
 import com.revature.RevRelay.utils.JwtUtil;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.function.Executable;
@@ -14,10 +15,14 @@ import static org.junit.Assert.assertTrue;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.test.util.ReflectionTestUtils;
 
+import java.time.Instant;
+import java.time.LocalDate;
+import java.util.Date;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyInt;
 import static org.mockito.Mockito.when;
 
 class UserServiceTest {
@@ -54,6 +59,7 @@ class UserServiceTest {
         user.setUserID(0);
         user.setUsername("testname");
         user.setPassword("testpassword");
+        user.setFirstName("H");
         //User used for incorrect login/registry
         fakeUser = new User();
         fakeUser.setUserID(0);
@@ -136,6 +142,104 @@ class UserServiceTest {
             Exception e = assertThrows(UsernameNotFoundException.class, (Executable) userService.loadUserByUsername(user.getUsername()));
             assertTrue(e.getMessage().contains("Username Not Found"));
         } catch (Exception ignored) {}
+    }
+
+    @Test
+    void updateFirstNameToRobert() {
+        when(mockUserRepository.findByUserID(anyInt())).thenReturn(Optional.ofNullable(user));
+        try{
+            userService.updateFirstName(0,"Robert");
+            Assertions.assertEquals("Robert", user.getFirstName());
+        }catch(Exception e){
+            e.printStackTrace();
+        }
+    }
+
+    @Test
+    void updateFirstNameToRobertButFail() {
+        when(mockUserRepository.findByUserID(anyInt())).thenReturn(Optional.empty());
+        try{
+            Assertions.assertFalse(userService.updateFirstName(10, "Robert"));
+        }catch(Exception e){
+            e.printStackTrace();
+        }
+    }
+
+    @Test
+    void updateLastNameToRobert() {
+        when(mockUserRepository.findByUserID(anyInt())).thenReturn(Optional.ofNullable(user));
+        try{
+            userService.updateLastName(0,"Robert");
+            Assertions.assertEquals("Robert", user.getLastName());
+        }catch(Exception e){
+            e.printStackTrace();
+        }
+    }
+
+    @Test
+    void updateLastNameToRobertButFail() {
+        when(mockUserRepository.findByUserID(anyInt())).thenReturn(Optional.empty());
+        try{
+            Assertions.assertFalse(userService.updateLastName(10, "Robert"));
+        }catch(Exception e){
+            e.printStackTrace();
+        }
+    }
+
+    @Test
+    void updateDisplayNameToRobert() {
+        when(mockUserRepository.findByUserID(anyInt())).thenReturn(Optional.ofNullable(user));
+        try{
+            userService.updateDisplayName(0,"Robert");
+            Assertions.assertEquals("Robert", user.getDisplayName());
+        }catch(Exception e){
+            e.printStackTrace();
+        }
+    }
+
+    @Test
+    void updateDisplayNameToRobertButFail() {
+        when(mockUserRepository.findByUserID(anyInt())).thenReturn(Optional.empty());
+        try{
+            Assertions.assertFalse(userService.updateDisplayName(10, "Robert"));
+        }catch(Exception e){
+            e.printStackTrace();
+        }
+    }
+
+    /*
+    @Test
+    void updateBirthDate() {
+        when(mockUserRepository.findByUserID(anyInt())).thenReturn(Optional.ofNullable(user));
+        try{
+            userService.updateBirthDate(0,new Date("2000-12-12"));
+            Assertions.assertEquals(new Date("2000-12-12"),user.getBirthDate());
+        }catch(Exception e){
+            e.printStackTrace();
+        }
+    }*/
+
+        /*
+    @Test
+    void updateBirthDateButFail() {
+        when(mockUserRepository.findByUserID(anyInt())).thenReturn(Optional.ofNullable(user));
+        try{
+            userService.updateBirthDate(0,new Date("2000-12-12"));
+            Assertions.assertEquals(new Date("2000-12-12"),user.getBirthDate());
+        }catch(Exception e){
+            e.printStackTrace();
+        }
+    }*/
+
+    @Test
+    void updatePasswordTo12345(){
+        when(mockUserRepository.findByUserID(anyInt())).thenReturn(Optional.ofNullable(user));
+        try{
+            userService.updatePassword(0,"testpassword","12345","12345");
+            Assertions.assertEquals("12345",user.getPassword());
+        }catch (Exception e){
+            e.printStackTrace();
+        }
     }
 
 }
