@@ -23,11 +23,7 @@ import java.util.Optional;
 //return to this later - NL
 import org.omg.CosNaming.NamingContextPackage.NotFound;
   
-@Service
-@NoArgsConstructor
-@Getter
-@Setter
-@AllArgsConstructor
+@Service @NoArgsConstructor @Getter @Setter @AllArgsConstructor
 public class UserService implements UserDetailsService {
 
     @Autowired
@@ -47,10 +43,7 @@ public class UserService implements UserDetailsService {
             User user = loadUserByUsername(username);
             if (user.getPassword().equals(password)) return user;
         }
-        catch (Exception e)
-        {
-            throw new AccessDeniedException("Incorrect username/password");
-        }
+        catch (Exception e) {}
         throw new AccessDeniedException("Incorrect username/password");
     }
 
@@ -81,6 +74,7 @@ public class UserService implements UserDetailsService {
      * @throws UsernameNotFoundException Throws exception on empty optional from repository.
      */
     @Override
+
     public User loadUserByUsername(String username) throws UsernameNotFoundException {
         Optional<User> user = userRepository.findByUsername(username);
         if (user.isPresent()) {
@@ -100,16 +94,4 @@ public class UserService implements UserDetailsService {
             throw new Exception("Token Does Not Correspond to User");
         }
     }
-//
-//    /**
-//     * Takes a user and returns a boolean if the username AND password matched what is in the database
-//     * @param user the User to check against the persisted database
-//     * @return True if the user is in the system, false otherwise
-//     * @throws BadCredentialsException Throws an error if the username does not exist
-//     */
-//    public boolean validate(User user) throws Exception {
-//        return userRepository.findByUsername(user.getUsername()).orElseThrow(Exception::new)
-//                .getPassword()
-//                .equals(user.getPassword());
-//    }
 }
