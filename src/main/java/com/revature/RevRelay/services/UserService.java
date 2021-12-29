@@ -22,11 +22,7 @@ import java.util.Optional;
 //return to this later - NL
 import org.omg.CosNaming.NamingContextPackage.NotFound;
   
-@Service
-@NoArgsConstructor
-@Getter
-@Setter
-@AllArgsConstructor
+@Service @NoArgsConstructor @Getter @Setter @AllArgsConstructor
 public class UserService implements UserDetailsService {
 
     @Autowired
@@ -43,17 +39,12 @@ public class UserService implements UserDetailsService {
      * @return User of the given username AND password.
      * @throws AccessDeniedException
      */
-    public User login(String username, String password) throws AccessDeniedException
-    {
-        try
-        {
+    public User login(String username, String password) throws AccessDeniedException {
+        try {
             User user = loadUserByUsername(username);
             if (user.getPassword().equals(password)) return user;
         }
-        catch (Exception e)
-        {
-            throw new AccessDeniedException("Incorrect username/password");
-        }
+        catch (Exception e) {}
         throw new AccessDeniedException("Incorrect username/password");
     }
 
@@ -62,6 +53,7 @@ public class UserService implements UserDetailsService {
      * @param userAuthRequest The Auth Request corresponding to the user that is going to be created
      * @return the full user object that was persisted is returned.
      */
+
     public User createUser(UserRegisterAuthRequest userAuthRequest) throws IllegalArgumentException {
         if (userRepository.existsByUsername(userAuthRequest.getUsername()) || userAuthRequest.getUsername() == null) {
             throw new IllegalArgumentException("Username Not Valid");
@@ -94,6 +86,7 @@ public class UserService implements UserDetailsService {
      * @throws UsernameNotFoundException Throws exception on empty optional from repository.
      */
     @Override
+
     public User loadUserByUsername(String username) throws UsernameNotFoundException {
         Optional<User> user = userRepository.findByUsername(username);
         if (user.isPresent()) {
