@@ -17,7 +17,6 @@ import org.springframework.stereotype.Service;
  * @author Evan Ritchey
  * @author Ryan Haynes
  */
-
 @NoArgsConstructor
 @Service
 public class GroupService {
