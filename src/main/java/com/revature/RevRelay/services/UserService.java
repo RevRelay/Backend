@@ -1,5 +1,6 @@
 package com.revature.RevRelay.services;
 
+import com.revature.RevRelay.models.dtos.UserDTO;
 import com.revature.RevRelay.repositories.UserRepository;
 import com.revature.RevRelay.models.User;
 import com.revature.RevRelay.models.dtos.UserRegisterAuthRequest;
@@ -81,16 +82,20 @@ public class UserService implements UserDetailsService {
     }
 
     /**
-     * Retrieves user by UserID
+     * Retrieves user by UserID without password
      *
      * @param userID userID expected to be in database.
-     * @return User object from database.
-     * @throws UsernameNotFoundException Throws exception on empty optional from repository.
+     * @return UserDTO created from a User object in database.
      */
-    public User loadUserByUserID(int userID) {
+    public UserDTO loadUserByUserID(int userID) {
         Optional<User> user = userRepository.findByUserID(userID);
-        assert user != null;
-        return user.get();
+        assert user.isPresent();
+        User realUser = user.get();
+
+        UserDTO userDTO = new UserDTO();
+        userDTO.setValues(realUser);
+
+        return userDTO;
     }
 
     /**
