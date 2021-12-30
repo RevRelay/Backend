@@ -1,7 +1,10 @@
 package com.revature.RevRelay.models;
 
+import com.fasterxml.jackson.annotation.JacksonInject;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import lombok.*;
 import javax.persistence.*;
+import java.util.List;
 
 /**
  * Page model for page information and relationships. Pages are either owned by a User
@@ -36,4 +39,8 @@ public class Page {
 
     @Column
     private int groupID;
+
+    @OneToMany(mappedBy = "postPage",cascade = CascadeType.MERGE)
+    @JsonManagedReference
+    private List<Post> posts;
 }

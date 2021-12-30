@@ -1,5 +1,8 @@
 package com.revature.RevRelay.models;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.revature.RevRelay.enums.PostType;
 import lombok.*;
 import javax.persistence.*;
@@ -36,8 +39,9 @@ public class Post {
     private int postOwnerID;
 
     // post relationships to other models
-    @ManyToOne
-    private Page postPageID;
+    @ManyToOne(cascade = CascadeType.MERGE) //TODO I may be causing issues ;)
+    @JsonBackReference
+    private Page postPage;
 
     @ManyToOne(cascade = CascadeType.MERGE)
     private Post parent;
