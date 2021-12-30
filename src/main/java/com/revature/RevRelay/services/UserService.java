@@ -90,12 +90,7 @@ public class UserService implements UserDetailsService {
     public UserDTO loadUserByUserID(int userID) {
         Optional<User> user = userRepository.findByUserID(userID);
         assert user.isPresent();
-        User realUser = user.get();
-
-        UserDTO userDTO = new UserDTO();
-        userDTO.setValues(realUser);
-
-        return userDTO;
+        return new UserDTO(user.get());
     }
 
     /**

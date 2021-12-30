@@ -18,7 +18,7 @@ public class UserDTO {
     private Date birthDate;
     private String displayName;
 
-    public void setValues(User user){
+    public UserDTO(User user){
         username = user.getUsername();
         email = user.getEmail();
         firstName = user.getFirstName();
