@@ -5,6 +5,9 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+/**
+ * DTO for registering a new user
+ */
 @Getter @Setter @AllArgsConstructor @NoArgsConstructor
 public class UserRegisterAuthRequest {
     private String username;

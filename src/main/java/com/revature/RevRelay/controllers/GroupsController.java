@@ -8,6 +8,10 @@ import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+/*
+TODO: refactor method returns to responseEntity?
+TODO: refactor method returns to handle optionals?
+ */
 /**
  * Controller endpoints for Group model
  * 
@@ -34,8 +38,6 @@ public class GroupsController {
         this.groupService = groupService;
     }
 
-    // Create Endpoints
-
     /**
      * Endpoint for persisting a Group onto the database
      * 
@@ -49,8 +51,6 @@ public class GroupsController {
     public ResponseEntity<?> createGroup(@RequestBody Group group) {
         return ResponseEntity.ok(groupService.createGroup(group));
     }
-
-    // Read Endpoints
 
     /**
      * Endpoint for retrieving Groups from database by their owner
@@ -69,7 +69,9 @@ public class GroupsController {
     }
 
     /**
-     * @return Page<Group>
+     * Endpoint for retrieving all group
+     *
+     * @return Page<Group> all the pages of a group
      */
     @GetMapping("/all")
     public Page<Group> getAll() {
@@ -77,7 +79,9 @@ public class GroupsController {
     }
 
     /**
-     * @param groupID
+     * Endpoint of retrieving a group using the groupID
+     *
+     * @param groupID id corresponding to group being retrieved
      * @return Group
      */
     @GetMapping("/{groupID}")
@@ -85,20 +89,22 @@ public class GroupsController {
         return groupService.getGroupByGroupID(groupID);
     }
 
-    // Update Endpoints
 
     /**
-     * @param group
-     * @return Group
+     * Endpoint for updating a group with a new group object
+     *
+     * @param group new group object being updated
+     * @return Group that is updated
      */
     @PutMapping
     public Group updateGroups(@RequestBody Group group) {
         return groupService.updateGroups(group);
     }
 
-    // Delete Endpoints
 
     /**
+     * Endpoint for deleting a group using the groupID
+     *
      * @param groupID
      */
     @DeleteMapping("/{groupID}")

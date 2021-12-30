@@ -1,8 +1,14 @@
 package com.revature.RevRelay.models;
 
+import com.fasterxml.jackson.annotation.JacksonInject;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import lombok.*;
 import javax.persistence.*;
+import java.util.List;
 
+/**
+ * Page model for page information and relationships. Pages are either owned by a User
+ */
 @Getter
 @Setter
 @NoArgsConstructor
@@ -10,6 +16,7 @@ import javax.persistence.*;
 @Entity
 public class Page {
 
+    // page information
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO, generator = "page_generator")
     @SequenceGenerator(name = "page_generator", sequenceName = "page_seq")
@@ -32,4 +39,8 @@ public class Page {
 
     @Column
     private int groupID;
+
+    @OneToMany(mappedBy = "postPage",cascade = CascadeType.MERGE)
+    @JsonManagedReference
+    private List<Post> posts;
 }
