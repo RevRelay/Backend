@@ -68,7 +68,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
     void getAllGroupsByGroupIdTest() throws Exception {
         mockMvc = MockMvcBuilders.standaloneSetup(groupsController).build();
         mockMvc.perform(MockMvcRequestBuilders.get("/groups/{groupsID}", 10)
-                ).andExpect(status().isOk()).andExpect(jsonPath("$.totalPages").exists())
+                ).andExpect(status().isOk())
                 .andDo(print());
     }
 }
