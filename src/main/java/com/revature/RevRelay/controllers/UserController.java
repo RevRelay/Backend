@@ -38,6 +38,17 @@ public class UserController {
     }
 
     /**
+     * Gets a user by their userID.
+     *
+     * @param userID user being retrieved
+     * @return response entity 200 signaling successful creation
+     */
+    @GetMapping("/{userID}")
+    public ResponseEntity<?> findByUserID(@PathVariable int userID){
+        return ResponseEntity.ok(userService.loadUserByUserID(userID));
+    }
+
+    /**
      * Updates a user's first name using the userID as the identifier
      *
      * @param userID userId of first name being changed

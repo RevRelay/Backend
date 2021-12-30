@@ -189,6 +189,15 @@ class UserServiceTest {
         } catch (Exception ignored) {}
     }
 
+    //Test loadUserByUserID. Should return an optional user that equals user.
+    @Test
+    void loadUserByUserID() {
+        when(mockUserRepository.findByUserID(anyInt())).thenReturn(Optional.ofNullable(user));
+        try{
+            assertTrue(userService.loadUserByUserID(user.getUserID()).equals(user));
+        } catch (Exception ignored) {}
+    }
+
     @Test
     void updateFirstNameToRobert() {
         when(mockUserRepository.findByUserID(anyInt())).thenReturn(Optional.ofNullable(user));
@@ -266,11 +275,11 @@ class UserServiceTest {
 
     @Test
     void updateBirthDateButFail() {
-        when(mockUserRepository.findByUserID(anyInt())).thenReturn(Optional.ofNullable(user));
+        when(mockUserRepository.findByUserID(anyInt())).thenReturn(Optional.empty());
         try{
             Date date=new SimpleDateFormat("dd/MM/yyyy").parse("12/12/2020");
             userService.updateBirthDate(0,date);
-            Assertions.assertEquals(date,user.getBirthDate());
+            Assertions.assertNotEquals(date,user.getBirthDate());
         }catch(Exception e){
             e.printStackTrace();
         }
