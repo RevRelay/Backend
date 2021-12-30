@@ -38,7 +38,6 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
         Group group = new Group();
         group.setGroupName("hello");
         group.setPrivate(false);
-        group.setUserOwnerID(1);
         mockMvc = MockMvcBuilders.standaloneSetup(groupsController).build();
         mockMvc.perform(MockMvcRequestBuilders.post("/groups")
                         .contentType(MediaType.APPLICATION_JSON)

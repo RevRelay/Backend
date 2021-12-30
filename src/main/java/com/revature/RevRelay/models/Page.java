@@ -37,14 +37,14 @@ public class Page {
     private boolean isGroupPage;
 
     @OneToOne(cascade = CascadeType.MERGE)
-    @JsonBackReference
+    @JsonBackReference(value="user-page")
     private User userOwner;
 
     @OneToOne(cascade = CascadeType.MERGE)
-    @JsonBackReference
+    @JsonBackReference(value="group-page")
     private Group groupOwner;
 
     @OneToMany(mappedBy = "postPage", cascade = CascadeType.MERGE)
-    @JsonManagedReference
+    @JsonManagedReference(value="page-post")
     private List<Post> posts;
 }

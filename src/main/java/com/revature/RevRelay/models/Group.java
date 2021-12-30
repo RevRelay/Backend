@@ -31,11 +31,11 @@ public class Group {
     private String groupName;
 
     @OneToOne(cascade = CascadeType.MERGE)
-    @JsonManagedReference
+    @JsonManagedReference(value="group-page")
     private Page groupPage;
 
     @ManyToOne(cascade = CascadeType.MERGE)
-    @JsonBackReference
+    @JsonBackReference(value="user-group")
     private User userOwner;
 
     @Column(nullable = false)

@@ -57,11 +57,11 @@ public class User implements UserDetails {
     private List<Group> userGroups;
 
     @OneToMany(cascade = CascadeType.MERGE)
-    @JsonManagedReference
+    @JsonManagedReference(value = "user-group")
     private List<Group> ownedGroups;
 
     @OneToOne(cascade = CascadeType.MERGE)
-    @JsonManagedReference
+    @JsonManagedReference(value = "user-page")
     private Page userPage;
 
     @ManyToMany(cascade = CascadeType.MERGE)
