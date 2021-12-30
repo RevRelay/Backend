@@ -44,7 +44,7 @@ public class UserController {
      * @return response entity 200 signaling successful creation
      */
     @GetMapping("/{userID}")
-    public ResponseEntity<?> findByUserName(@PathVariable int userID){
+    public ResponseEntity<?> findByUserID(@PathVariable int userID){
         return ResponseEntity.ok(userService.loadUserByUserID(userID));
     }
 
