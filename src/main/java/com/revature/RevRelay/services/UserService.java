@@ -81,6 +81,19 @@ public class UserService implements UserDetailsService {
     }
 
     /**
+     * Retrieves user by UserID
+     *
+     * @param userID userID expected to be in database.
+     * @return User object from database.
+     * @throws UsernameNotFoundException Throws exception on empty optional from repository.
+     */
+    public User loadUserByUserID(int userID) {
+        Optional<User> user = userRepository.findByUserID(userID);
+        assert user != null;
+        return user.get();
+    }
+
+    /**
      * Implementation of UserDetailsService method for Spring Security.
      *
      * @param username Username expected to be in database.
