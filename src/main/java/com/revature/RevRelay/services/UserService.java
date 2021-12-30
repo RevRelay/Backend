@@ -87,7 +87,7 @@ public class UserService implements UserDetailsService {
      * @param userID userID expected to be in database.
      * @return UserDTO created from a User object in database.
      */
-    public UserDTO loadUserByUserID(int userID) {
+    public UserDTO loadUserDTOByUserID(int userID) {
         Optional<User> user = userRepository.findByUserID(userID);
         assert user.isPresent();
         return new UserDTO(user.get());
