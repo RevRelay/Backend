@@ -129,7 +129,7 @@ public class GroupService {
      * Receives a Group ID from the controller and deletes the Group with that ID
      * from the database
      * 
-     * @param groupID
+     * @param groupID is the ID of the group to remove
      */
     public void deleteGroupsByID(Integer groupID) {
         groupRepository.deleteById(groupID);

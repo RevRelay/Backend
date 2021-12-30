@@ -7,8 +7,11 @@ import javax.persistence.*;
 import java.util.List;
 
 /**
- * Page model for page information and relationships. Pages are either owned by
- * a User
+ * Page Model
+ * 
+ * Holds information and relationships for Pages. Every User and Group has one
+ * Page. Pages contain many Posts. Pages have a User as an Owner, but can also
+ * be be associated to a Group
  */
 @Getter
 @Setter
@@ -36,14 +39,14 @@ public class Page {
     private boolean isGroupPage;
 
     @OneToOne(cascade = CascadeType.MERGE)
-    @JsonBackReference(value="user-page")
+    @JsonBackReference(value = "user-page")
     private User userOwner;
 
     @OneToOne(cascade = CascadeType.MERGE)
-    @JsonBackReference(value="group-page")
+    @JsonBackReference(value = "group-page")
     private Group groupOwner;
 
     @OneToMany(mappedBy = "postPage", cascade = CascadeType.MERGE)
-    @JsonManagedReference(value="page-post")
+    @JsonManagedReference(value = "page-post")
     private List<Post> posts;
 }

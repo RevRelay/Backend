@@ -12,11 +12,13 @@ import java.util.Date;
 import java.util.List;
 
 /**
- * Post model for posts information and relationships. Posts are a part of a
- * page which are owned by a user.
- * Posts can also have a parent post and child posts, with child posts being the
- * replyies of parent posts.
+ * Post Model
+ * 
+ * Holds information and relationships for Posts. Every Post is a part of a User
+ * or Group Page has one
+ * Page.
  */
+
 @Getter
 @Setter
 @NoArgsConstructor
