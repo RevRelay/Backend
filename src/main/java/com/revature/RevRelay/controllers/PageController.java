@@ -47,8 +47,8 @@ public class PageController {
      * @return Page single page matching provided userOwnerID
      */
     @GetMapping("/users/{userOwnerID}")
-    public Page getPageByUserOwnerID(@PathVariable Integer userOwnerID) {
-        return pageService.getPageByUserOwnerID(userOwnerID);
+    public Page getPageByUserOwnerUserID(@PathVariable Integer userOwnerID) {
+        return pageService.getPageByUserOwnerUserID(userOwnerID);
     }
 
     /**

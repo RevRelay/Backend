@@ -1,6 +1,5 @@
 package com.revature.RevRelay.services.controllerTest;
 
-
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.revature.RevRelay.controllers.PageController;
 import com.revature.RevRelay.models.Page;
@@ -27,44 +26,40 @@ public class PageControllerTest {
     @Autowired
     private PageRepository pageRepository;
 
-
     private MockMvc mockMvc;
     private ObjectMapper mapper = new ObjectMapper();
 
-//    @Test
-//    void createPageValid() throws Exception {
-//    Page page = new Page();
-//    page.setPrivate(true);
-//    page.setGroupPage(true);
-//    page.setUserOwnerID(1);
-//    page.set
-//        mockMvc = MockMvcBuilders.standaloneSetup(pageController).build();
-//        mockMvc.perform(MockMvcRequestBuilders.post("/pages")
-//                ).andExpect(status().isOk()).andExpect(jsonPath("$.totalPages").exists())
-//                .andDo(print());
-//    }
+    // @Test
+    // void createPageValid() throws Exception {
+    // Page page = new Page();
+    // page.setPrivate(true);
+    // page.setGroupPage(true);
+    // page.setUserOwnerID(1);
+    // page.set
+    // mockMvc = MockMvcBuilders.standaloneSetup(pageController).build();
+    // mockMvc.perform(MockMvcRequestBuilders.post("/pages")
+    // ).andExpect(status().isOk()).andExpect(jsonPath("$.totalPages").exists())
+    // .andDo(print());
+    // }
 
     @Test
     void getPageByValidUserOwnerId() throws Exception {
         mockMvc = MockMvcBuilders.standaloneSetup(pageController).build();
-        mockMvc.perform(MockMvcRequestBuilders.get("/pages/users/{userOwnerID}",0)
-                ).andExpect(status().isOk())
+        mockMvc.perform(MockMvcRequestBuilders.get("/pages/users/{userOwnerID}", 0)).andExpect(status().isOk())
                 .andDo(print());
     }
 
     @Test
     void getPageByValidPageByGroupOwnerID() throws Exception {
         mockMvc = MockMvcBuilders.standaloneSetup(pageController).build();
-        mockMvc.perform(MockMvcRequestBuilders.get("/pages/groups/{groupID}",0)
-                ).andExpect(status().isOk())
+        mockMvc.perform(MockMvcRequestBuilders.get("/pages/groups/{groupID}", 0)).andExpect(status().isOk())
                 .andDo(print());
     }
 
     @Test
     void getPageByValidPageIDThatDoesNotExist() throws Exception {
         mockMvc = MockMvcBuilders.standaloneSetup(pageController).build();
-        mockMvc.perform(MockMvcRequestBuilders.get("/pages/{groupID}",0)
-                ).andExpect(status().isOk())
+        mockMvc.perform(MockMvcRequestBuilders.get("/pages/{groupID}", 0)).andExpect(status().isNotFound())
                 .andDo(print());
     }
 }

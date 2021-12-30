@@ -1,14 +1,18 @@
 package com.revature.RevRelay.services;
 
+import com.revature.RevRelay.models.Group;
 import com.revature.RevRelay.models.Page;
+import com.revature.RevRelay.models.User;
+import com.revature.RevRelay.repositories.GroupRepository;
 import com.revature.RevRelay.repositories.PageRepository;
+import com.revature.RevRelay.repositories.UserRepository;
+
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
-import com.revature.RevRelay.models.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.test.context.TestPropertySource;
 import java.util.ArrayList;
@@ -25,9 +29,27 @@ public class PageServiceTest {
 	PageRepository pageRepository;
 	@Autowired
 	PageService pageService;
+	@Autowired
+	UserRepository userRepository;
+	@Autowired
+	GroupRepository groupRepository;
+
+	User user;
+	Group group;
+
+	public PageServiceTest() {
+		this.user = new User();
+		user.setUsername("fakeUser");
+		user.setPassword("fakePassword");
+		user.setEmail("fakeEmail");
+		user.setDisplayName("fakeDisplayName");
+
+		this.group = new Group();
+		group.setGroupName("fakeGroup");
+	}
 
 	@Test
-	public void createPageTest() {
+	public void createPageTest() throws Exception {
 		System.out.println(pageRepository);
 		Page page = new Page();
 		page.setDescription("TEST");
@@ -45,11 +67,14 @@ public class PageServiceTest {
 	@Test
 	public void getAllTest() {
 		pageRepository.deleteAll();
+		userRepository.deleteAll();
+
 		List<Page> Pages = new ArrayList<>();
+		userRepository.save(user);
 		for (int i = 0; i < 100; i++) {
 			Page g = new Page();
 			g.setDescription(i + "");
-			g.setUserOwnerID(i);
+			g.setUserOwner(user);
 			g.setPrivate(false);
 			Pages.add(g);
 			pageService.createPage(g);
@@ -72,35 +97,43 @@ public class PageServiceTest {
 	}
 
 	@Test
-	public void deletePagesByIDTest() {
+	public void deletePagesByIDTest() throws Exception {
 		pageRepository.deleteAll();
-		Page Page = new Page();
-		Page.setPageID(10000);
-		Page.setDescription("TEST");
-		Page Page1 = pageService.createPage(Page);
-		pageService.deletePageByID(Page1.getPageID());
-		Page g = pageService.getPageByPageID(10000);
-		assertNull(g);
+		Page page1 = new Page();
+		Page page = pageService.createPage(new Page());
+		pageService.deletePageByID(page.getPageID());
+		try {
+			page1 = pageService.getPageByPageID(page.getPageID());
+		} catch (Exception e) {
+			page1 = null;
+		}
+
+		assertNull(page1);
+
 	}
 
 	@Test
 	public void getPageByUserOwnerIDTest() {
 		pageRepository.deleteAll();
+		userRepository.deleteAll();
+
+		userRepository.save(user);
+
 		Page page = new Page();
-		page.setUserOwnerID(1);
+		page.setUserOwner(user);
 		Page Page1 = pageService.createPage(page);
-		assertEquals(page, Page1);
-		assertEquals(Page1.getUserOwnerID(),
-				pageService.getPageByUserOwnerUserID(Page1.getUserOwnerID()).getUserOwnerID());
+		assertEquals(Page1.getPageID(), pageService.getPageByUserOwnerUserID(Page1.getUserOwner().getUserID())
+				.getPageID());
 	}
 
 	@Test
 	public void getPageByGroupIDTest() {
 		pageRepository.deleteAll();
+		groupRepository.save(group);
 		Page page = new Page();
-		page.setGroupID(1);
+		page.setGroupOwner(group);
 		Page Page1 = pageService.createPage(page);
 		assertEquals(page, Page1);
-		assertEquals(Page1.getGroupID(), pageService.getPageByGroupOwnerGroupID(Page1.getGroupID()).getGroupID());
+		assertEquals(Page1.getPageID(), pageService.getPageByGroupID(Page1.getGroupOwner().getGroupID()).getPageID());
 	}
 }

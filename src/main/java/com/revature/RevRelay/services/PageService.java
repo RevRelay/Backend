@@ -1,12 +1,12 @@
 package com.revature.RevRelay.services;
 
 import com.revature.RevRelay.models.Page;
+import com.revature.RevRelay.models.User;
 import com.revature.RevRelay.repositories.PageRepository;
 import lombok.NoArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import java.util.List;
-import java.util.Optional;
 
 @Service
 @NoArgsConstructor
@@ -45,7 +45,7 @@ public class PageService {
      * @param userOwnerID the userOwnerID to find the page of
      * @return Page the associated Page with the provided userOwnerID
      */
-    public Page getPageByUserOwnerID(Integer userOwnerID) {
+    public Page getPageByUserOwnerUserID(Integer userOwnerID) {
         return pageRepository.getPageByUserOwnerUserID(userOwnerID);
     }
 
