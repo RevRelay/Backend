@@ -2,10 +2,15 @@ package com.revature.RevRelay.models;
 
 import lombok.*;
 import javax.persistence.*;
+
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+
 import java.util.List;
 
 /**
- * Group model for group information and relationships. Groups consist of users and group pages are stored in the
+ * Group model for group information and relationships. Groups consist of users
+ * and group pages are stored in the
  * User model as users are the ones that own group pages
  */
 @Getter
@@ -25,8 +30,13 @@ public class Group {
     @Column(nullable = false, unique = true)
     private String groupName;
 
-    @Column(nullable = false)
-    private int userOwnerID;
+    @OneToOne(cascade = CascadeType.MERGE)
+    @JsonManagedReference
+    private Page groupPage;
+
+    @ManyToOne(cascade = CascadeType.MERGE)
+    @JsonBackReference
+    private User userOwner;
 
     @Column(nullable = false)
     boolean isPrivate;

@@ -1,13 +1,15 @@
 package com.revature.RevRelay.models;
 
 import com.fasterxml.jackson.annotation.JacksonInject;
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import lombok.*;
 import javax.persistence.*;
 import java.util.List;
 
 /**
- * Page model for page information and relationships. Pages are either owned by a User
+ * Page model for page information and relationships. Pages are either owned by
+ * a User
  */
 @Getter
 @Setter
@@ -34,13 +36,15 @@ public class Page {
     @Column(nullable = false)
     private boolean isGroupPage;
 
-    @Column(nullable = false)
-    private int userOwnerID;
+    @OneToOne(cascade = CascadeType.MERGE)
+    @JsonBackReference
+    private User userOwner;
 
-    @Column
-    private int groupID;
+    @OneToOne(cascade = CascadeType.MERGE)
+    @JsonBackReference
+    private Group groupOwner;
 
-    @OneToMany(mappedBy = "postPage",cascade = CascadeType.MERGE)
+    @OneToMany(mappedBy = "postPage", cascade = CascadeType.MERGE)
     @JsonManagedReference
     private List<Post> posts;
 }

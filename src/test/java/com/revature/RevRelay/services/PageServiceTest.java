@@ -27,28 +27,28 @@ public class PageServiceTest {
 	PageService pageService;
 
 	@Test
-	public void createPageTest(){
+	public void createPageTest() {
 		System.out.println(pageRepository);
 		Page page = new Page();
 		page.setDescription("TEST");
 		Page Page1 = pageService.createPage(page);
-		assertEquals(page,Page1);
+		assertEquals(page, Page1);
 		assertEquals(Page1.getPageID(), pageService.getPageByPageID(Page1.getPageID()).getPageID());
 	}
-	
+
 	@Test
-	public void NoArgsTest(){
+	public void NoArgsTest() {
 		PageService gr = new PageService();
 		assertNotNull(gr);
 	}
 
 	@Test
-	public void getAllTest(){
+	public void getAllTest() {
 		pageRepository.deleteAll();
 		List<Page> Pages = new ArrayList<>();
 		for (int i = 0; i < 100; i++) {
 			Page g = new Page();
-			g.setDescription(i+"");
+			g.setDescription(i + "");
 			g.setUserOwnerID(i);
 			g.setPrivate(false);
 			Pages.add(g);
@@ -56,12 +56,12 @@ public class PageServiceTest {
 		}
 		List<Page> p1 = pageService.getAll();
 		for (int i = 0; i < 100; i++) {
-			assertEquals(Pages.get(i).getPageID(),p1.get(i).getPageID());
+			assertEquals(Pages.get(i).getPageID(), p1.get(i).getPageID());
 		}
 	}
-	
+
 	@Test
-	public void updatePagesTestTest(){
+	public void updatePagesTestTest() {
 		pageRepository.deleteAll();
 		System.out.println(pageRepository);
 		Page Page = new Page();
@@ -70,9 +70,9 @@ public class PageServiceTest {
 		Page1.setDescription("Test2");
 		assertEquals(Page1.getDescription(), pageService.updatePage(Page1).getDescription());
 	}
-	
+
 	@Test
-	public void deletePagesByIDTest(){
+	public void deletePagesByIDTest() {
 		pageRepository.deleteAll();
 		Page Page = new Page();
 		Page.setPageID(10000);
@@ -82,24 +82,25 @@ public class PageServiceTest {
 		Page g = pageService.getPageByPageID(10000);
 		assertNull(g);
 	}
-	
+
 	@Test
 	public void getPageByUserOwnerIDTest() {
 		pageRepository.deleteAll();
 		Page page = new Page();
 		page.setUserOwnerID(1);
 		Page Page1 = pageService.createPage(page);
-		assertEquals(page,Page1);
-		assertEquals(Page1.getUserOwnerID(), pageService.getPageByUserOwnerID(Page1.getUserOwnerID()).getUserOwnerID());
+		assertEquals(page, Page1);
+		assertEquals(Page1.getUserOwnerID(),
+				pageService.getPageByUserOwnerUserID(Page1.getUserOwnerID()).getUserOwnerID());
 	}
-	
+
 	@Test
 	public void getPageByGroupIDTest() {
 		pageRepository.deleteAll();
 		Page page = new Page();
 		page.setGroupID(1);
 		Page Page1 = pageService.createPage(page);
-		assertEquals(page,Page1);
-		assertEquals(Page1.getGroupID(), pageService.getPageByGroupID(Page1.getGroupID()).getGroupID());
+		assertEquals(page, Page1);
+		assertEquals(Page1.getGroupID(), pageService.getPageByGroupOwnerGroupID(Page1.getGroupID()).getGroupID());
 	}
 }

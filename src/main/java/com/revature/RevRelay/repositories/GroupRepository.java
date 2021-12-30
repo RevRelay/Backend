@@ -8,11 +8,11 @@ import org.springframework.stereotype.Repository;
 import java.util.Optional;
 
 /**
- * Interface that uses JpaRepository to directly access database, handles group table
+ * Interface that uses JpaRepository to directly access database, handles group
+ * table
  */
 @Repository
-public interface GroupRepository extends JpaRepository<Group,Integer> {
-    Page<Group> findGroupsByUserOwnerID(Integer userOwnerID, Pageable pageable);
+public interface GroupRepository extends JpaRepository<Group, Integer> {
+    Page<Group> findGroupsByUserOwnerUserID(Integer userOwnerID, Pageable pageable);
 
-    Optional<Group> getGroupsByGroupID(Integer groupID);
 }

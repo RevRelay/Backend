@@ -6,6 +6,7 @@ import lombok.NoArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @NoArgsConstructor
@@ -16,11 +17,11 @@ public class PageService {
     /**
      * @param pageRepository to be autowired
      */
-    public PageService(PageRepository pageRepository){
+    public PageService(PageRepository pageRepository) {
         this.pageRepository = pageRepository;
     }
 
-    //CREATE
+    // CREATE
 
     /**
      *
@@ -30,8 +31,8 @@ public class PageService {
     public Page createPage(Page page) {
         return pageRepository.save(page);
     }
-    
-    //READ
+
+    // READ
 
     /**
      * @return admin method to get all pages that exist
@@ -45,7 +46,7 @@ public class PageService {
      * @return Page the associated Page with the provided userOwnerID
      */
     public Page getPageByUserOwnerID(Integer userOwnerID) {
-        return pageRepository.getPageByUserOwnerID(userOwnerID);
+        return pageRepository.getPageByUserOwnerUserID(userOwnerID);
     }
 
     /**
@@ -53,18 +54,18 @@ public class PageService {
      * @return Page the associated Page with the provided groupID
      */
     public Page getPageByGroupID(Integer groupID) {
-        return pageRepository.getPageByGroupID(groupID);
+        return pageRepository.getPageByGroupOwnerGroupID(groupID);
     }
 
     /**
      * @param pageID the pageID to find the page of
      * @return Page the associated Page with the provided pageID
      */
-    public Page getPageByPageID(Integer pageID) {
-        return pageRepository.getPageByPageID(pageID);
+    public Page getPageByPageID(Integer pageID) throws Exception {
+        return pageRepository.findById(pageID).orElseThrow(() -> new Exception("No Page Found"));
     }
-    
-    //UPDATE
+
+    // UPDATE
 
     /**
      * @param page the page to be updated
@@ -73,8 +74,8 @@ public class PageService {
     public Page updatePage(Page page) {
         return pageRepository.save(page);
     }
-    
-    //DELETE
+
+    // DELETE
 
     /**
      * @param pageID the pageID to delete from the database
