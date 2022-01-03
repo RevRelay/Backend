@@ -44,7 +44,7 @@ public class GroupService {
      */
     public Group createGroup(Group group) {
         return groupRepository.save(group);
-    }
+    }//tested
 
     /**
      * Retrieves all Groups from the database
@@ -78,7 +78,7 @@ public class GroupService {
      * @return Page<Group> is page containing the Groups
      */
     public Page<Group> findAllByUserOwnerID(Integer userOwnerID) {
-        return groupRepository.findGroupsByUserOwnerUserID(userOwnerID, Pageable.unpaged());
+        return groupRepository.findGroupsByUserOwnerID(userOwnerID, Pageable.unpaged());
     }
 
     /**
@@ -93,7 +93,7 @@ public class GroupService {
      * @return Page<Group> is page containing the Groups from a specific page
      */
     public Page<Group> findAllByUserOwnerID(Integer userOwnerID, Pageable pageable) {
-        return groupRepository.findGroupsByUserOwnerUserID(userOwnerID, pageable);
+        return groupRepository.findGroupsByUserOwnerID(userOwnerID, pageable);
     }
 
     /**
@@ -106,7 +106,7 @@ public class GroupService {
      * @return Group
      */
     public Group getGroupByGroupID(Integer groupID) {
-        return groupRepository.findById(groupID).orElse(null);
+        return groupRepository.getGroupsByGroupID(groupID).orElse(null);
         // TODO Custom exception
     }
 
@@ -129,7 +129,7 @@ public class GroupService {
      * Receives a Group ID from the controller and deletes the Group with that ID
      * from the database
      * 
-     * @param groupID is the ID of the group to remove
+     * @param groupID
      */
     public void deleteGroupsByID(Integer groupID) {
         groupRepository.deleteById(groupID);
