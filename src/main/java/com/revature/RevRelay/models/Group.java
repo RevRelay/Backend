@@ -36,7 +36,8 @@ public class Group {
     private Page groupPage;
 
     @ManyToOne(cascade = CascadeType.MERGE)
-    @JsonBackReference(value = "user-group")
+    @JoinColumn(name = "userOwnerID")
+    @JsonBackReference
     private User userOwner;
 
     @Column(nullable = false)
