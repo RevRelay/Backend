@@ -4,11 +4,12 @@ import com.revature.RevRelay.models.Page;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
-@Repository
 /**
- * This Repo handles the other methods needed for full page CRUD functionality
- * not already defined in Spring JPA
+ * Data Layer for Pages
+ * 
+ * Interface using JpaRepository to access the database
  */
+@Repository
 public interface PageRepository extends JpaRepository<Page, Integer> {
     /**
      * @param userOwnerID id to search by

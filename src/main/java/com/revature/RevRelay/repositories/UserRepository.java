@@ -6,7 +6,9 @@ import org.springframework.stereotype.Repository;
 import java.util.Optional;
 
 /**
- * Interface that uses JpaRepository to directly access database, handles user table
+ * Data Layer for Users
+ * 
+ * Interface using JpaRepository to access the database
  */
 @Repository
 public interface UserRepository extends JpaRepository<User, Integer> {

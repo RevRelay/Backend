@@ -15,10 +15,8 @@ import java.util.List;
  * Post Model
  * 
  * Holds information and relationships for Posts. Every Post is a part of a User
- * or Group Page has one
- * Page.
+ * or Group Page. Posts have childern/parent posts for replies
  */
-
 @Getter
 @Setter
 @NoArgsConstructor

@@ -102,11 +102,13 @@ public class PageServiceTest {
 	}
 
 	@Test
-	public void deletePagesByIDTest() throws Exception {
+	public void deletePagesByIDTest() {
 		pageRepository.deleteAll();
+
 		Page page1 = new Page();
 		Page page = pageService.createPage(new Page());
 		pageService.deletePageByID(page.getPageID());
+
 		try {
 			page1 = pageService.getPageByPageID(page.getPageID());
 		} catch (Exception e) {
