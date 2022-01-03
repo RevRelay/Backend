@@ -107,6 +107,7 @@ public class GroupServiceTest {
 			assertEquals(groups1.get(i).getGroupID(), groups.get(i).getGroupID());
 		}
 	}
+	
 	@Test
 	public void findAllByOwnerIDTestPageable() {
 		groupRepository.deleteAll();
