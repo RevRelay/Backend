@@ -8,6 +8,10 @@ import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+/*
+TODO: refactor method returns to responseEntity?
+TODO: refactor method returns to handle optionals?
+ */
 /**
  * Controller endpoints for Group model
  * 
