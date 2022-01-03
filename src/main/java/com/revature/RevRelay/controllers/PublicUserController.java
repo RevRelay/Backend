@@ -73,6 +73,7 @@ public class PublicUserController {
         final String jwt = jwtTokenUtil.generateToken(user);
         return ResponseEntity.ok(new UserAuthResponse(jwt));
     }
-	@GetMapping(value = "/test")
-	public Post pageTemplate(){return new Post();}
+
+    @GetMapping(value = "/test")
+    public Post pageTemplate(){return new Post();}
 }
