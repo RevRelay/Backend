@@ -107,6 +107,27 @@ public class GroupServiceTest {
 			assertEquals(groups1.get(i).getGroupID(), groups.get(i).getGroupID());
 		}
 	}
+	@Test
+	public void findAllByOwnerIDTestPageable() {
+		groupRepository.deleteAll();
+		userRepository.deleteAll();
+
+		User user1 = userRepository.save(user);
+
+		List<Group> groups = new ArrayList<>();
+		for (int i = 0; i < 100; i++) {
+			Group g = new Group();
+			g.setGroupName(i + "");
+			g.setUserOwner(user1);
+			g.setPrivate(false);
+			groups.add(g);
+			groupService.createGroup(g);
+		}
+		List<Group> groups1 = groupRepository.findAll();
+		for (int i = 0; i < 100; i++) {
+			assertEquals(groups1.get(i).getGroupID(), groups.get(i).getGroupID());
+		}
+	}
 
 	@Test
 	public void updateGroupsTestTest() {

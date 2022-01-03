@@ -49,4 +49,15 @@ public class Page {
     @OneToMany(mappedBy = "postPage", cascade = CascadeType.MERGE)
     @JsonManagedReference(value = "page-post")
     private List<Post> posts;
+
+    @Override
+    public String toString() {
+        return "Page{" +
+                "pageID=" + pageID +
+                ", description='" + description + '\'' +
+                ", bannerURL='" + bannerURL + '\'' +
+                ", isPrivate=" + isPrivate +
+                ", isGroupPage=" + isGroupPage +
+                '}';
+    }
 }

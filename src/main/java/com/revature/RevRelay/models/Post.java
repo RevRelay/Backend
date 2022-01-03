@@ -61,4 +61,17 @@ public class Post {
     @OneToMany(mappedBy = "parent", cascade = CascadeType.MERGE)
     @JsonManagedReference(value = "post-post")
     private List<Post> children;
+
+    @Override
+    public String toString() {
+        return "Post{" +
+                "postID=" + postID +
+                ", postType=" + postType +
+                ", postTitle='" + postTitle + '\'' +
+                ", postContent='" + postContent + '\'' +
+                ", postLikes=" + postLikes +
+                ", postTime=" + postTime +
+                ", postOwnerID=" + postOwnerID +
+                '}';
+    }
 }
