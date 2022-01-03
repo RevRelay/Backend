@@ -7,8 +7,9 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
 /**
- * Interface that uses JpaRepository to directly access database, handles group
- * table
+ * Data Layer for Groups
+ * 
+ * Interface using JpaRepository to access the database
  */
 @Repository
 public interface GroupRepository extends JpaRepository<Group, Integer> {

@@ -29,19 +29,6 @@ public class PageControllerTest {
     private MockMvc mockMvc;
     private ObjectMapper mapper = new ObjectMapper();
 
-    // @Test
-    // void createPageValid() throws Exception {
-    // Page page = new Page();
-    // page.setPrivate(true);
-    // page.setGroupPage(true);
-    // page.setUserOwnerID(1);
-    // page.set
-    // mockMvc = MockMvcBuilders.standaloneSetup(pageController).build();
-    // mockMvc.perform(MockMvcRequestBuilders.post("/pages")
-    // ).andExpect(status().isOk()).andExpect(jsonPath("$.totalPages").exists())
-    // .andDo(print());
-    // }
-
     @Test
     void getPageByValidUserOwnerId() throws Exception {
         mockMvc = MockMvcBuilders.standaloneSetup(pageController).build();
