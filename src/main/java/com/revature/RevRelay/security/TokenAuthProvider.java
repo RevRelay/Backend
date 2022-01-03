@@ -9,8 +9,11 @@ import org.springframework.stereotype.Component;
 @Component
 public class TokenAuthProvider extends DaoAuthenticationProvider {
 
+    private UserDetailsService userDetailsService;
+    private PasswordEncoder passwordEncoder;
+
     @Autowired
-    public TokenAuthProvider(UserDetailsService userDetailsService, PasswordEncoder passwordEncoder) {
+    public TokenAuthProvider (UserDetailsService userDetailsService, PasswordEncoder passwordEncoder) {
         this.setPasswordEncoder(passwordEncoder);
         this.setUserDetailsService(userDetailsService);
     }

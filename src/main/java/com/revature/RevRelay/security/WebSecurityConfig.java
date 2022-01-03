@@ -32,19 +32,17 @@ import static org.springframework.security.config.http.SessionCreationPolicy.STA
 public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
     /**
-     * Builds a RequestMatcher for PUBLIC_URLS, defined as URLs that are accessible
-     * without authorization.
-     * Included is an attempt at allowing Swagger to pass without authentication,
-     * which was unsuccessful at
+     * Builds a RequestMatcher for PUBLIC_URLS, defined as URLs that are accessible without authorization.
+     * Included is an attempt at allowing Swagger to pass without authentication, which was unsuccessful at
      * the time of writing this documentation (NL 211229).
      */
     private static final RequestMatcher PUBLIC_URLS = new OrRequestMatcher(
-            // this allows public pages including user creation and login
-            new AntPathRequestMatcher("/public/**"));
+            //this allows public pages including user creation and login
+            new AntPathRequestMatcher("/public/**")
+    );
 
     /**
-     * Builds a RequestMatcher for PROTECTED_URLS by negation of the list of
-     * PUBLIC_URLS.
+     * Builds a RequestMatcher for PROTECTED_URLS by negation of the list of PUBLIC_URLS.
      */
     private static final RequestMatcher PROTECTED_URLS = new NegatedRequestMatcher(PUBLIC_URLS);
 
@@ -53,18 +51,14 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     UserDetailsService userDetailsService;
 
     /**
-     * Autowired constructor providing TokenAuthProvider, PasswordEncoder, and
-     * UserDetailsService.
+     * Autowired constructor providing TokenAuthProvider, PasswordEncoder, and UserDetailsService.
      * 
-     * @param provider           TokenAuthProvider from class in the security
-     *                           package.
-     * @param passwordEncoder    PasswordEncoder from RevRelayConfig; new
-     *                           BCryptPasswordEncoder().
+     * @param provider           TokenAuthProvider from class in the security package.
+     * @param passwordEncoder    PasswordEncoder from RevRelayConfig; new BCryptPasswordEncoder().
      * @param userDetailsService UserDetailsService from UserService.
      */
     @Autowired
-    WebSecurityConfig(TokenAuthProvider provider, PasswordEncoder passwordEncoder,
-            UserDetailsService userDetailsService) {
+    WebSecurityConfig(TokenAuthProvider provider, PasswordEncoder passwordEncoder, UserDetailsService userDetailsService) {
         super();
         this.provider = requireNonNull(provider);
         this.passwordEncoder = requireNonNull(passwordEncoder);
@@ -82,8 +76,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     }
 
     /**
-     * Configure override for WebSecurity. At this time, configures only
-     * PUBLIC_URLS.
+     * Configure override for WebSecurity. At this time, configures only PUBLIC_URLS.
      *
      * @param web WebSecurity configured by wiring.
      */
@@ -93,13 +86,11 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     }
 
     /**
-     * Configures HttpSecurity; this is where the magic happens. Many of these
-     * elements add default or disabled
+     * Configures HttpSecurity; this is where the magic happens. Many of these elements add default or disabled
      * configuration elements, which are largely self-explanatory.
      * 
      * @param http Provided/wired HttpSecurity object.
-     * @throws Exception Possible untyped exceptions thrown by .cors() and
-     *                   restAuthenticationFilter() elements.
+     * @throws Exception Possible untyped exceptions thrown by .cors() and restAuthenticationFilter() elements.
      */
     @Override
     protected void configure(final HttpSecurity http) throws Exception {
@@ -109,8 +100,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .sessionCreationPolicy(STATELESS)
                 .and()
                 .exceptionHandling()
-                // this entry point handles when you request a protected page, and you are not
-                // yet
+                // this entry point handles when you request a protected page, and you are not yet
                 // authenticated
                 .defaultAuthenticationEntryPointFor(forbiddenEntryPoint(), PROTECTED_URLS)
                 .and()
@@ -129,8 +119,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     /**
      * Provides default CorsConfigurationSource using applyPermitDefaultValues().
      * 
-     * @return CorsConfigurationSource configured with applyPermitDefaultValues on
-     *         all endpoints.
+     * @return CorsConfigurationSource configured with applyPermitDefaultValues on all endpoints.
      */
     @Bean
     CorsConfigurationSource corsConfigurationSource() {
@@ -139,32 +128,25 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
         return source;
     }
 
-    // Alternate bean for providing CorsConfigurationSource. Necessary for allowing
-    // non-default verbs such as delete.
-    // As the defaults are plenty, this should not be used, but I'm keeping it just
-    // in case we need it. - NL
-    // @Bean
-    // CorsConfigurationSource corsConfigurationSource() {
-    // CorsConfiguration configuration = new CorsConfiguration();
-    // configuration.setAllowedOrigins(Arrays.asList("*"));
-    // configuration.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "PATCH",
-    // "DELETE", "OPTIONS"));
-    // configuration.setAllowedHeaders(Arrays.asList("authorization",
-    // "content-type", "x-auth-token"));
-    // configuration.setExposedHeaders(Arrays.asList("x-auth-token"));
-    // UrlBasedCorsConfigurationSource source = new
-    // UrlBasedCorsConfigurationSource();
-    // source.registerCorsConfiguration("/**", configuration);
-    // return source;
-    // }
+//    Alternate bean for providing CorsConfigurationSource. Necessary for allowing non-default verbs such as delete.
+//    As the defaults are plenty, this should not be used, but I'm keeping it just in case we need it. - NL
+//    @Bean
+//    CorsConfigurationSource corsConfigurationSource() {
+//        CorsConfiguration configuration = new CorsConfiguration();
+//        configuration.setAllowedOrigins(Arrays.asList("*"));
+//        configuration.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"));
+//        configuration.setAllowedHeaders(Arrays.asList("authorization", "content-type", "x-auth-token"));
+//        configuration.setExposedHeaders(Arrays.asList("x-auth-token"));
+//        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
+//        source.registerCorsConfiguration("/**", configuration);
+//        return source;
+//    }
 
     /**
-     * Provides a TokenAuthFilter configured on PROTECTED_URLS using
-     * authenticationManager() and successHandler().
+     * Provides a TokenAuthFilter configured on PROTECTED_URLS using authenticationManager() and successHandler().
      * 
      * @return Configured TokenAuthFilter.
-     * @throws Exception Catches untyped Exceptions thrown by
-     *                   authenticationManager().
+     * @throws Exception Catches untyped Exceptions thrown by authenticationManager().
      */
     @Bean
     TokenAuthFilter restAuthenticationFilter() throws Exception {
@@ -175,8 +157,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     }
 
     /**
-     * Provides a SimpleUrlAuthenticationSuccessHandler containing an empty
-     * NoRedirectStrategy().
+     * Provides a SimpleUrlAuthenticationSuccessHandler containing an empty NoRedirectStrategy().
      * 
      * @return SuccessHandler as above.
      */

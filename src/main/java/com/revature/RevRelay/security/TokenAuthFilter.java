@@ -22,6 +22,7 @@ import static org.springframework.http.HttpHeaders.AUTHORIZATION;
 //@FieldDefaults(level = PRIVATE, makeFinal = true)
 @FieldDefaults(level = PRIVATE)
 final class TokenAuthFilter extends AbstractAuthenticationProcessingFilter {
+    private static final String BEARER = "Bearer";
 
     @Autowired
     JwtUtil jwtUtil;
@@ -35,7 +36,7 @@ final class TokenAuthFilter extends AbstractAuthenticationProcessingFilter {
     /**
      * Takes a request & Response and returns an Authentication object
      * 
-     * @param request  the http request to check for an authorization header
+     * @param request the http request to check for an authorization header
      * @param response http response taken as a param
      * @return returns an Authentication object
      */
@@ -50,10 +51,11 @@ final class TokenAuthFilter extends AbstractAuthenticationProcessingFilter {
                 .map(value -> value.replace("Bearer ", ""))
                 .map(String::trim)
                 .orElseThrow(() -> new BadCredentialsException("Missing Authentication Token"));
-        Authentication auth = new PreAuthenticatedAuthenticationToken(jwtUtil.extractUsername(token), token);
-        if (jwtUtil.validateToken(token, userService.loadUserByUsername(jwtUtil.extractUsername(token)))) {
+        Authentication auth = new PreAuthenticatedAuthenticationToken(jwtUtil.extractUsername(token),token);
+        if (jwtUtil.validateToken(token,userService.loadUserByUsername(jwtUtil.extractUsername(token)))) {
             auth.setAuthenticated(true);
-        } else {
+        }
+        else {
             auth.setAuthenticated(false);
         }
         return auth;
@@ -62,14 +64,12 @@ final class TokenAuthFilter extends AbstractAuthenticationProcessingFilter {
     /**
      * Function for successful Authentication
      * 
-     * @param request    the HttpRequest
-     * @param response   The HttpResponse
-     * @param chain      The filter chain used by spring security
+     * @param request  the HttpRequest
+     * @param response The HttpResponse
+     * @param chain The filter chain used by spring security
      * @param authResult the result of Authentication
-     * @throws IOException      both successfulAuthentication and doFilter propagate
-     *                          IOExceptions
-     * @throws ServletException both successfulAuthentication and doFilter propagate
-     *                          ServletExceptions
+     * @throws IOException both successfulAuthentication and doFilter propagate IOExceptions
+     * @throws ServletException both successfulAuthentication and doFilter propagate ServletExceptions
      */
     @Override
     protected void successfulAuthentication(

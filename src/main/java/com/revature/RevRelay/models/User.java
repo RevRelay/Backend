@@ -4,18 +4,13 @@ import lombok.*;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import javax.persistence.*;
-
-import com.fasterxml.jackson.annotation.JsonManagedReference;
-
 import java.util.Collection;
 import java.util.Date;
 import java.util.List;
 
 /**
- * User model containing all user information. username and password are used
- * for login authentication, users own a page
- * and can hold multiple group pages, and users can be a part of multiple chat
- * rooms and multiple groups.
+ * User model containing all user information. username and password are used for login authentication, users own a page
+ * and can hold multiple group pages, and users can be a part of multiple chat rooms and multiple groups.
  */
 @Setter
 @Getter
@@ -56,13 +51,13 @@ public class User implements UserDetails {
     @ManyToMany(cascade = CascadeType.MERGE)
     private List<Group> userGroups;
 
-    @OneToMany(mappedBy="userOwner",cascade = CascadeType.MERGE)
-    @JsonManagedReference
-    private List<Group> ownedGroups;
+    @ElementCollection
+    @CollectionTable(name = "groupList")
+    private List<Integer> ownedGroupIDs;
 
-    @OneToOne(cascade = CascadeType.MERGE)
-    @JsonManagedReference(value = "user-page")
-    private Page userPage;
+    @ElementCollection
+    @CollectionTable(name = "pageList")
+    private List<Integer> userPageID;
 
     @ManyToMany(cascade = CascadeType.MERGE)
     private List<Chatroom> chatRooms;
@@ -78,22 +73,11 @@ public class User implements UserDetails {
      * @return booleans for corresponding security functions
      */
     @Override
-    public boolean isAccountNonExpired() {
-        return true;
-    }
-
+    public boolean isAccountNonExpired() { return true; }
     @Override
-    public boolean isAccountNonLocked() {
-        return true;
-    }
-
+    public boolean isAccountNonLocked() { return true; }
     @Override
-    public boolean isCredentialsNonExpired() {
-        return true;
-    }
-
+    public boolean isCredentialsNonExpired() { return true; }
     @Override
-    public boolean isEnabled() {
-        return true;
-    }
+    public boolean isEnabled() { return true; }
 }

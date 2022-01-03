@@ -1,7 +1,6 @@
 package com.revature.RevRelay.services;
 
 import com.revature.RevRelay.models.Page;
-import com.revature.RevRelay.models.User;
 import com.revature.RevRelay.repositories.PageRepository;
 import lombok.NoArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,11 +16,11 @@ public class PageService {
     /**
      * @param pageRepository to be autowired
      */
-    public PageService(PageRepository pageRepository) {
+    public PageService(PageRepository pageRepository){
         this.pageRepository = pageRepository;
     }
 
-    // CREATE
+    //CREATE
 
     /**
      *
@@ -31,8 +30,8 @@ public class PageService {
     public Page createPage(Page page) {
         return pageRepository.save(page);
     }
-
-    // READ
+    
+    //READ
 
     /**
      * @return admin method to get all pages that exist
@@ -45,8 +44,8 @@ public class PageService {
      * @param userOwnerID the userOwnerID to find the page of
      * @return Page the associated Page with the provided userOwnerID
      */
-    public Page getPageByUserOwnerUserID(Integer userOwnerID) {
-        return pageRepository.getPageByUserOwnerUserID(userOwnerID);
+    public Page getPageByUserOwnerID(Integer userOwnerID) {
+        return pageRepository.getPageByUserOwnerID(userOwnerID);
     }
 
     /**
@@ -54,18 +53,18 @@ public class PageService {
      * @return Page the associated Page with the provided groupID
      */
     public Page getPageByGroupID(Integer groupID) {
-        return pageRepository.getPageByGroupOwnerGroupID(groupID);
+        return pageRepository.getPageByGroupID(groupID);
     }
 
     /**
      * @param pageID the pageID to find the page of
      * @return Page the associated Page with the provided pageID
      */
-    public Page getPageByPageID(Integer pageID) throws Exception {
-        return pageRepository.findById(pageID).orElseThrow(() -> new Exception("No Page Found"));
+    public Page getPageByPageID(Integer pageID) {
+        return pageRepository.getPageByPageID(pageID);
     }
-
-    // UPDATE
+    
+    //UPDATE
 
     /**
      * @param page the page to be updated
@@ -74,8 +73,8 @@ public class PageService {
     public Page updatePage(Page page) {
         return pageRepository.save(page);
     }
-
-    // DELETE
+    
+    //DELETE
 
     /**
      * @param pageID the pageID to delete from the database
