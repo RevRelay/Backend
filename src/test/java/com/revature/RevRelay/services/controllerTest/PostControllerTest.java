@@ -21,6 +21,8 @@ import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -74,6 +76,68 @@ public class PostControllerTest {
                 )
                         .andExpect((status().isOk())).andDo(print());
 
+    }
+
+
+    @Test
+    void findPostByPostPageIDTestWithValidData () throws Exception {
+        Post post = new Post();
+        post.setPostType(PostType.ORIGINAL);
+        post.setPostTitle("HELLOO");
+        post.setPostContent("CONTENTTT");
+        post.setPostTime(DateUtil.now());
+        post.setPostOwnerID(1);
+        Post post1 = postRepository.save(post);
+        mockMvc = MockMvcBuilders.standaloneSetup(postController).build();
+        mockMvc.perform(MockMvcRequestBuilders.get("/posts/page/{postPageID}", 1)
+                )
+                .andExpect((status().isOk())).andDo(print());
+
+    }
+
+    @Test
+    void findPostByPostOwnerIDTestWithValidData () throws Exception {
+        Post post = new Post();
+        post.setPostType(PostType.ORIGINAL);
+        post.setPostTitle("HELLOO");
+        post.setPostContent("CONTENTTT");
+        post.setPostTime(DateUtil.now());
+        post.setPostOwnerID(1);
+        Post post1 = postRepository.save(post);
+        mockMvc = MockMvcBuilders.standaloneSetup(postController).build();
+        mockMvc.perform(MockMvcRequestBuilders.get("/posts/user/{postOwnerID}", 1)
+                )
+                .andExpect((status().isOk())).andDo(print());
+    }
+
+    @Test
+    void updatePostIDTestWithValidData () throws Exception {
+        Post post = new Post();
+        post.setPostType(PostType.ORIGINAL);
+        post.setPostTitle("HELLOO");
+        post.setPostContent("CONTENTTT");
+        post.setPostTime(DateUtil.now());
+        post.setPostOwnerID(1);
+        Post post1 = postRepository.save(post);
+        mockMvc = MockMvcBuilders.standaloneSetup(postController).build();
+        mockMvc.perform(MockMvcRequestBuilders.put("/posts")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(mapper.writeValueAsString(post)))
+                .andExpect((status().isOk())).andDo(print());
+    }
+
+    @Test
+    void deletePostByPostIDTestWithValidData () throws Exception {
+        Post post = new Post();
+        post.setPostType(PostType.ORIGINAL);
+        post.setPostTitle("HELLOO");
+        post.setPostContent("CONTENTTT");
+        post.setPostTime(DateUtil.now());
+        post.setPostOwnerID(1);
+        Post post1 = postRepository.save(post);
+        mockMvc = MockMvcBuilders.standaloneSetup(postController).build();
+        mockMvc.perform(MockMvcRequestBuilders.delete("/posts/{postID}", post.getPostID()))
+                .andExpect((status().isOk())).andDo(print());
     }
 
 
