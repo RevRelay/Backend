@@ -9,9 +9,10 @@ import com.fasterxml.jackson.annotation.JsonManagedReference;
 import java.util.List;
 
 /**
- * Group model for group information and relationships. Groups consist of users
- * and group pages are stored in the
- * User model as users are the ones that own group pages
+ * Group Model
+ * 
+ * Holds information and relationships for Groups. Every Group has a page,
+ * memebers, and an owner.
  */
 @Getter
 @Setter
@@ -31,11 +32,12 @@ public class Group {
     private String groupName;
 
     @OneToOne(cascade = CascadeType.MERGE)
-    @JsonManagedReference(value="group-page")
+    @JsonManagedReference(value = "group-page")
     private Page groupPage;
 
     @ManyToOne(cascade = CascadeType.MERGE)
-    @JsonBackReference(value="user-group")
+    @JoinColumn(name = "userOwnerID")
+    @JsonBackReference
     private User userOwner;
 
     @Column(nullable = false)

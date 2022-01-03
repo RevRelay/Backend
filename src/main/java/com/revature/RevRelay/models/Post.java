@@ -12,11 +12,13 @@ import java.util.Date;
 import java.util.List;
 
 /**
- * Post model for posts information and relationships. Posts are a part of a
- * page which are owned by a user.
- * Posts can also have a parent post and child posts, with child posts being the
- * replyies of parent posts.
+ * Post Model
+ * 
+ * Holds information and relationships for Posts. Every Post is a part of a User
+ * or Group Page has one
+ * Page.
  */
+
 @Getter
 @Setter
 @NoArgsConstructor
@@ -34,7 +36,12 @@ public class Post {
     private PostType postType;
 
     @Column(nullable = false)
-    private String postContent;
+    private String postTitle;
+	@Column(nullable = false)
+	private String postContent;
+
+	@Column(nullable = false)
+	private int postLikes;
 
     @Column(nullable = false)
     private Date postTime;
@@ -54,4 +61,17 @@ public class Post {
     @OneToMany(mappedBy = "parent", cascade = CascadeType.MERGE)
     @JsonManagedReference(value = "post-post")
     private List<Post> children;
+
+    @Override
+    public String toString() {
+        return "Post{" +
+                "postID=" + postID +
+                ", postType=" + postType +
+                ", postTitle='" + postTitle + '\'' +
+                ", postContent='" + postContent + '\'' +
+                ", postLikes=" + postLikes +
+                ", postTime=" + postTime +
+                ", postOwnerID=" + postOwnerID +
+                '}';
+    }
 }

@@ -7,6 +7,8 @@ import com.revature.RevRelay.repositories.GroupRepository;
 import com.revature.RevRelay.repositories.PageRepository;
 import com.revature.RevRelay.repositories.UserRepository;
 
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.junit.jupiter.MockitoExtension;
@@ -37,7 +39,8 @@ public class PageServiceTest {
 	User user;
 	Group group;
 
-	public PageServiceTest() {
+	@BeforeEach
+	public void test() {
 		this.user = new User();
 		user.setUsername("fakeUser");
 		user.setPassword("fakePassword");
@@ -67,7 +70,9 @@ public class PageServiceTest {
 	@Test
 	public void getAllTest() {
 		pageRepository.deleteAll();
+		groupRepository.deleteAll();
 		userRepository.deleteAll();
+
 
 		List<Page> Pages = new ArrayList<>();
 		userRepository.save(user);
@@ -115,6 +120,7 @@ public class PageServiceTest {
 	@Test
 	public void getPageByUserOwnerIDTest() {
 		pageRepository.deleteAll();
+		groupRepository.deleteAll();
 		userRepository.deleteAll();
 
 		userRepository.save(user);

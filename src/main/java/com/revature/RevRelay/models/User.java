@@ -56,8 +56,8 @@ public class User implements UserDetails {
     @ManyToMany(cascade = CascadeType.MERGE)
     private List<Group> userGroups;
 
-    @OneToMany(cascade = CascadeType.MERGE)
-    @JsonManagedReference(value = "user-group")
+    @OneToMany(mappedBy="userOwner",cascade = CascadeType.MERGE)
+    @JsonManagedReference
     private List<Group> ownedGroups;
 
     @OneToOne(cascade = CascadeType.MERGE)
