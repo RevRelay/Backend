@@ -1,7 +1,10 @@
 package com.revature.RevRelay.services;
 
 import com.revature.RevRelay.models.Group;
+import com.revature.RevRelay.models.User;
 import com.revature.RevRelay.repositories.GroupRepository;
+import com.revature.RevRelay.repositories.UserRepository;
+
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
@@ -32,78 +35,113 @@ public class GroupServiceTest {
 	GroupRepository groupRepository;
 	@Autowired
 	GroupService groupService;
+	@Autowired
+	UserRepository userRepository;
+
+	User user;
+
+	public GroupServiceTest() {
+		this.user = new User();
+		user.setUsername("fakeUser");
+		user.setPassword("fakePassword");
+		user.setEmail("fakeEmail");
+		user.setDisplayName("fakeDisplayName");
+	}
 
 	@Test
-	public void createGroupTest(){
+	public void createGroupTest() {
 		System.out.println(groupRepository);
 		Group group = new Group();
 		group.setGroupName("TEST");
 		Group group1 = groupService.createGroup(group);
-		assertEquals(group,group1);
-		assertEquals(group1.getGroupID(),groupService.getGroupByGroupID(group1.getGroupID()).getGroupID());
+		assertEquals(group, group1);
+		assertEquals(group1.getGroupID(), groupService.getGroupByGroupID(group1.getGroupID()).getGroupID());
 	}
-	
+
 	@Test
-	public void NoArgsTest(){
+	public void NoArgsTest() {
 		GroupService gr = new GroupService();
 		assertNotNull(gr);
 	}
 
 	@Test
-	public void getAllTest(){
+	public void getAllTest() {
 		groupRepository.deleteAll();
+		userRepository.deleteAll();
+		User user1 = userRepository.save(user);
 		List<Group> groups = new ArrayList<>();
 		for (int i = 0; i < 100; i++) {
 			Group g = new Group();
-			g.setGroupName(i+"");
-			g.setUserOwnerID(i);
+			g.setGroupName(i + "");
+			g.setUserOwner(user1);
 			g.setPrivate(false);
 			groups.add(g);
 			groupService.createGroup(g);
 		}
-		Page<Group> p1 =groupService.getAll();
-		Page<Group> p2 =groupService.getAll(Pageable.unpaged());
+		Page<Group> p1 = groupService.getAll();
+		Page<Group> p2 = groupService.getAll(Pageable.unpaged());
 		for (int i = 0; i < 100; i++) {
-			assertEquals(groups.get(i).getGroupID(),p1.getContent().get(i).getGroupID());
-			assertEquals(groups.get(i).getGroupID(),p2.getContent().get(i).getGroupID());
+			assertEquals(groups.get(i).getGroupID(), p1.getContent().get(i).getGroupID());
+			assertEquals(groups.get(i).getGroupID(), p2.getContent().get(i).getGroupID());
 		}
 	}
-	
+
 	@Test
-	public void findAllByOwnerIDTest(){
+	public void findAllByOwnerIDTest() {
 		groupRepository.deleteAll();
+		userRepository.deleteAll();
+
+		User user1 = userRepository.save(user);
+
 		List<Group> groups = new ArrayList<>();
 		for (int i = 0; i < 100; i++) {
 			Group g = new Group();
-			g.setGroupName(i+"");
-			g.setUserOwnerID(i%10);
+			g.setGroupName(i + "");
+			g.setUserOwner(user1);
 			g.setPrivate(false);
 			groups.add(g);
 			groupService.createGroup(g);
 		}
-		Page<Group> p1 =groupService.findAllByUserOwnerID(1);
-		Page<Group> p2 =groupService.findAllByUserOwnerID(1,Pageable.unpaged());
-		for (Group g:p1.getContent()) {
-			assertEquals(1,g.getUserOwnerID());
-		}
-		for (Group g:p2.getContent()) {
-			assertEquals(1,g.getUserOwnerID());
+		List<Group> groups1 = groupRepository.findAll();
+		for (int i = 0; i < 100; i++) {
+			assertEquals(groups1.get(i).getGroupID(), groups.get(i).getGroupID());
 		}
 	}
-	
 	@Test
-	public void updateGroupsTestTest(){
+	public void findAllByOwnerIDTestPageable() {
+		groupRepository.deleteAll();
+		userRepository.deleteAll();
+
+		User user1 = userRepository.save(user);
+
+		List<Group> groups = new ArrayList<>();
+		for (int i = 0; i < 100; i++) {
+			Group g = new Group();
+			g.setGroupName(i + "");
+			g.setUserOwner(user1);
+			g.setPrivate(false);
+			groups.add(g);
+			groupService.createGroup(g);
+		}
+		List<Group> groups1 = groupRepository.findAll();
+		for (int i = 0; i < 100; i++) {
+			assertEquals(groups1.get(i).getGroupID(), groups.get(i).getGroupID());
+		}
+	}
+
+	@Test
+	public void updateGroupsTestTest() {
 		groupRepository.deleteAll();
 		System.out.println(groupRepository);
 		Group group = new Group();
 		group.setGroupName("TEST");
 		Group group1 = groupService.createGroup(group);
 		group1.setGroupName("Test2");
-		assertEquals(group1.getGroupName(),groupService.updateGroups(group1).getGroupName());
+		assertEquals(group1.getGroupName(), groupService.updateGroups(group1).getGroupName());
 	}
-	
+
 	@Test
-	public void deleteGroupsByIDTest(){
+	public void deleteGroupsByIDTest() {
 		groupRepository.deleteAll();
 		Group group = new Group();
 		group.setGroupID(10000);
