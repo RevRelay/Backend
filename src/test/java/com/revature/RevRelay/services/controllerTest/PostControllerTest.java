@@ -1,6 +1,5 @@
 package com.revature.RevRelay.services.controllerTest;
 
-
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.revature.RevRelay.controllers.PageController;
 import com.revature.RevRelay.controllers.PostController;
@@ -75,7 +74,4 @@ public class PostControllerTest {
                         .andExpect((status().isOk())).andDo(print());
 
     }
-
-
-
 }
