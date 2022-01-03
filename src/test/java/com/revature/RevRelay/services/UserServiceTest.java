@@ -9,14 +9,11 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.function.Executable;
 import org.mockito.Mockito;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.test.util.ReflectionTestUtils;
+
 import java.text.SimpleDateFormat;
-import java.time.Instant;
-import java.time.LocalDate;
 import java.util.Date;
 import java.util.Optional;
 
@@ -194,7 +191,7 @@ class UserServiceTest {
     void loadUserByUserID() {
         when(mockUserRepository.findByUserID(anyInt())).thenReturn(Optional.ofNullable(user));
         try{
-            assertTrue(userService.loadUserByUserID(user.getUserID()).equals(user));
+            assertTrue(userService.loadUserDTOByUserID(user.getUserID()).equals(user));
         } catch (Exception ignored) {}
     }
 

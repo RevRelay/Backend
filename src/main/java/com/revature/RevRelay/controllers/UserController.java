@@ -2,10 +2,13 @@ package com.revature.RevRelay.controllers;
 
 import com.google.gson.Gson;
 import com.revature.RevRelay.models.User;
+import com.revature.RevRelay.models.dtos.UserDTO;
 import com.revature.RevRelay.models.dtos.UserRegisterAuthRequest;
 import com.revature.RevRelay.repositories.UserRepository;
 import com.revature.RevRelay.services.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import java.util.Date;
@@ -38,6 +41,24 @@ public class UserController {
     }
 
     /**
+     * Returns a UserDTO representing the logged-in user via JWT.
+     *
+     * @param token JWT of currently logged-in user from Authorization header.
+     * @return ResponseEntity containing current user.
+     */
+    @GetMapping("/current")
+    ResponseEntity<?> getCurrent(@RequestHeader("Authorization") String token) {
+        String tokenParsed = token.replace("Bearer", "").trim();
+        HttpHeaders responseHeaders = new HttpHeaders();
+        responseHeaders.setBearerAuth(tokenParsed);
+        try {
+            return new ResponseEntity<UserDTO>(new UserDTO(userService.findByToken(tokenParsed)), responseHeaders, HttpStatus.ACCEPTED);
+        } catch (Exception e) {
+            return new ResponseEntity<String>(e.toString(), responseHeaders, HttpStatus.NOT_FOUND);
+        }
+    }
+
+    /**
      * Gets a user by their userID.
      *
      * @param userID user being retrieved
@@ -45,7 +66,7 @@ public class UserController {
      */
     @GetMapping("/{userID}")
     public ResponseEntity<?> findByUserID(@PathVariable int userID){
-        return ResponseEntity.ok(userService.loadUserByUserID(userID));
+        return ResponseEntity.ok(userService.loadUserDTOByUserID(userID));
     }
 
     /**
