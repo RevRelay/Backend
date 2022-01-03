@@ -1,6 +1,5 @@
 package com.revature.RevRelay.services;
 
-
 import com.revature.RevRelay.enums.PostType;
 import com.revature.RevRelay.models.Page;
 import com.revature.RevRelay.models.Post;
@@ -16,7 +15,6 @@ import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMock
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.test.context.TestPropertySource;
-
 import java.lang.reflect.Array;
 import java.util.Arrays;
 import java.util.List;
@@ -41,23 +39,27 @@ public class PostServiceTest {
 		pageRepo.deleteAll();
 		service = new PostService(postRepo);
 	}
+	
 	@Test
 	public void noArgsConstructorTest(){
 		PostService post = new PostService();
 		assertNotNull(post);
 	}
+	
 	@Test
 	public void  createPostTest(){
 		Post post = new Post(0, PostType.ORIGINAL,"TEST","CONTENT",-1, DateUtil.now(),0,null,null,null);
 		service.createPost(post);
 		assertEquals("TEST", postRepo.getById(post.getPostID()).getPostTitle());
 	}
+	
 	@Test
 	public void  findPostByIDTest() throws Exception {
 		Post post = new Post(0, PostType.ORIGINAL,"TEST","CONTENT",-1, DateUtil.now(),0,null,null,null);
 		postRepo.save(post);
 		assertEquals("TEST",service.findPostByPostID(post.getPostID()).getPostTitle());
 	}
+	
 	@Test
 	public void findPostByIDTestException(){
 		boolean exceptionTest = false;
@@ -68,6 +70,7 @@ public class PostServiceTest {
 		}
 		assertTrue(exceptionTest);
 	}
+	
 	@Test
 	public void findPostByPostPageIDTest(){
 		Page page = new Page(1,"","",false,false,null,null,null);
@@ -76,6 +79,7 @@ public class PostServiceTest {
 		postRepo.save(post);
 		assertEquals("TEST",service.findPostByPostPageID(1).getContent().get(0).getPostTitle());
 	}
+	
 	@Test
 	public void findPostByPostPageIDTestPageable(){
 		Page page = new Page(1,"","",false,false,null,null,null);
@@ -84,18 +88,21 @@ public class PostServiceTest {
 		postRepo.save(post);
 		assertEquals("TEST",service.findPostByPostPageID(p2.getPageID(), Pageable.unpaged()).getContent().get(0).getPostTitle());
 	}
+	
 	@Test
 	public void findPostByPostOwnerIDTest(){
 		Post post = new Post(1, PostType.ORIGINAL,"TEST","CONTENT",-1, DateUtil.now(),0,null,null,null);
 		postRepo.save(post);
 		assertEquals("TEST",service.findPostByPostOwnerID(0).getContent().get(0).getPostTitle());
 	}
+	
 	@Test
 	public void findPostByPostOwnerIDTestPageable(){
 		Post post = new Post(1, PostType.ORIGINAL,"TEST","CONTENT",-1, DateUtil.now(),0,null,null,null);
 		postRepo.save(post);
 		assertEquals("TEST",service.findPostByPostOwnerID(0,Pageable.unpaged()).getContent().get(0).getPostTitle());
 	}
+	
 	@Test
 	public void updatePostTest() throws Exception {
 		Post post = new Post(1, PostType.ORIGINAL,"TEST","CONTENT",-1, DateUtil.now(),0,null,null,null);
@@ -106,6 +113,7 @@ public class PostServiceTest {
 		assertNotNull(post3);
 		assertEquals("TEST2",service.findPostByPostID(post2.getPostID()).getPostContent());
 	}
+	
 	@Test
 	public void deletePostByPostIDTest() throws Exception {
 		Post post = new Post(1, PostType.ORIGINAL,"TEST","CONTENT",-1, DateUtil.now(),0,null,null,null);
@@ -119,5 +127,4 @@ public class PostServiceTest {
 		}
 		assertNull(post2);
 	}
-
 }
