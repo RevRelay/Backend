@@ -1,5 +1,6 @@
 package com.revature.RevRelay.controllers;
 
+import com.revature.RevRelay.models.Post;
 import com.revature.RevRelay.models.User;
 import com.revature.RevRelay.models.dtos.UserLoginAuthRequest;
 import com.revature.RevRelay.models.dtos.UserAuthResponse;
@@ -8,6 +9,7 @@ import com.revature.RevRelay.security.TokenAuthProvider;
 import com.revature.RevRelay.services.UserService;
 import com.revature.RevRelay.utils.JwtUtil;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -71,4 +73,6 @@ public class PublicUserController {
         final String jwt = jwtTokenUtil.generateToken(user);
         return ResponseEntity.ok(new UserAuthResponse(jwt));
     }
+	@GetMapping(value = "/test")
+	public Post pageTemplate(){return new Post();}
 }

@@ -36,7 +36,12 @@ public class Post {
     private PostType postType;
 
     @Column(nullable = false)
-    private String postContent;
+    private String postTitle;
+	@Column(nullable = false)
+	private String postContent;
+
+	@Column(nullable = false)
+	private int postLikes;
 
     @Column(nullable = false)
     private Date postTime;
