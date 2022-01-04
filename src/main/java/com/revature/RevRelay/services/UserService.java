@@ -86,13 +86,7 @@ public class UserService implements UserDetailsService {
             user.setUsername(userAuthRequest.getUsername());
             user.setPassword(passwordEncoder.encode(userAuthRequest.getPassword()));
 			user = userRepository.save(user);
-			Page p = new Page();
-			p.setPosts(null);
-			p.setBannerURL("");
-			p.setDescription("Your description here");
-			p.setUserOwner(user);
-			p.setPrivate(true);
-			p.setGroupPage(false);
+			Page p = new Page(user);
 			pageRepository.save(p);
 			user.setUserPage(p);
             return userRepository.save(user);
