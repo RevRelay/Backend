@@ -2,6 +2,7 @@ package com.revature.RevRelay.services;
 
 import com.revature.RevRelay.models.User;
 import com.revature.RevRelay.models.dtos.UserRegisterAuthRequest;
+import com.revature.RevRelay.repositories.PageRepository;
 import com.revature.RevRelay.repositories.UserRepository;
 import com.revature.RevRelay.utils.JwtUtil;
 import org.junit.jupiter.api.Assertions;
@@ -25,6 +26,7 @@ import static org.mockito.Mockito.when;
 
 class UserServiceTest {
     UserRepository mockUserRepository;
+	PageRepository mockPageRepository;
     PasswordEncoder passwordEncoder;
     JwtUtil mockJwtUtil;
     PasswordEncoder mockPasswordEncoder;
@@ -43,8 +45,10 @@ class UserServiceTest {
         mockJwtUtil = Mockito.mock(JwtUtil.class);
         //Making a mock passwordEncoder
         mockPasswordEncoder = Mockito.mock(PasswordEncoder.class);
+		//Making a mock pageRepository
+		mockPageRepository = Mockito.mock(PageRepository.class);
         //Setting up the userservice
-        userService = new UserService(mockUserRepository, mockJwtUtil, mockPasswordEncoder);
+        userService = new UserService(mockUserRepository, mockJwtUtil, mockPasswordEncoder,mockPageRepository);
         //Used with creating User
         userRegisterAuthRequest = new UserRegisterAuthRequest();
         //Standard user used in testing
@@ -75,7 +79,7 @@ class UserServiceTest {
     //Test User creation. Should return user and then user should equal user
     @Test
     void userServiceConstructor() {
-        UserService userServiceTestEquality = new UserService(mockUserRepository, mockJwtUtil, mockPasswordEncoder);
+        UserService userServiceTestEquality = new UserService(mockUserRepository, mockJwtUtil, mockPasswordEncoder,mockPageRepository);
         assertTrue(userServiceTestEquality.getUserRepository()==mockUserRepository
                 &&userServiceTestEquality.getJwtUtil()==mockJwtUtil
                 &&userServiceTestEquality.getPasswordEncoder()==mockPasswordEncoder);
@@ -86,6 +90,7 @@ class UserServiceTest {
     void createUser() {
         userRegisterAuthRequest.setUsername("notNull");
         when(mockUserRepository.save(any())).thenReturn(user);
+		when(mockPageRepository.save(any())).thenReturn(null);
         when(mockUserRepository.existsByUsername(any())).thenReturn(false);
         try{
             assertTrue(userService.createUser(userRegisterAuthRequest).equals(user));
@@ -191,7 +196,7 @@ class UserServiceTest {
     void loadUserByUserID() {
         when(mockUserRepository.findByUserID(anyInt())).thenReturn(Optional.ofNullable(user));
         try{
-            assertTrue(userService.loadUserDTOByUserID(user.getUserID()).equals(user));
+            assertTrue(userService.loadUserDTOByUserID(user.getUserID()).getUsername().equals(user.getUsername()));
         } catch (Exception ignored) {}
     }
 

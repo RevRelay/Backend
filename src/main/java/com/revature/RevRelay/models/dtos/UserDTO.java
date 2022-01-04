@@ -1,4 +1,5 @@
 package com.revature.RevRelay.models.dtos;
+import com.revature.RevRelay.models.Page;
 import com.revature.RevRelay.models.User;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -17,6 +18,7 @@ public class UserDTO {
     private String lastName;
     private Date birthDate;
     private String displayName;
+	private Page userPage;
 
     public UserDTO(User user){
         username = user.getUsername();
@@ -25,5 +27,6 @@ public class UserDTO {
         lastName = user.getLastName();
         birthDate = user.getBirthDate();
         displayName = user.getDisplayName();
+		userPage = user.getUserPage();
     }
 }

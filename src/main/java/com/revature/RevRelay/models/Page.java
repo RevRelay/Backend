@@ -50,6 +50,16 @@ public class Page {
     @JsonManagedReference(value = "page-post")
     private List<Post> posts;
 
+
+	public Page(User user){
+		this.setPosts(null);
+		this.setBannerURL("https://i.imgur.com/0EtPsQK.jpeg");
+		this.setDescription("You description here");
+		this.setUserOwner(user);
+		this.setPrivate(true);
+		this.setGroupPage(false);
+	}
+
     @Override
     public String toString() {
         return "Page{" +

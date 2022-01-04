@@ -35,8 +35,12 @@ public class UserController {
      */
     @PostMapping
     public ResponseEntity<?> createUser(@RequestBody UserRegisterAuthRequest user) {
+
         return ResponseEntity.ok(userService.createUser(user));
     }
+
+
+
 
     /**
      * Returns a UserDTO representing the logged-in user via JWT.
