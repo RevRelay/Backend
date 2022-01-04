@@ -42,11 +42,11 @@ public class Page {
     @JsonBackReference(value = "user-page")
     private User userOwner;
 
-    @OneToOne(cascade = CascadeType.MERGE)
+    @OneToOne(cascade = {CascadeType.MERGE,CascadeType.REMOVE})
     @JsonBackReference(value = "group-page")
     private Group groupOwner;
 
-    @OneToMany(mappedBy = "postPage", cascade = CascadeType.MERGE)
+    @OneToMany(mappedBy = "postPage", cascade = {CascadeType.MERGE,CascadeType.REMOVE})
     @JsonManagedReference(value = "page-post")
     private List<Post> posts;
 

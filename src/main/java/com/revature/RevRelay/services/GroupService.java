@@ -3,6 +3,7 @@ package com.revature.RevRelay.services;
 import com.revature.RevRelay.models.Group;
 import com.revature.RevRelay.models.User;
 import com.revature.RevRelay.repositories.GroupRepository;
+import com.revature.RevRelay.repositories.PageRepository;
 import com.revature.RevRelay.repositories.UserRepository;
 import lombok.NoArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,6 +28,8 @@ public class GroupService {
 
     GroupRepository groupRepository;
 
+	PageRepository pageRepository;
+
     UserRepository userRepository;
 
     /**
@@ -35,9 +38,10 @@ public class GroupService {
      * @param groupRepository is the data layer for the Group model
      */
     @Autowired
-    public GroupService(GroupRepository groupRepository,UserRepository userRepository) {
+    public GroupService(GroupRepository groupRepository,UserRepository userRepository,PageRepository pageRepository) {
         this.groupRepository = groupRepository;
         this.userRepository = userRepository;
+		this.pageRepository = pageRepository;
     }
 
     /**
@@ -55,8 +59,11 @@ public class GroupService {
         p.setBannerURL("");
         p.setPrivate(true);
         p.setGroupPage(true);
-        p.setGroupOwner(groupRepository.save(group));
-        group.setGroupPage(p);
+		group = groupRepository.save(group);
+        p.setGroupOwner(group);
+
+        group.setGroupPage(pageRepository.save(p));
+
         return groupRepository.save(group);
     }
 
