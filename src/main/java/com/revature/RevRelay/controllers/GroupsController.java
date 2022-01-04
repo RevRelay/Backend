@@ -1,6 +1,7 @@
 package com.revature.RevRelay.controllers;
 
 import com.revature.RevRelay.models.Group;
+import com.revature.RevRelay.models.User;
 import com.revature.RevRelay.services.GroupService;
 import lombok.NoArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -38,9 +39,6 @@ public class GroupsController {
     public GroupsController(GroupService groupService) {
         this.groupService = groupService;
     }
-
-
-
 
     /**
      * Endpoint for persisting a Group onto the database
@@ -114,5 +112,28 @@ public class GroupsController {
     @DeleteMapping("/{groupID}")
     public void deleteGroupsByID(@PathVariable Integer groupID) {
         groupService.deleteGroupsByID(groupID);
+    }
+
+
+    /**
+     * Endpoint for adding members to groups
+     *
+     * @param groupID
+     * @param userID
+     */
+    @PostMapping
+    public void addMember(Integer groupID, Integer userID){
+        groupService.addMember(groupID,userID);
+    }
+
+    /**
+     * Endpoint for removing members from groups
+     *
+     * @param groupID
+     * @param userID
+     */
+    @DeleteMapping
+    public void deleteMember(Integer groupID,Integer userID){
+        groupService.deleteMember(groupID,userID);
     }
 }

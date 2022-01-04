@@ -89,7 +89,7 @@ public class UserService implements UserDetailsService {
 			Page p = new Page();
 			p.setPosts(null);
 			p.setBannerURL("");
-			p.setDescription("You discription here");
+			p.setDescription("Your description here");
 			p.setUserOwner(user);
 			p.setPrivate(true);
 			p.setGroupPage(false);

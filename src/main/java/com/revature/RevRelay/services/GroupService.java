@@ -1,12 +1,16 @@
 package com.revature.RevRelay.services;
 
 import com.revature.RevRelay.models.Group;
+import com.revature.RevRelay.models.User;
 import com.revature.RevRelay.repositories.GroupRepository;
+import com.revature.RevRelay.repositories.UserRepository;
 import lombok.NoArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
 
 /**
  * Service layer for Group model
@@ -23,14 +27,17 @@ public class GroupService {
 
     GroupRepository groupRepository;
 
+    UserRepository userRepository;
+
     /**
      * Constructor for GroupService
      * 
      * @param groupRepository is the data layer for the Group model
      */
     @Autowired
-    public GroupService(GroupRepository groupRepository) {
+    public GroupService(GroupRepository groupRepository,UserRepository userRepository) {
         this.groupRepository = groupRepository;
+        this.userRepository = userRepository;
     }
 
     /**
@@ -43,6 +50,13 @@ public class GroupService {
      * @return Group is the Group created on the database
      */
     public Group createGroup(Group group) {
+        com.revature.RevRelay.models.Page p = new com.revature.RevRelay.models.Page();
+        p.setDescription("Empty Description");
+        p.setBannerURL("");
+        p.setPrivate(true);
+        p.setGroupPage(true);
+        p.setGroupOwner(groupRepository.save(group));
+        group.setGroupPage(p);
         return groupRepository.save(group);
     }
 
@@ -133,5 +147,39 @@ public class GroupService {
      */
     public void deleteGroupsByID(Integer groupID) {
         groupRepository.deleteById(groupID);
+    }
+
+    /**
+     *
+     * @param groupID groupID to add a member to
+     * @param userID the id of user to add to group
+     */
+    public void addMember(Integer groupID, Integer userID) {
+        Group group = groupRepository.getById(groupID);
+        User user = userRepository.getById(userID);
+
+        List<User> members = group.getMembers();
+        members.add(user);
+        group.setMembers((members));
+        groupRepository.save(group);
+    }
+
+    /**
+     *
+     * @param groupID groupID to remove member from
+     * @param userID loops through groups members and deletes userID
+     */
+    public void deleteMember(Integer groupID, Integer userID) {
+        Group group = groupRepository.getById(groupID);
+        User user = userRepository.getById(userID);
+
+        List<User> members = group.getMembers();
+
+        for(int i = 0; i < members.size();i++){
+            if(members.get(i).getUserID()==userID)
+                members.remove(i);
+        }
+        group.setMembers(members);
+        groupRepository.save(group);
     }
 }
