@@ -43,11 +43,11 @@ public class UserService implements UserDetailsService {
      * @param passwordEncoder PasswordEncoder object autowired
      */
     @Autowired
-    UserService(UserRepository userRepository, JwtUtil jwtUtil, PasswordEncoder passwordEncoder,PageRepository pageRepository) {
+    UserService(UserRepository userRepository, JwtUtil jwtUtil, PasswordEncoder passwordEncoder, PageRepository pageRepository) {
         this.userRepository = userRepository;
         this.jwtUtil = jwtUtil;
         this.passwordEncoder = passwordEncoder;
-		this.pageRepository = pageRepository;
+        this.pageRepository = pageRepository;
     }
 
     /**
@@ -82,7 +82,7 @@ public class UserService implements UserDetailsService {
             throw new IllegalArgumentException("Username Not Valid");
         } else if (!isValidPassword(userAuthRequest.getPassword())) {
             throw new IllegalArgumentException("Password Not Valid");
-        } else if (userRepository.existsByEmail(userAuthRequest.getEmail()) || userAuthRequest.getEmail() == null) {
+        } else if (!isValidEmail(userAuthRequest.getEmail())) {
             throw new IllegalArgumentException("Email Not Valid");
         } else {
             User user = new User();

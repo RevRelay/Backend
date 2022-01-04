@@ -51,17 +51,22 @@ class UserServiceTest {
         userService = new UserService(mockUserRepository, mockJwtUtil, mockPasswordEncoder,mockPageRepository);
         //Used with creating User
         userRegisterAuthRequest = new UserRegisterAuthRequest();
+        userRegisterAuthRequest.setUsername("notNull");
+        userRegisterAuthRequest.setPassword("notNull");
+        userRegisterAuthRequest.setEmail("notNull");
         //Standard user used in testing
         user = new User();
         user.setUserID(0);
         user.setUsername("testname");
         user.setPassword("testpassword");
+        user.setEmail("testemail");
         user.setFirstName("H");
         //User used for incorrect login/registry
         fakeUser = new User();
         fakeUser.setUserID(0);
         fakeUser.setUsername("testname");
         fakeUser.setPassword("testpassword");
+        user.setEmail("testemail");
     }
 
     @Test
@@ -88,10 +93,10 @@ class UserServiceTest {
     //Test User creation. Should return user and then user should equal user
     @Test
     void createUser() {
-        userRegisterAuthRequest.setUsername("notNull");
         when(mockUserRepository.save(any())).thenReturn(user);
 		when(mockPageRepository.save(any())).thenReturn(null);
         when(mockUserRepository.existsByUsername(any())).thenReturn(false);
+        when(mockUserRepository.existsByEmail(any())).thenReturn(false);
         try{
             assertTrue(userService.createUser(userRegisterAuthRequest).equals(user));
         } catch (Exception ignored) {}
@@ -104,7 +109,30 @@ class UserServiceTest {
         try{
             assertThrows(IllegalArgumentException.class, (Executable) userService.createUser(userRegisterAuthRequest));
         } catch (Exception ignored) {}
+    }
 
+    @Test
+    void createUserWithPreexistingUsername(){
+        when(mockUserRepository.existsByUsername(any())).thenReturn(true);
+        try{
+            assertThrows(IllegalArgumentException.class, (Executable) userService.createUser(userRegisterAuthRequest));
+        } catch (Exception ignored) {}
+    }
+
+    @Test
+    void createUserWithNullPassword(){
+        userRegisterAuthRequest.setPassword(null);
+        try{
+            assertThrows(IllegalArgumentException.class, (Executable) userService.createUser(userRegisterAuthRequest));
+        } catch (Exception ignored) {}
+    }
+
+    @Test
+    void createUserWithPreexistingEmail(){
+        when(mockUserRepository.existsByEmail(any())).thenReturn(true);
+        try{
+            assertThrows(IllegalArgumentException.class, (Executable) userService.createUser(userRegisterAuthRequest));
+        } catch (Exception ignored) {}
     }
 
     //Test login. Should return true and user should equal user

@@ -19,6 +19,7 @@ import java.util.function.Function;
 
 /**
  * Provides JWT functionality for creating and reading JWTs.
+ * @author Nathan Luther
  */
 @Service
 public class JwtUtil {
