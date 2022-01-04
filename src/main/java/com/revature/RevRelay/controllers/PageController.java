@@ -17,6 +17,10 @@ import java.util.List;
 public class PageController {
     PageService pageService;
 
+
+
+
+
     /**
      * @param pageService autowired pageService
      */
@@ -24,6 +28,11 @@ public class PageController {
     public PageController(PageService pageService) {
         this.pageService = pageService;
     }
+
+
+
+
+
 
     /**
      * @param page to be created

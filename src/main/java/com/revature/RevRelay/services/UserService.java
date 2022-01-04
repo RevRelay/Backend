@@ -1,6 +1,8 @@
 package com.revature.RevRelay.services;
 
+import com.revature.RevRelay.models.Page;
 import com.revature.RevRelay.models.dtos.UserDTO;
+import com.revature.RevRelay.repositories.PageRepository;
 import com.revature.RevRelay.repositories.UserRepository;
 import com.revature.RevRelay.models.User;
 import com.revature.RevRelay.models.dtos.UserRegisterAuthRequest;
@@ -27,6 +29,7 @@ import java.util.Optional;
 @Setter
 public class UserService implements UserDetailsService {
 
+	private PageRepository pageRepository;
     private UserRepository userRepository;
     private JwtUtil jwtUtil;
     private PasswordEncoder passwordEncoder;
@@ -39,10 +42,11 @@ public class UserService implements UserDetailsService {
      * @param passwordEncoder PasswordEncoder object autowired
      */
     @Autowired
-    UserService(UserRepository userRepository, JwtUtil jwtUtil, PasswordEncoder passwordEncoder) {
+    UserService(UserRepository userRepository, JwtUtil jwtUtil, PasswordEncoder passwordEncoder,PageRepository pageRepository) {
         this.userRepository = userRepository;
         this.jwtUtil = jwtUtil;
         this.passwordEncoder = passwordEncoder;
+		this.pageRepository = pageRepository;
     }
 
     /**
@@ -81,6 +85,16 @@ public class UserService implements UserDetailsService {
             user.setEmail(userAuthRequest.getEmail());
             user.setUsername(userAuthRequest.getUsername());
             user.setPassword(passwordEncoder.encode(userAuthRequest.getPassword()));
+			user = userRepository.save(user);
+			Page p = new Page();
+			p.setPosts(null);
+			p.setBannerURL("");
+			p.setDescription("You discription here");
+			p.setUserOwner(user);
+			p.setPrivate(true);
+			p.setGroupPage(false);
+			pageRepository.save(p);
+			user.setUserPage(p);
             return userRepository.save(user);
         }
     }
