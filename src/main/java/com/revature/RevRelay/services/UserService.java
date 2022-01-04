@@ -16,6 +16,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
+
 import java.util.Date;
 import java.util.Optional;
 
@@ -29,7 +30,7 @@ import java.util.Optional;
 @Setter
 public class UserService implements UserDetailsService {
 
-	private PageRepository pageRepository;
+    private PageRepository pageRepository;
     private UserRepository userRepository;
     private JwtUtil jwtUtil;
     private PasswordEncoder passwordEncoder;
@@ -42,11 +43,11 @@ public class UserService implements UserDetailsService {
      * @param passwordEncoder PasswordEncoder object autowired
      */
     @Autowired
-    UserService(UserRepository userRepository, JwtUtil jwtUtil, PasswordEncoder passwordEncoder,PageRepository pageRepository) {
+    UserService(UserRepository userRepository, JwtUtil jwtUtil, PasswordEncoder passwordEncoder, PageRepository pageRepository) {
         this.userRepository = userRepository;
         this.jwtUtil = jwtUtil;
         this.passwordEncoder = passwordEncoder;
-		this.pageRepository = pageRepository;
+        this.pageRepository = pageRepository;
     }
 
     /**
@@ -56,7 +57,10 @@ public class UserService implements UserDetailsService {
      * @param username the username to match.
      * @param password the password to match.
      * @return User of the given username AND password.
-     * @throws AccessDeniedException
+     * @throws AccessDeniedException Thrown when either a user cannot be loaded
+     *                               or when there's a password mismatch.
+     * @deprecated This method is marked for deletion as its function is handled
+     * by the authentication method of the TokenAuthProvider class. - NL
      */
     public User login(String username, String password) throws AccessDeniedException {
         try {
@@ -77,18 +81,22 @@ public class UserService implements UserDetailsService {
      * @return the full user object that was persisted is returned.
      */
     public User createUser(UserRegisterAuthRequest userAuthRequest) throws IllegalArgumentException {
-        if (userRepository.existsByUsername(userAuthRequest.getUsername()) || userAuthRequest.getUsername() == null) {
+        if (!isValidUsername(userAuthRequest.getUsername())) {
             throw new IllegalArgumentException("Username Not Valid");
+        } else if (!isValidPassword(userAuthRequest.getPassword())) {
+            throw new IllegalArgumentException("Password Not Valid");
+        } else if (!isValidEmail(userAuthRequest.getEmail())) {
+            throw new IllegalArgumentException("Email Not Valid");
         } else {
             User user = new User();
             user.setDisplayName(userAuthRequest.getDisplayName());
             user.setEmail(userAuthRequest.getEmail());
             user.setUsername(userAuthRequest.getUsername());
             user.setPassword(passwordEncoder.encode(userAuthRequest.getPassword()));
-			user = userRepository.save(user);
-			Page p = new Page(user);
-			pageRepository.save(p);
-			user.setUserPage(p);
+            user = userRepository.save(user);
+            Page p = new Page(user);
+            pageRepository.save(p);
+            user.setUserPage(p);
             return userRepository.save(user);
         }
     }
@@ -142,7 +150,7 @@ public class UserService implements UserDetailsService {
 
     /**
      * Updates a User's first name, to be displayed on their profile
-     * 
+     *
      * @param userID    The User's unique ID
      * @param firstName The User's desired first name
      * @return True if the update succeeds, or else false
@@ -159,7 +167,7 @@ public class UserService implements UserDetailsService {
 
     /**
      * Updates a User's last name, to be displayed on their profile
-     * 
+     *
      * @param userID   The User's unique ID
      * @param lastName The User's desired last name
      * @return True if the update succeeds, or else false
@@ -181,7 +189,7 @@ public class UserService implements UserDetailsService {
      * If the old password is incorrect, or the new password does not match the
      * confirmation, returns false
      * If a User's password is successfully updated, save the User and return true
-     * 
+     *
      * @param userID          The User's unique ID
      * @param oldPassword     The User's old password
      * @param newPassword     The User's desired new password
@@ -191,7 +199,9 @@ public class UserService implements UserDetailsService {
     public boolean updatePassword(int userID, String oldPassword, String newPassword, String confirmPassword) {
         User user = userRepository.findByUserID(userID).orElse(null);
         if (user != null) {
-            if (passwordEncoder.matches(oldPassword, user.getPassword()) && (newPassword.equals(confirmPassword))) {
+            if (passwordEncoder.matches(oldPassword, user.getPassword())
+                    && (newPassword.equals(confirmPassword))
+                    && (isValidPassword(newPassword))) {
                 user.setPassword(passwordEncoder.encode(newPassword));
                 userRepository.save(user);
                 return true;
@@ -202,7 +212,7 @@ public class UserService implements UserDetailsService {
 
     /**
      * Updates a User's birthday
-     * 
+     *
      * @param userID    The User's unique ID
      * @param birthDate The User's desired birthday
      * @return True if the update succeeds, or else false
@@ -220,7 +230,7 @@ public class UserService implements UserDetailsService {
     /**
      * Updates a User's display name, which will be seen by other Users in chat
      * rooms/groups
-     * 
+     *
      * @param userID      The User's unique ID
      * @param displayName The User's desired display name
      * @return True if the update succeeds, or else false
@@ -233,5 +243,35 @@ public class UserService implements UserDetailsService {
             return true;
         }
         return false;
+    }
+
+    /**
+     * Verifies that a username is suitable based on our constraints.
+     *
+     * @param username New username prior to hashing and storage to database.
+     * @return True if valid, false if invalid.
+     */
+    private boolean isValidUsername(String username) {
+        return (!userRepository.existsByUsername(username) && username != null);
+    }
+
+    /**
+     * Verifies that a password is suitable based on our constraints.
+     *
+     * @param password New password prior to hashing and storage to database.
+     * @return True if valid, false if invalid.
+     */
+    private boolean isValidPassword(String password) {
+        return (password != null);
+    }
+
+    /**
+     * Verifies that a email is suitable based on our constraints.
+     *
+     * @param email New email prior to hashing and storage to database.
+     * @return True if valid, false if invalid.
+     */
+    private boolean isValidEmail(String email) {
+        return (!userRepository.existsByEmail(email) && email != null);
     }
 }

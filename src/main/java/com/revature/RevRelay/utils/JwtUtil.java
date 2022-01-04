@@ -19,6 +19,7 @@ import java.util.function.Function;
 
 /**
  * Provides JWT functionality for creating and reading JWTs.
+ * @author Nathan Luther
  */
 @Service
 public class JwtUtil {
@@ -26,7 +27,7 @@ public class JwtUtil {
     //this will obviously need to not be in the source code in the project deliverable.
 //    @Value("${jwt.secret}")
 //    private String SECRET_KEY;
-    private String SECRET_KEY = "secretsecretsecretsecretsecretsecretsecretsecretsecretsecret";
+    private final String SECRET_KEY = "secretsecretsecretsecretsecretsecretsecretsecretsecretsecret";
 
     @Value("#{24*60*60*1000}")
     private int expiration;
