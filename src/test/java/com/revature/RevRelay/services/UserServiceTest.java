@@ -18,8 +18,7 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Optional;
 
-import static org.junit.jupiter.api.Assertions.assertTrue;
-import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyInt;
 import static org.mockito.Mockito.when;
@@ -98,7 +97,7 @@ class UserServiceTest {
         when(mockUserRepository.existsByUsername(any())).thenReturn(false);
         when(mockUserRepository.existsByEmail(any())).thenReturn(false);
         try{
-            assertTrue(userService.createUser(userRegisterAuthRequest).equals(user));
+            assertEquals(userService.createUser(userRegisterAuthRequest), user);
         } catch (Exception ignored) {}
     }
 
@@ -140,7 +139,7 @@ class UserServiceTest {
     void loginCorrectUser() {
         when(mockUserRepository.findByUsername(any())).thenReturn(Optional.ofNullable(user));
         try{
-            assertTrue(userService.login(user.getUsername(), user.getPassword()).equals(user));
+            assertEquals(userService.login(user.getUsername(), user.getPassword()), user);
         } catch (Exception ignored) {}
     }
 
@@ -173,14 +172,14 @@ class UserServiceTest {
         when(mockUserRepository.findByUsername(any())).thenReturn(java.util.Optional.ofNullable(user));
         when(mockJwtUtil.generateToken(fakeUser)).thenReturn(legitimateToken);
         try{
-            assertTrue(userService.findByToken(mockJwtUtil.generateToken(fakeUser)).equals(user));
+            assertEquals(userService.findByToken(mockJwtUtil.generateToken(fakeUser)), user);
         } catch (Exception ignored) {}
     }
 
     //Test failed findByToken. Should return null and return an exception, the exception is expected.
     @Test
     void findByTokenNotFound() {
-        when(mockUserRepository.findByUsername(any())).thenReturn(Optional.ofNullable(null));
+        when(mockUserRepository.findByUsername(any())).thenReturn(Optional.empty());
         when(mockJwtUtil.generateToken(fakeUser)).thenReturn(null);
         try{
             Exception e = assertThrows(Exception.class, (Executable) userService.findByToken(mockJwtUtil.generateToken(fakeUser)));
@@ -192,7 +191,7 @@ class UserServiceTest {
     @Test
     void findByTokenUserNotFound() {
         String legitimateToken = ":";
-        when(mockUserRepository.findByUsername(any())).thenReturn(Optional.ofNullable(null));
+        when(mockUserRepository.findByUsername(any())).thenReturn(Optional.empty());
         when(mockJwtUtil.generateToken(fakeUser)).thenReturn(legitimateToken);
         try{
             Exception e = assertThrows(Exception.class, (Executable) userService.findByToken(mockJwtUtil.generateToken(fakeUser)));
@@ -205,7 +204,7 @@ class UserServiceTest {
     void loadUserByUsername() {
         when(mockUserRepository.findByUsername(user.getUsername())).thenReturn(Optional.ofNullable(user));
         try{
-            assertTrue(userService.loadUserByUsername(user.getUsername()).equals(user));
+            assertEquals(userService.loadUserByUsername(user.getUsername()), user);
         } catch (Exception ignored) {}
     }
 
@@ -224,7 +223,7 @@ class UserServiceTest {
     void loadUserByUserID() {
         when(mockUserRepository.findByUserID(anyInt())).thenReturn(Optional.ofNullable(user));
         try{
-            assertTrue(userService.loadUserDTOByUserID(user.getUserID()).getUsername().equals(user.getUsername()));
+            assertEquals(userService.loadUserDTOByUserID(user.getUserID()).getUsername(), user.getUsername());
         } catch (Exception ignored) {}
     }
 

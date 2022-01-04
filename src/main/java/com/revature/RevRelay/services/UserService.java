@@ -30,7 +30,7 @@ import java.util.Optional;
 @Setter
 public class UserService implements UserDetailsService {
 
-	private PageRepository pageRepository;
+    private PageRepository pageRepository;
     private UserRepository userRepository;
     private JwtUtil jwtUtil;
     private PasswordEncoder passwordEncoder;
@@ -57,7 +57,10 @@ public class UserService implements UserDetailsService {
      * @param username the username to match.
      * @param password the password to match.
      * @return User of the given username AND password.
-     * @throws AccessDeniedException
+     * @throws AccessDeniedException Thrown when either a user cannot be loaded
+     *                               or when there's a password mismatch.
+     * @deprecated This method is marked for deletion as its function is handled
+     * by the authentication method of the TokenAuthProvider class. - NL
      */
     public User login(String username, String password) throws AccessDeniedException {
         try {
@@ -90,10 +93,10 @@ public class UserService implements UserDetailsService {
             user.setEmail(userAuthRequest.getEmail());
             user.setUsername(userAuthRequest.getUsername());
             user.setPassword(passwordEncoder.encode(userAuthRequest.getPassword()));
-			user = userRepository.save(user);
-			Page p = new Page(user);
-			pageRepository.save(p);
-			user.setUserPage(p);
+            user = userRepository.save(user);
+            Page p = new Page(user);
+            pageRepository.save(p);
+            user.setUserPage(p);
             return userRepository.save(user);
         }
     }

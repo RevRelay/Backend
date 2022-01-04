@@ -6,6 +6,9 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
+import java.util.Optional;
+
 /**
  * Interface that uses JpaRepository to directly access database, handles group
  * table
@@ -13,5 +16,8 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface GroupRepository extends JpaRepository<Group, Integer> {
     Page<Group> findGroupsByUserOwnerUserID(Integer userOwnerID, Pageable pageable);
+
+    Optional<List<Group>> findByGroupNameContainingIgnoreCase(String displayName);
+    Page<Group> findByGroupNameContainingIgnoreCase(String displayName, Pageable pageable);
 
 }
