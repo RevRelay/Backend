@@ -28,6 +28,7 @@ TODO: refactor method returns to handle optionals?
 public class GroupsController {
     GroupService groupService;
 
+
     /**
      * Constructor for GroupsController
      * 
@@ -37,6 +38,9 @@ public class GroupsController {
     public GroupsController(GroupService groupService) {
         this.groupService = groupService;
     }
+
+
+
 
     /**
      * Endpoint for persisting a Group onto the database
