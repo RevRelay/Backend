@@ -121,7 +121,7 @@ public class GroupsController {
      * @param groupID
      * @param userID
      */
-    @PostMapping
+    @PostMapping("/addmember")
     public void addMember(Integer groupID, Integer userID){
         groupService.addMember(groupID,userID);
     }
@@ -132,7 +132,7 @@ public class GroupsController {
      * @param groupID
      * @param userID
      */
-    @DeleteMapping
+    @DeleteMapping("deletemember")
     public void deleteMember(Integer groupID,Integer userID){
         groupService.deleteMember(groupID,userID);
     }
