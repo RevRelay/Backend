@@ -18,8 +18,7 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Optional;
 
-import static org.junit.jupiter.api.Assertions.assertTrue;
-import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyInt;
 import static org.mockito.Mockito.when;
@@ -51,17 +50,22 @@ class UserServiceTest {
         userService = new UserService(mockUserRepository, mockJwtUtil, mockPasswordEncoder,mockPageRepository);
         //Used with creating User
         userRegisterAuthRequest = new UserRegisterAuthRequest();
+        userRegisterAuthRequest.setUsername("notNull");
+        userRegisterAuthRequest.setPassword("notNull");
+        userRegisterAuthRequest.setEmail("notNull");
         //Standard user used in testing
         user = new User();
         user.setUserID(0);
         user.setUsername("testname");
         user.setPassword("testpassword");
+        user.setEmail("testemail");
         user.setFirstName("H");
         //User used for incorrect login/registry
         fakeUser = new User();
         fakeUser.setUserID(0);
         fakeUser.setUsername("testname");
         fakeUser.setPassword("testpassword");
+        user.setEmail("testemail");
     }
 
     @Test
@@ -88,12 +92,12 @@ class UserServiceTest {
     //Test User creation. Should return user and then user should equal user
     @Test
     void createUser() {
-        userRegisterAuthRequest.setUsername("notNull");
         when(mockUserRepository.save(any())).thenReturn(user);
 		when(mockPageRepository.save(any())).thenReturn(null);
         when(mockUserRepository.existsByUsername(any())).thenReturn(false);
+        when(mockUserRepository.existsByEmail(any())).thenReturn(false);
         try{
-            assertTrue(userService.createUser(userRegisterAuthRequest).equals(user));
+            assertEquals(userService.createUser(userRegisterAuthRequest), user);
         } catch (Exception ignored) {}
     }
 
@@ -104,7 +108,30 @@ class UserServiceTest {
         try{
             assertThrows(IllegalArgumentException.class, (Executable) userService.createUser(userRegisterAuthRequest));
         } catch (Exception ignored) {}
+    }
 
+    @Test
+    void createUserWithPreexistingUsername(){
+        when(mockUserRepository.existsByUsername(any())).thenReturn(true);
+        try{
+            assertThrows(IllegalArgumentException.class, (Executable) userService.createUser(userRegisterAuthRequest));
+        } catch (Exception ignored) {}
+    }
+
+    @Test
+    void createUserWithNullPassword(){
+        userRegisterAuthRequest.setPassword(null);
+        try{
+            assertThrows(IllegalArgumentException.class, (Executable) userService.createUser(userRegisterAuthRequest));
+        } catch (Exception ignored) {}
+    }
+
+    @Test
+    void createUserWithPreexistingEmail(){
+        when(mockUserRepository.existsByEmail(any())).thenReturn(true);
+        try{
+            assertThrows(IllegalArgumentException.class, (Executable) userService.createUser(userRegisterAuthRequest));
+        } catch (Exception ignored) {}
     }
 
     //Test login. Should return true and user should equal user
@@ -112,7 +139,7 @@ class UserServiceTest {
     void loginCorrectUser() {
         when(mockUserRepository.findByUsername(any())).thenReturn(Optional.ofNullable(user));
         try{
-            assertTrue(userService.login(user.getUsername(), user.getPassword()).equals(user));
+            assertEquals(userService.login(user.getUsername(), user.getPassword()), user);
         } catch (Exception ignored) {}
     }
 
@@ -145,14 +172,14 @@ class UserServiceTest {
         when(mockUserRepository.findByUsername(any())).thenReturn(java.util.Optional.ofNullable(user));
         when(mockJwtUtil.generateToken(fakeUser)).thenReturn(legitimateToken);
         try{
-            assertTrue(userService.findByToken(mockJwtUtil.generateToken(fakeUser)).equals(user));
+            assertEquals(userService.findByToken(mockJwtUtil.generateToken(fakeUser)), user);
         } catch (Exception ignored) {}
     }
 
     //Test failed findByToken. Should return null and return an exception, the exception is expected.
     @Test
     void findByTokenNotFound() {
-        when(mockUserRepository.findByUsername(any())).thenReturn(Optional.ofNullable(null));
+        when(mockUserRepository.findByUsername(any())).thenReturn(Optional.empty());
         when(mockJwtUtil.generateToken(fakeUser)).thenReturn(null);
         try{
             Exception e = assertThrows(Exception.class, (Executable) userService.findByToken(mockJwtUtil.generateToken(fakeUser)));
@@ -164,7 +191,7 @@ class UserServiceTest {
     @Test
     void findByTokenUserNotFound() {
         String legitimateToken = ":";
-        when(mockUserRepository.findByUsername(any())).thenReturn(Optional.ofNullable(null));
+        when(mockUserRepository.findByUsername(any())).thenReturn(Optional.empty());
         when(mockJwtUtil.generateToken(fakeUser)).thenReturn(legitimateToken);
         try{
             Exception e = assertThrows(Exception.class, (Executable) userService.findByToken(mockJwtUtil.generateToken(fakeUser)));
@@ -177,7 +204,7 @@ class UserServiceTest {
     void loadUserByUsername() {
         when(mockUserRepository.findByUsername(user.getUsername())).thenReturn(Optional.ofNullable(user));
         try{
-            assertTrue(userService.loadUserByUsername(user.getUsername()).equals(user));
+            assertEquals(userService.loadUserByUsername(user.getUsername()), user);
         } catch (Exception ignored) {}
     }
 
@@ -196,7 +223,7 @@ class UserServiceTest {
     void loadUserByUserID() {
         when(mockUserRepository.findByUserID(anyInt())).thenReturn(Optional.ofNullable(user));
         try{
-            assertTrue(userService.loadUserDTOByUserID(user.getUserID()).getUsername().equals(user.getUsername()));
+            assertEquals(userService.loadUserDTOByUserID(user.getUserID()).getUsername(), user.getUsername());
         } catch (Exception ignored) {}
     }
 
