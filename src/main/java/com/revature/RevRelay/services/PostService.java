@@ -11,7 +11,7 @@ import org.springframework.stereotype.Service;
 
 /**
  * Service layer for the Post model
- * 
+ *
  * @author Isaiah Anason
  * @author Noah Frederick
  * @author Loustauanau Luis
@@ -25,7 +25,7 @@ public class PostService {
 
     /**
      * Constructor for PostService
-     * 
+     *
      * @param postRepository is the data layer for the Group model
      */
     @Autowired
@@ -37,10 +37,10 @@ public class PostService {
 
     /**
      * Persists a new Post to the database
-     * 
+     * <p>
      * Receives a Post object from the controller and persists it as a new Post
      * record on the database
-     * 
+     *
      * @param post is the Post object to be persisted
      * @return Post is the Post created on the database
      */
@@ -52,10 +52,10 @@ public class PostService {
 
     /**
      * Retrieves all Posts from the database by their ID
-     * 
+     * <p>
      * Receives a Post ID from the controller and queries the database for
      * that Post
-     * 
+     *
      * @param postID
      * @return Post
      */
@@ -65,10 +65,10 @@ public class PostService {
 
     /**
      * Retrieves all Posts from the database by their PageID
-     * 
+     * <p>
      * Receives a Page ID from the controller and queries the database for
      * every Post which has that Page ID
-     * 
+     *
      * @param pageID is the ID of the page used when querying the database
      * @return Page<Post> is a page containing the Groups
      */
@@ -78,13 +78,13 @@ public class PostService {
 
     /**
      * Retrieves all Posts from the database by their PageID
-     * 
+     * <p>
      * Receives a Page ID from the controller and queries the database for
      * every Post which has that Page ID Also receives a pageable, that specifies
      * a specific page to return from Page<Post>
-     * 
-     * @param pageID   is the ID of the page used when querying the database
-     * @param pageable is the specific page to return from the Page<Post>
+     *
+     * @param postPageID is the ID of the page used when querying the database
+     * @param pageable   is the specific page to return from the Page<Post>
      * @return Page<Post> is page containing the Groups from a specific page
      */
     public Page<Post> findPostByPostPageID(Integer postPageID, Pageable pageable) {
@@ -93,11 +93,11 @@ public class PostService {
 
     /**
      * Retrieves all Posts from the database by their OwnerID
-     * 
+     * <p>
      * Receives an Owner ID from the controller and queries the database for
      * every Post which has that OwnerID
-     * 
-     * @param userOwnerID is the ID of the owner used when querying the database
+     *
+     * @param postOwnerID is the ID of the owner used when querying the database
      * @return Page<Post> is page containing the Groups
      */
     public Page<Post> findPostByPostOwnerID(Integer postOwnerID) {
@@ -106,12 +106,12 @@ public class PostService {
 
     /**
      * Retrieves all Posts from the database by their OwnerID
-     * 
+     * <p>
      * Receives an Owner ID from the controller and queries the database for
      * every Post which has that OwnerID. Also receives a pageable, that specifies
      * a specific page to return from Page<Post>
-     * 
-     * @param userOwnerID is the ID of the owner used when querying the database
+     *
+     * @param postOwnerID is the ID of the owner used when querying the database
      * @param pageable    is the specific page to return from the Page<Group>
      * @return Page<Post> is page containing the Groups from a specific page
      */
@@ -123,10 +123,10 @@ public class PostService {
 
     /**
      * Updates a Post
-     * 
+     * <p>
      * Receives a Post object from the controller and updates that Post on the
      * database
-     * 
+     *
      * @param post is the Post object to be persisted
      * @return Post is the Post created on the database
      */
@@ -138,10 +138,10 @@ public class PostService {
 
     /**
      * Deletes a Post
-     * 
+     * <p>
      * Receives a Post ID from the controller and deletes the Post with that ID
      * from the database
-     * 
+     *
      * @param postID is the ID of the Post to remove
      */
     public void deletePostByPostID(Integer postID) {

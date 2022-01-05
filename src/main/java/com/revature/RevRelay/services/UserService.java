@@ -136,16 +136,52 @@ public class UserService implements UserDetailsService {
      *
      * @param token Token with information about the username inside the token
      * @return returns optional user
-     * @throws Exception Throws exception if token does not exist OR optional is
-     *                   null
+     * @throws UsernameNotFoundException Throws exception if token does not exist
+     *                                   OR optional is null
      */
-    public User findByToken(String token) throws Exception {
+    public User loadUserByToken(String token) throws UsernameNotFoundException {
         Optional<User> user = userRepository.findByUsername(jwtUtil.extractUsername(token));
         if (user.isPresent()) {
             return user.get();
         } else {
-            throw new Exception("Token Does Not Correspond to User");
+            throw new UsernameNotFoundException("Token Does Not Correspond to User");
         }
+    }
+
+    /**
+     * Single function for updating a User (identified by a JWT) via a UserDTO.
+     * Updates Username, Email, FirstName, LastName, BirthDate, and DisplayName.
+     * Not suitable for updating a password.
+     * Note that the isValid functions do allow empty strings (for deleting
+     * user information from the database) while not allowing nulls.
+     *
+     * @param token   JWT corresponding to a User in the database.
+     * @param userDTO UserDTO deserialized from a Controller query.
+     * @return UserDTO object corresponding to the User after edits.
+     * @throws UsernameNotFoundException If Token fails to find a User.
+     */
+    public UserDTO updateUser(String token, UserDTO userDTO) throws UsernameNotFoundException {
+        User user = loadUserByToken(token);
+        if (isValidUsername(userDTO.getUsername())) {
+            user.setUsername(userDTO.getUsername());
+        }
+        if (isValidEmail(userDTO.getEmail())) {
+            user.setEmail(userDTO.getEmail());
+        }
+        if (isValidFirstName(userDTO.getFirstName())) {
+            user.setFirstName(userDTO.getFirstName());
+        }
+        if (isValidLastName(userDTO.getLastName())) {
+            user.setLastName(userDTO.getLastName());
+        }
+        if (isValidBirthDate(userDTO.getBirthDate())) {
+            user.setBirthDate(userDTO.getBirthDate());
+        }
+        if (isValidDisplayName(userDTO.getDisplayName())) {
+            user.setDisplayName(userDTO.getDisplayName());
+        }
+        userRepository.save(user);
+        return new UserDTO(user);
     }
 
     /**
@@ -248,7 +284,7 @@ public class UserService implements UserDetailsService {
     /**
      * Verifies that a username is suitable based on our constraints.
      *
-     * @param username New username prior to hashing and storage to database.
+     * @param username New username.
      * @return True if valid, false if invalid.
      */
     private boolean isValidUsername(String username) {
@@ -268,10 +304,51 @@ public class UserService implements UserDetailsService {
     /**
      * Verifies that a email is suitable based on our constraints.
      *
-     * @param email New email prior to hashing and storage to database.
+     * @param email New email.
      * @return True if valid, false if invalid.
      */
     private boolean isValidEmail(String email) {
         return (!userRepository.existsByEmail(email) && email != null);
+    }
+
+    /**
+     * Verifies that a firstName is suitable based on our constraints.
+     *
+     * @param firstName New firstName.
+     * @return True if valid, false if invalid.
+     */
+    private boolean isValidFirstName(String firstName) {
+        return (firstName != null);
+    }
+
+    /**
+     * Verifies that a lastName is suitable based on our constraints.
+     *
+     * @param lastName New lastName.
+     * @return True if valid, false if invalid.
+     */
+    private boolean isValidLastName(String lastName) {
+        return (lastName != null);
+    }
+
+    /**
+     * Verifies that a displayName is suitable based on our constraints.
+     *
+     * @param displayName New displayName.
+     * @return True if valid, false if invalid.
+     */
+    private boolean isValidDisplayName(String displayName) {
+        return (displayName != null);
+    }
+
+    /**
+     * Verifies that a birthDate is suitable based on our constraints.
+     *
+     * @param birthDate New displayName.
+     * @return True if valid, false if invalid.
+     */
+    private boolean isValidBirthDate(Date birthDate) {
+        Date minBirthDate = new Date(-2208988800000L); // Jan 1st 1900, 12:00 AM
+        return (birthDate != null && birthDate.after(minBirthDate));
     }
 }

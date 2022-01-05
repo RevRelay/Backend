@@ -51,11 +51,7 @@ final class TokenAuthFilter extends AbstractAuthenticationProcessingFilter {
                 .map(String::trim)
                 .orElseThrow(() -> new BadCredentialsException("Missing Authentication Token"));
         Authentication auth = new PreAuthenticatedAuthenticationToken(jwtUtil.extractUsername(token), token);
-        if (jwtUtil.validateToken(token, userService.loadUserByUsername(jwtUtil.extractUsername(token)))) {
-            auth.setAuthenticated(true);
-        } else {
-            auth.setAuthenticated(false);
-        }
+        auth.setAuthenticated(jwtUtil.validateToken(token, userService.loadUserByUsername(jwtUtil.extractUsername(token))));
         return auth;
     }
 

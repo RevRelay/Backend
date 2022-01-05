@@ -9,7 +9,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.web.bind.annotation.*;
+
 import java.util.Date;
 import java.util.Map;
 
@@ -40,8 +42,6 @@ public class UserController {
     }
 
 
-
-
     /**
      * Returns a UserDTO representing the logged-in user via JWT.
      *
@@ -54,9 +54,21 @@ public class UserController {
         HttpHeaders responseHeaders = new HttpHeaders();
         responseHeaders.setBearerAuth(tokenParsed);
         try {
-            return new ResponseEntity<UserDTO>(new UserDTO(userService.findByToken(tokenParsed)), responseHeaders, HttpStatus.ACCEPTED);
+            return new ResponseEntity<UserDTO>(new UserDTO(userService.loadUserByToken(tokenParsed)), responseHeaders, HttpStatus.ACCEPTED);
         } catch (Exception e) {
             return new ResponseEntity<String>(e.toString(), responseHeaders, HttpStatus.NOT_FOUND);
+        }
+    }
+
+    @PutMapping("/current")
+    ResponseEntity<?> updateCurrent(@RequestHeader("Authorization") String token, @RequestBody UserDTO userDTO) {
+        String tokenParsed = token.replace("Bearer", "").trim();
+        HttpHeaders responseHeaders = new HttpHeaders();
+        responseHeaders.setBearerAuth(tokenParsed);
+        try {
+            return new ResponseEntity<UserDTO>(userService.updateUser(token, userDTO), responseHeaders, HttpStatus.ACCEPTED);
+        } catch (UsernameNotFoundException e) {
+            return new ResponseEntity<String>("Current User Not Found", responseHeaders, HttpStatus.NOT_FOUND);
         }
     }
 
@@ -67,7 +79,7 @@ public class UserController {
      * @return response entity 200 signaling successful creation
      */
     @GetMapping("/{userID}")
-    public ResponseEntity<?> findByUserID(@PathVariable int userID){
+    public ResponseEntity<?> findByUserID(@PathVariable int userID) {
         return ResponseEntity.ok(userService.loadUserDTOByUserID(userID));
     }
 

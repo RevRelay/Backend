@@ -172,7 +172,7 @@ class UserServiceTest {
         when(mockUserRepository.findByUsername(any())).thenReturn(java.util.Optional.ofNullable(user));
         when(mockJwtUtil.generateToken(fakeUser)).thenReturn(legitimateToken);
         try{
-            assertEquals(userService.findByToken(mockJwtUtil.generateToken(fakeUser)), user);
+            assertEquals(userService.loadUserByToken(mockJwtUtil.generateToken(fakeUser)), user);
         } catch (Exception ignored) {}
     }
 
@@ -182,7 +182,7 @@ class UserServiceTest {
         when(mockUserRepository.findByUsername(any())).thenReturn(Optional.empty());
         when(mockJwtUtil.generateToken(fakeUser)).thenReturn(null);
         try{
-            Exception e = assertThrows(Exception.class, (Executable) userService.findByToken(mockJwtUtil.generateToken(fakeUser)));
+            Exception e = assertThrows(Exception.class, (Executable) userService.loadUserByToken(mockJwtUtil.generateToken(fakeUser)));
             assertTrue(e.getMessage().contains("Token Does Not Correspond to User"));
         } catch (Exception ignored) {}
     }
@@ -194,7 +194,7 @@ class UserServiceTest {
         when(mockUserRepository.findByUsername(any())).thenReturn(Optional.empty());
         when(mockJwtUtil.generateToken(fakeUser)).thenReturn(legitimateToken);
         try{
-            Exception e = assertThrows(Exception.class, (Executable) userService.findByToken(mockJwtUtil.generateToken(fakeUser)));
+            Exception e = assertThrows(Exception.class, (Executable) userService.loadUserByToken(mockJwtUtil.generateToken(fakeUser)));
             assertTrue(e.getMessage().contains("Token Does Not Correspond to User"));
         } catch (Exception ignored) {}
     }

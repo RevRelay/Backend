@@ -6,6 +6,7 @@ import com.revature.RevRelay.repositories.PageRepository;
 import lombok.NoArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
 import java.util.List;
 
 @Service
@@ -13,10 +14,10 @@ import java.util.List;
 public class PageService {
     PageRepository pageRepository;
 
-    @Autowired
     /**
      * @param pageRepository to be autowired
      */
+    @Autowired
     public PageService(PageRepository pageRepository) {
         this.pageRepository = pageRepository;
     }
@@ -24,7 +25,6 @@ public class PageService {
     // CREATE
 
     /**
-     *
      * @param page page to be created
      * @return Page the page that is being created
      */
