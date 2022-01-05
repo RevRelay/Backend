@@ -81,7 +81,7 @@ public class PostServiceTest {
 		Page page = new Page(1,"","",false,false,null,null,null);
 		page = pageRepo.save(page);
 		Post post = new Post(1, PostType.ORIGINAL,"TEST","CONTENT",-1, DateUtil.now(),0,page,null,null);
-		post =postRepo.save(post);
+		post = postRepo.save(post);
 		assertEquals("TEST",service.findPostByPostPageID(page.getPageID()).getContent().get(0).getPostTitle());
 	}
 	
