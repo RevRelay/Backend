@@ -29,7 +29,7 @@ public class Group {
     @Column(nullable = false, unique = true)
     private String groupName;
 
-    @OneToOne(cascade = CascadeType.MERGE)
+    @OneToOne(cascade = {CascadeType.MERGE,CascadeType.REMOVE})
     @JsonManagedReference(value = "group-page")
     private Page groupPage;
 

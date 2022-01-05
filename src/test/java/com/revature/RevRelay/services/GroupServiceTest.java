@@ -3,7 +3,10 @@ package com.revature.RevRelay.services;
 import com.revature.RevRelay.models.Group;
 import com.revature.RevRelay.models.User;
 import com.revature.RevRelay.repositories.GroupRepository;
+import com.revature.RevRelay.repositories.PageRepository;
+import com.revature.RevRelay.repositories.PostRepository;
 import com.revature.RevRelay.repositories.UserRepository;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
@@ -39,6 +42,18 @@ public class GroupServiceTest {
 
 	User user;
 
+	@Autowired
+	PostRepository postRepo;
+	@Autowired
+	PageRepository pageRepo;
+
+	@BeforeEach
+	public void setup(){
+		postRepo.deleteAll();
+		pageRepo.deleteAll();
+		groupRepository.deleteAll();
+	}
+
 	public GroupServiceTest() {
 		this.user = new User();
 		user.setUsername("fakeUser");
@@ -53,7 +68,7 @@ public class GroupServiceTest {
 		Group group = new Group();
 		group.setGroupName("TEST");
 		Group group1 = groupService.createGroup(group);
-		assertEquals(group, group1);
+		assertEquals(group.getGroupName(), group1.getGroupName());
 		assertEquals(group1.getGroupID(), groupService.getGroupByGroupID(group1.getGroupID()).getGroupID());
 	}
 
