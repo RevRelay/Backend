@@ -19,6 +19,7 @@ public class UserDTO {
     private Date birthDate;
     private String displayName;
 	private Page userPage;
+    private int userID;
 
     public UserDTO(User user){
         username = user.getUsername();
@@ -28,5 +29,6 @@ public class UserDTO {
         birthDate = user.getBirthDate();
         displayName = user.getDisplayName();
 		userPage = user.getUserPage();
+        userID = user.getUserID();
     }
 }
