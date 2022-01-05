@@ -91,7 +91,6 @@ public class GroupsController {
         return groupService.getGroupByGroupID(groupID);
     }
 
-
     /**
      * Endpoint for updating a group with a new group object
      *
@@ -103,7 +102,6 @@ public class GroupsController {
         return groupService.updateGroups(group);
     }
 
-
     /**
      * Endpoint for deleting a group using the groupID
      *
@@ -113,7 +111,6 @@ public class GroupsController {
     public void deleteGroupsByID(@PathVariable Integer groupID) {
         groupService.deleteGroupsByID(groupID);
     }
-
 
     /**
      * Endpoint for adding members to groups
