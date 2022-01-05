@@ -3,6 +3,8 @@ package com.revature.RevRelay.controllers;
 import com.revature.RevRelay.models.Group;
 import com.revature.RevRelay.models.User;
 import com.revature.RevRelay.services.GroupService;
+import com.revature.RevRelay.services.UserService;
+import com.revature.RevRelay.utils.JwtUtil;
 import lombok.NoArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -29,6 +31,10 @@ TODO: refactor method returns to handle optionals?
 public class GroupsController {
     GroupService groupService;
 
+    UserService userService;
+
+    JwtUtil jwtUtil;
+
 
     /**
      * Constructor for GroupsController
@@ -36,7 +42,7 @@ public class GroupsController {
      * @param groupService is the service layer for Group
      */
     @Autowired
-    public GroupsController(GroupService groupService) {
+    public GroupsController(GroupService groupService,UserService userService,JwtUtil jwtUtil) {
         this.groupService = groupService;
     }
 
@@ -50,7 +56,10 @@ public class GroupsController {
      * @return ResponseEntity<?> contains the response and the newly create group
      */
     @PostMapping
-    public ResponseEntity<?> createGroup(@RequestBody Group group) {
+    public ResponseEntity<?> createGroup(@RequestBody Group group,@RequestHeader("Authorization") String token) {
+        if(token!=null){
+            group.setUserOwner(userService.loadUserByUsername(jwtUtil.extractUsername(token.substring(7))));
+        }
         return ResponseEntity.ok(groupService.createGroup(group));
     }
 
