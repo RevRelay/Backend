@@ -153,7 +153,10 @@ public class UserService implements UserDetailsService {
      * Updates Username, Email, FirstName, LastName, BirthDate, and DisplayName.
      * Not suitable for updating a password.
      * Note that the isValid functions do allow empty strings (for deleting
-     * user information from the database) while not allowing nulls.
+     * user information from the database) while not allowing nulls. The exception is
+     * BirthDate, which could be solved in a few ways (very distant past date == delete?).
+     * Invalid inputs are ignored without feedback to the user; possible point
+     * of improvement. - NL
      *
      * @param token   JWT corresponding to a User in the database.
      * @param userDTO UserDTO deserialized from a Controller query.
@@ -180,8 +183,7 @@ public class UserService implements UserDetailsService {
         if (isValidDisplayName(userDTO.getDisplayName())) {
             user.setDisplayName(userDTO.getDisplayName());
         }
-        userRepository.save(user);
-        return new UserDTO(user);
+        return new UserDTO(userRepository.save(user));
     }
 
     /**
