@@ -19,6 +19,7 @@ the backend of the project
   - As a User, I should be able to create a post with text and images.
 [ ] Like a Post
   - As a User, I should be able to like another user's post.
+
 [x] Comment
   - As a User, I should be able to comment on posts or reply to comments on posts.
 [ ] Host/Join Events
