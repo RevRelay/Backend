@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.web.bind.annotation.*;
 
 import java.text.ParseException;
@@ -55,9 +56,21 @@ public class UserController {
         HttpHeaders responseHeaders = new HttpHeaders();
         responseHeaders.setBearerAuth(tokenParsed);
         try {
-            return new ResponseEntity<UserDTO>(new UserDTO(userService.findByToken(tokenParsed)), responseHeaders, HttpStatus.ACCEPTED);
+            return new ResponseEntity<UserDTO>(new UserDTO(userService.loadUserByToken(tokenParsed)), responseHeaders, HttpStatus.ACCEPTED);
         } catch (Exception e) {
             return new ResponseEntity<String>(e.toString(), responseHeaders, HttpStatus.NOT_FOUND);
+        }
+    }
+
+    @PutMapping("/current")
+    ResponseEntity<?> updateCurrent(@RequestHeader("Authorization") String token, @RequestBody UserDTO userDTO) {
+        String tokenParsed = token.replace("Bearer", "").trim();
+        HttpHeaders responseHeaders = new HttpHeaders();
+        responseHeaders.setBearerAuth(tokenParsed);
+        try {
+            return new ResponseEntity<UserDTO>(userService.updateUser(token, userDTO), responseHeaders, HttpStatus.ACCEPTED);
+        } catch (UsernameNotFoundException e) {
+            return new ResponseEntity<String>("Current User Not Found", responseHeaders, HttpStatus.NOT_FOUND);
         }
     }
 
