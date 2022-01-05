@@ -35,14 +35,15 @@ public class GroupsController {
 
     JwtUtil jwtUtil;
 
-
     /**
      * Constructor for GroupsController
      * 
      * @param groupService is the service layer for Group
      */
     @Autowired
-    public GroupsController(GroupService groupService,UserService userService,JwtUtil jwtUtil) {
+    public GroupsController(GroupService groupService, UserService userService, JwtUtil jwtUtil) {
+        this.jwtUtil = jwtUtil;
+        this.userService = userService;
         this.groupService = groupService;
     }
 
@@ -56,8 +57,8 @@ public class GroupsController {
      * @return ResponseEntity<?> contains the response and the newly create group
      */
     @PostMapping
-    public ResponseEntity<?> createGroup(@RequestBody Group group,@RequestHeader("Authorization") String token) {
-        if(token!=null&&token.length()>1){
+    public ResponseEntity<?> createGroup(@RequestBody Group group, @RequestHeader("Authorization") String token) {
+        if (token != null && token.length() > 1) {
             group.setUserOwner(userService.loadUserByUsername(jwtUtil.extractUsername(token.substring(7))));
         }
         return ResponseEntity.ok(groupService.createGroup(group));
@@ -128,8 +129,8 @@ public class GroupsController {
      * @param userID
      */
     @PostMapping("/addmember")
-    public void addMember(@RequestHeader("GroupID") Integer groupID,@RequestHeader("UserID") Integer userID){
-        groupService.addMember(groupID,userID);
+    public void addMember(@RequestHeader("GroupID") Integer groupID, @RequestHeader("UserID") Integer userID) {
+        groupService.addMember(groupID, userID);
     }
 
     /**
@@ -139,7 +140,7 @@ public class GroupsController {
      * @param userID
      */
     @DeleteMapping("deletemember")
-    public void deleteMember(@RequestHeader("GroupID") Integer groupID,@RequestHeader("UserID") Integer userID){
-        groupService.deleteMember(groupID,userID);
+    public void deleteMember(@RequestHeader("GroupID") Integer groupID, @RequestHeader("UserID") Integer userID) {
+        groupService.deleteMember(groupID, userID);
     }
 }
