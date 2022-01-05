@@ -38,7 +38,6 @@ public class PostServiceTest {
 
 	@BeforeEach
 	public void setup(){
-
 		postRepo.deleteAll();
 		pageRepo.deleteAll();
 		groupRepo.deleteAll();
