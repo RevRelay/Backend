@@ -42,20 +42,16 @@ public class GroupServiceTest {
 
 	User user;
 
-
 	@Autowired
 	PostRepository postRepo;
 	@Autowired
 	PageRepository pageRepo;
 
-
 	@BeforeEach
 	public void setup(){
-
 		postRepo.deleteAll();
 		pageRepo.deleteAll();
 		groupRepository.deleteAll();
-
 	}
 
 	public GroupServiceTest() {
