@@ -20,6 +20,8 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import java.util.Date;
 import java.util.Optional;
 
+/* TODO - Add tests for email service */
+
 /**
  * Returns a UserService object, which allows a User to update information on
  * their personal page
@@ -176,6 +178,23 @@ public class UserService implements UserDetailsService {
         User user = userRepository.findByUserID(userID).orElse(null);
         if (user != null) {
             user.setLastName(lastName);
+            userRepository.save(user);
+            return true;
+        }
+        return false;
+    }
+
+    /**
+     * Updates a User's last name, to be displayed on their profile
+     *
+     * @param userID   The User's unique ID
+     * @param email The User's desired last name
+     * @return True if the update succeeds, or else false
+     */
+    public boolean updateEmail(int userID, String email) {
+        User user = userRepository.findByUserID(userID).orElse(null);
+        if (user != null) {
+            user.setEmail(email);
             userRepository.save(user);
             return true;
         }

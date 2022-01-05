@@ -10,6 +10,9 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Map;
 
@@ -40,8 +43,6 @@ public class UserController {
     }
 
 
-
-
     /**
      * Returns a UserDTO representing the logged-in user via JWT.
      *
@@ -67,7 +68,7 @@ public class UserController {
      * @return response entity 200 signaling successful creation
      */
     @GetMapping("/{userID}")
-    public ResponseEntity<?> findByUserID(@PathVariable int userID){
+    public ResponseEntity<?> findByUserID(@PathVariable int userID) {
         return ResponseEntity.ok(userService.loadUserDTOByUserID(userID));
     }
 
@@ -80,9 +81,7 @@ public class UserController {
      */
     @PutMapping("/firstName/{userID}")
     public ResponseEntity<?> updateFirstName(@PathVariable int userID, @RequestBody String firstName) {
-        User user = g.fromJson(firstName, User.class);
-        String s = user.getFirstName();
-        return ResponseEntity.ok(userService.updateFirstName(userID, s));
+        return ResponseEntity.ok(userService.updateFirstName(userID, firstName.substring(1, firstName.length() - 1)));
     }
 
     /**
@@ -94,9 +93,7 @@ public class UserController {
      */
     @PutMapping("/lastName/{userID}")
     public ResponseEntity<?> updateLastName(@PathVariable int userID, @RequestBody String lastName) {
-        User user = g.fromJson(lastName, User.class);
-        String s = user.getLastName();
-        return ResponseEntity.ok(userService.updateLastName(userID, s));
+        return ResponseEntity.ok(userService.updateLastName(userID, lastName.substring(1, lastName.length() - 1)));
     }
 
     /**
@@ -126,9 +123,7 @@ public class UserController {
      */
     @PutMapping("/displayName/{userID}")
     public ResponseEntity<?> updateDisplayName(@PathVariable int userID, @RequestBody String displayName) {
-        User user = g.fromJson(displayName, User.class);
-        String s = user.getDisplayName();
-        return ResponseEntity.ok(userService.updateDisplayName(userID, s));
+        return ResponseEntity.ok(userService.updateDisplayName(userID, displayName.substring(1, displayName.length() - 1)));
     }
 
     /**
@@ -139,9 +134,26 @@ public class UserController {
      * @return response entity 200 signaling successful update
      */
     @PutMapping("/birthDate/{userID}")
-    public ResponseEntity<?> updateBirthDate(@PathVariable int userID, @RequestBody Date birthDate) {
-        User user = g.fromJson(birthDate.toString(), User.class);
-        Date s = user.getBirthDate();
+    public ResponseEntity<?> updateBirthDate(@PathVariable int userID, @RequestBody String birthDate) {
+        Date s = null;
+        try {
+            s = new SimpleDateFormat("yyyy/MM/dd").parse(birthDate.substring(1, birthDate.length() - 1));
+        } catch (Exception e) {
+            return null;
+        }
         return ResponseEntity.ok(userService.updateBirthDate(userID, s));
     }
+
+    /**
+     * Updates a user's email using the userID as the identifier
+     *
+     * @param userID userId of user being updated
+     * @param email  user information being changed
+     * @return response entity 200 signaling successful update
+     */
+    @PutMapping("/email/{userID}")
+    public ResponseEntity<?> updateEmail(@PathVariable int userID, @RequestBody String email) {
+        return ResponseEntity.ok(userService.updateEmail(userID, email.substring(1, email.length() - 1)));
+    }
+
 }

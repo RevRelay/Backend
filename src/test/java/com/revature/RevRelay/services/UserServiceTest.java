@@ -1,6 +1,6 @@
 package com.revature.RevRelay.services;
 
-import com.revature.RevRelay.models.User;
+import com.revature.RevRelay.models.*;
 import com.revature.RevRelay.models.dtos.UserRegisterAuthRequest;
 import com.revature.RevRelay.repositories.PageRepository;
 import com.revature.RevRelay.repositories.UserRepository;
@@ -344,6 +344,27 @@ class UserServiceTest {
         try{
             Assertions.assertFalse(userService.updatePassword(0,"testpassword0","1234567890","1234567890"));
         }catch (Exception e){
+            e.printStackTrace();
+        }
+    }
+
+    @Test
+    void updateEmailToRobert() {
+        when(mockUserRepository.findByUserID(anyInt())).thenReturn(Optional.ofNullable(user));
+        try{
+            userService.updateEmail(0,"Robert@gmail.com");
+            Assertions.assertEquals("Robert@gmail.com", user.getEmail());
+        }catch(Exception e){
+            e.printStackTrace();
+        }
+    }
+
+    @Test
+    void updateEmailToRobertButFail() {
+        when(mockUserRepository.findByUserID(anyInt())).thenReturn(Optional.empty());
+        try{
+            Assertions.assertFalse(userService.updateEmail(10, "Robert@gmail.com"));
+        }catch(Exception e){
             e.printStackTrace();
         }
     }
