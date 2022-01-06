@@ -44,7 +44,6 @@ public class UserController {
         return ResponseEntity.ok(userService.createUser(user));
     }
 
-
     /**
      * Returns a UserDTO representing the logged-in user via JWT.
      *
@@ -63,16 +62,21 @@ public class UserController {
         }
     }
 
-    @PutMapping("/current")
-    ResponseEntity<?> updateCurrent(@RequestHeader("Authorization") String token, @RequestBody UserDTO userDTO) {
+    /**
+     * Takes in a UserUpdateDTO with email, firstName, lastName, birthDate,and displayName all in String format.
+     * In the userSerivice the date is converted from a String into a date. All info from the UserUpdateDTO is used to
+     * update the current user information.
+     *
+     * Returns a UserDTO with all this updated info in the correct format.
+     *
+     * @param token JWT of currently logged-in user from Authorization header.
+     * @param changedInfoUser UserUpdateDTO with email, firstName, lastName, birthDate,and displayName all in String format.
+     * @return ResponseEntity containing current user (UserDTO) with their updated info.
+     */
+    @PutMapping("/update")
+    public ResponseEntity<?> updateAnyInfo(@RequestHeader("Authorization") String token, @RequestBody UserUpdateDTO changedInfoUser){
         String tokenParsed = token.replace("Bearer", "").trim();
-        HttpHeaders responseHeaders = new HttpHeaders();
-        responseHeaders.setBearerAuth(tokenParsed);
-        try {
-            return new ResponseEntity<UserDTO>(userService.updateUser(token, userDTO), responseHeaders, HttpStatus.ACCEPTED);
-        } catch (UsernameNotFoundException e) {
-            return new ResponseEntity<String>("Current User Not Found", responseHeaders, HttpStatus.NOT_FOUND);
-        }
+        return ResponseEntity.ok(userService.updateUser(tokenParsed, changedInfoUser));
     }
 
     /**
@@ -84,30 +88,6 @@ public class UserController {
     @GetMapping("/{userID}")
     public ResponseEntity<?> findByUserID(@PathVariable int userID) {
         return ResponseEntity.ok(userService.loadUserDTOByUserID(userID));
-    }
-
-    /**
-     * Updates a user's first name using the userID as the identifier
-     *
-     * @param userID    userId of first name being changed
-     * @param firstName user information being changed
-     * @return response entity 200 signaling successful update
-     */
-    @PutMapping("/firstName/{userID}")
-    public ResponseEntity<?> updateFirstName(@PathVariable int userID, @RequestBody String firstName) {
-        return ResponseEntity.ok(userService.updateFirstName(userID, firstName.substring(1, firstName.length() - 1)));
-    }
-
-    /**
-     * Updates a user's last name using the userID as the identifier
-     *
-     * @param userID   userId of user being updated
-     * @param lastName user information being changed
-     * @return response entity 200 signaling successful update
-     */
-    @PutMapping("/lastName/{userID}")
-    public ResponseEntity<?> updateLastName(@PathVariable int userID, @RequestBody String lastName) {
-        return ResponseEntity.ok(userService.updateLastName(userID, lastName.substring(1, lastName.length() - 1)));
     }
 
     /**
@@ -125,65 +105,5 @@ public class UserController {
         String newPassword = json.get("newPassword");
         String confirmPassword = json.get("confirmPassword");
         return ResponseEntity.ok(userService.updatePassword(userID, oldPassword, newPassword, confirmPassword));
-    }
-
-    /**
-     * Updates a user's display name using the userID as the identifier
-     *
-     * @param userID      userId of user being updated
-     * @param displayName user information being changed
-     * @return response entity 200 signaling successful update
-     */
-    @PutMapping("/displayName/{userID}")
-    public ResponseEntity<?> updateDisplayName(@PathVariable int userID, @RequestBody String displayName) {
-        return ResponseEntity.ok(userService.updateDisplayName(userID, displayName.substring(1, displayName.length() - 1)));
-    }
-
-    /**
-     * Updates a user's birthday using the userID as the identifier
-     *
-     * @param userID    userId of user being updated
-     * @param birthDate user information being changed formatted *"yyyy-mm-ddT04:00:00.000Z"* Then we trim for just the first 10 values (Minus quotes)
-     * @return response entity 200 signaling successful update
-     */
-    @PutMapping("/birthDate/{userID}")
-    public ResponseEntity<?> updateBirthDate(@PathVariable int userID, @RequestBody String birthDate) {
-        Date s = null;
-        try {
-            s = new SimpleDateFormat("yyyy-MM-dd").parse(birthDate.substring(1, birthDate.length() - 15));
-        } catch (Exception e) {
-            return ResponseEntity.ok(e.getMessage());
-        }
-        return ResponseEntity.ok(userService.updateBirthDate(userID, s));
-    }
-
-    /**
-     * This endpoint handles adding a friend to your firends list.
-     * @param userID the id of the user that will add a friend.
-     * @param username the user that wil be added as a user.
-     * @return response entity 200 signaling successful update
-     */
-    @PostMapping("/addFriend/{userID}")
-    public ResponseEntity addFriend(@PathVariable int userID, @RequestParam String username) throws Exception {
-
-        return ResponseEntity.ok(userService.addFriend(userID, username));
-    }
-
-    /*
-     * Updates a user's email using the userID as the identifier
-     *
-     * @param userID userId of user being updated
-     * @param email  user information being changed
-     * @return response entity 200 signaling successful update
-     */
-    @PutMapping("/email/{userID}")
-    public ResponseEntity<?> updateEmail(@PathVariable int userID, @RequestBody String email) {
-        return ResponseEntity.ok(userService.updateEmail(userID, email.substring(1, email.length() - 1)));
-    }
-
-    @PutMapping("/update")
-    public ResponseEntity<?> updateAnyInfo(@RequestHeader("Authorization") String token, @RequestBody UserUpdateDTO changedInfoUser){
-        String tokenParsed = token.replace("Bearer", "").trim();
-        return ResponseEntity.ok(userService.updateUser(tokenParsed, changedInfoUser));
     }
 }
