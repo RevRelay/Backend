@@ -241,93 +241,6 @@ class UserServiceTest {
     }
 
     @Test
-    void updateFirstNameToRobert() {
-        when(mockUserRepository.findByUserID(anyInt())).thenReturn(Optional.ofNullable(user));
-        try{
-            userService.updateFirstName(0,"Robert");
-            Assertions.assertEquals("Robert", user.getFirstName());
-        }catch(Exception e){
-            e.printStackTrace();
-        }
-    }
-
-    @Test
-    void updateFirstNameToRobertButFail() {
-        when(mockUserRepository.findByUserID(anyInt())).thenReturn(Optional.empty());
-        try{
-            Assertions.assertFalse(userService.updateFirstName(10, "Robert"));
-        }catch(Exception e){
-            e.printStackTrace();
-        }
-    }
-
-    @Test
-    void updateLastNameToRobert() {
-        when(mockUserRepository.findByUserID(anyInt())).thenReturn(Optional.ofNullable(user));
-        try{
-            userService.updateLastName(0,"Robert");
-            Assertions.assertEquals("Robert", user.getLastName());
-        }catch(Exception e){
-            e.printStackTrace();
-        }
-    }
-
-    @Test
-    void updateLastNameToRobertButFail() {
-        when(mockUserRepository.findByUserID(anyInt())).thenReturn(Optional.empty());
-        try{
-            Assertions.assertFalse(userService.updateLastName(10, "Robert"));
-        }catch(Exception e){
-            e.printStackTrace();
-        }
-    }
-
-    @Test
-    void updateDisplayNameToRobert() {
-        when(mockUserRepository.findByUserID(anyInt())).thenReturn(Optional.ofNullable(user));
-        try{
-            userService.updateDisplayName(0,"Robert");
-            Assertions.assertEquals("Robert", user.getDisplayName());
-        }catch(Exception e){
-            e.printStackTrace();
-        }
-    }
-
-    @Test
-    void updateDisplayNameToRobertButFail() {
-        when(mockUserRepository.findByUserID(anyInt())).thenReturn(Optional.empty());
-        try{
-            Assertions.assertFalse(userService.updateDisplayName(10, "Robert"));
-        }catch(Exception e){
-            e.printStackTrace();
-        }
-    }
-
-    @Test
-    void updateBirthDate() {
-        when(mockUserRepository.findByUserID(anyInt())).thenReturn(Optional.ofNullable(user));
-        try{
-            Date date=new SimpleDateFormat("dd/MM/yyyy").parse("12/12/2020");
-            userService.updateBirthDate(0, date);
-            Assertions.assertEquals(date,user.getBirthDate());
-        }catch(Exception e){
-            e.printStackTrace();
-        }
-    }
-
-    @Test
-    void updateBirthDateButFail() {
-        when(mockUserRepository.findByUserID(anyInt())).thenReturn(Optional.empty());
-        try{
-            Date date=new SimpleDateFormat("dd/MM/yyyy").parse("12/12/2020");
-            userService.updateBirthDate(0,date);
-            Assertions.assertNotEquals(date,user.getBirthDate());
-        }catch(Exception e){
-            e.printStackTrace();
-        }
-    }
-
-    @Test
     void updatePasswordTo12345AndReturnTrue(){
         when(mockUserRepository.findByUserID(anyInt())).thenReturn(Optional.ofNullable(user));
         when(mockPasswordEncoder.matches(any(),any())).thenReturn(true);
@@ -501,27 +414,6 @@ class UserServiceTest {
             UserDTO testUserDTOOutput = userService.updateUser("mockToken", mockUserDTO);
             assertEquals(testUserDTOOutput.getFirstName(), "");
             assertEquals(testUserDTOOutput.getLastName(), "");
-        }
-    }
-
-    @Test
-    void updateEmailToRobert() {
-        when(mockUserRepository.findByUserID(anyInt())).thenReturn(Optional.ofNullable(user));
-        try{
-            userService.updateEmail(0,"Robert@gmail.com");
-            Assertions.assertEquals("Robert@gmail.com", user.getEmail());
-        }catch(Exception e){
-            e.printStackTrace();
-        }
-    }
-
-    @Test
-    void updateEmailToRobertButFail() {
-        when(mockUserRepository.findByUserID(anyInt())).thenReturn(Optional.empty());
-        try{
-            Assertions.assertFalse(userService.updateEmail(10, "Robert@gmail.com"));
-        }catch(Exception e){
-            e.printStackTrace();
         }
     }
 }
