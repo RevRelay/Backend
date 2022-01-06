@@ -95,9 +95,8 @@ public class PageService {
           // return userRepository.
         System.out.println(username);
         System.out.println("do you see me");
-    User user = userRepository.findByUsername(username).orElseThrow(() -> new Exception("No friends Found"));
-    //
-    List<User> friends = user.getFriends();
-    return friends;
+        User user = userRepository.findByUsername(username).orElseThrow(() -> new Exception("No friends Found"));
+        List<User> friends = user.getFriends();
+        return friends;
     }
 }
