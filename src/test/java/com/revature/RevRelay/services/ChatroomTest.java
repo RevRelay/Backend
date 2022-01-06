@@ -70,7 +70,7 @@ public class ChatroomTest {
 	
 	@Test
 	public void addMemberTest(){
-		User user =userRepository.save(new User(1,"test","test","test","test","test",null,"test",null,null,null,new HashSet<>()));
+		User user =userRepository.save(new User(1,"test","test","test","test","test",null,"test",null,null,null,new HashSet<>(),null));
 		Chatroom chatroom = new Chatroom();
 		chatroom.setChatID(10000000);
 		chatroom.setRoomName("TEST");
@@ -82,7 +82,7 @@ public class ChatroomTest {
 	
 	@Test
 	public void removeMemberTest(){
-		User user =userRepository.save(new User(1,"test","test","test","test","test",null,"test",null,null,null,new HashSet<>()));
+		User user =userRepository.save(new User(1,"test","test","test","test","test",null,"test",null,null,null,new HashSet<>(),null));
 		Chatroom chatroom = new Chatroom();
 		chatroom.setChatID(10000000);
 		chatroom.setRoomName("TEST");
@@ -100,7 +100,7 @@ public class ChatroomTest {
 	
 	@Test
 	public void getChatroomsByMembersTest(){
-		User user =userRepository.save(new User(1,"test","test","test","test","test",null,"test",null,null,null,new HashSet<>()));
+		User user =userRepository.save(new User(1,"test","test","test","test","test",null,"test",null,null,null,new HashSet<>(),null));
 		Chatroom chatroom = new Chatroom();
 		chatroom.setChatID(10000000);
 		chatroom.setRoomName("TEST");
