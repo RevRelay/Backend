@@ -111,8 +111,7 @@ public class UserController {
 
     /**
      * Updates a user's password using the userID as the identifier, user needs to
-     * input old password,
-     * new password, and confirm new password again
+     * input old password, new password, and confirm new password again
      *
      * @param userID userId of user being updated
      * @param json   json object of password array, old password and two new
@@ -143,7 +142,7 @@ public class UserController {
      * Updates a user's birthday using the userID as the identifier
      *
      * @param userID    userId of user being updated
-     * @param birthDate user information being changed
+     * @param birthDate user information being changed formatted *"yyyy-mm-ddT04:00:00.000Z"* Then we trim for just the first 10 values (Minus quotes)
      * @return response entity 200 signaling successful update
      */
     @PutMapping("/birthDate/{userID}")
