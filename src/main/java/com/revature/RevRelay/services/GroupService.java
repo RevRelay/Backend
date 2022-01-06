@@ -161,14 +161,17 @@ public class GroupService {
      * @param groupID groupID to add a member to
      * @param userID the id of user to add to group
      */
-    public void addMember(Integer groupID, Integer userID) {
-        Group group = groupRepository.getById(groupID);
-        User user = userRepository.getById(userID);
+    public Group addMember(Integer groupID, Integer userID) {
+        Group group = groupRepository.findById(groupID).orElse(null);
+        User user = userRepository.findById(userID).orElse(null);
 
         List<User> members = group.getMembers();
         members.add(user);
         group.setMembers((members));
-        groupRepository.save(group);
+        System.out.println("The User: "+user);
+        System.out.println("The Group: " + group);
+        groupRepository.flush();
+        return groupRepository.save(group);
     }
 
     /**

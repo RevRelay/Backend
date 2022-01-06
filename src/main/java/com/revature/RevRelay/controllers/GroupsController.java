@@ -131,8 +131,9 @@ public class GroupsController {
      * @param userID
      */
     @PostMapping("/addmember")
-    public void addMember(@RequestHeader("GroupID") Integer groupID, @RequestHeader("UserID") Integer userID) {
-        groupService.addMember(groupID, userID);
+    public Group addMember(@RequestHeader("GroupID") Integer groupID, @RequestHeader("UserID") Integer userID) {
+        System.out.println("***********************SOMETHING\n\n\n\n");
+        return groupService.addMember(groupID, userID);
     }
 
     /**

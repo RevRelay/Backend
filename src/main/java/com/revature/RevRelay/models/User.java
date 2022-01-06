@@ -1,10 +1,13 @@
 package com.revature.RevRelay.models;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.*;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import javax.persistence.*;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
+
+import java.io.Serializable;
 import java.util.Collection;
 import java.util.Date;
 import java.util.List;
@@ -51,7 +54,8 @@ public class User implements UserDetails {
     private String displayName;
 
     // User Relations to other models
-    @ManyToMany(cascade = CascadeType.MERGE)
+    @ManyToMany(mappedBy = "members",cascade = CascadeType.MERGE)
+    @JsonIgnore
     private List<Group> userGroups;
 
     @OneToMany(mappedBy="userOwner",cascade = CascadeType.MERGE)
@@ -93,5 +97,19 @@ public class User implements UserDetails {
     @Override
     public boolean isEnabled() {
         return true;
+    }
+
+    @Override
+    public String toString() {
+        return "User{" +
+                "userID=" + userID +
+                ", username='" + username + '\'' +
+                ", password='" + password + '\'' +
+                ", email='" + email + '\'' +
+                ", firstName='" + firstName + '\'' +
+                ", lastName='" + lastName + '\'' +
+                ", birthDate=" + birthDate +
+                ", displayName='" + displayName + '\'' +
+                '}';
     }
 }
