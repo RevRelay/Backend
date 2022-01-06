@@ -70,6 +70,14 @@ public class PageController {
     }
 
     /**
+     * @param User id user id to be searched and returned
+     * @return Page single page matching provided pageID
+     */
+    @GetMapping("/friends/{username}")
+    public ResponseEntity<?> getAllFriends(@PathVariable String username) throws Exception {
+            return ResponseEntity.ok(pageService.getAllFriendsFromUser(username));
+    }
+    /**
      * @param pageID pageID to be searched and returned
      * @return Page single page matching provided pageID
      */

@@ -144,4 +144,16 @@ public class UserController {
         Date s = user.getBirthDate();
         return ResponseEntity.ok(userService.updateBirthDate(userID, s));
     }
+
+    /**
+     * This endpoint handles adding a friend to your firends list.
+     * @param userID
+     * @param username
+     * @return response entity 200 signaling successful update
+     */
+    @PostMapping("/addFriend/{userID}")
+    public ResponseEntity addFriend(@PathVariable int userID, @RequestParam String username) throws Exception {
+
+        return ResponseEntity.ok(userService.addFriend(userID, username));
+    }
 }

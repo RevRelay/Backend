@@ -3,6 +3,7 @@ package com.revature.RevRelay.services;
 import com.revature.RevRelay.models.Page;
 import com.revature.RevRelay.models.User;
 import com.revature.RevRelay.repositories.PageRepository;
+import com.revature.RevRelay.repositories.UserRepository;
 import lombok.NoArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -12,13 +13,14 @@ import java.util.List;
 @NoArgsConstructor
 public class PageService {
     PageRepository pageRepository;
-
+    UserRepository userRepository;
     @Autowired
     /**
      * @param pageRepository to be autowired
      */
-    public PageService(PageRepository pageRepository) {
+    public PageService(PageRepository pageRepository, UserRepository userRepository) {
         this.pageRepository = pageRepository;
+        this.userRepository = userRepository;
     }
 
     // CREATE
@@ -82,5 +84,12 @@ public class PageService {
      */
     public void deletePageByID(Integer pageID) {
         pageRepository.deleteById(pageID);
+    }
+
+    public List<User> getAllFriendsFromUser(String username) throws Exception {
+          // return userRepository.
+    User user =userRepository.findByUsername(username).orElseThrow(() -> new Exception("No friends Found"));
+    List<User> friends = user.getFriends();
+    return friends;
     }
 }
