@@ -59,6 +59,7 @@ class GroupControllerTest {
         mockMvc = MockMvcBuilders.standaloneSetup(groupsController).build();
         mockMvc.perform(MockMvcRequestBuilders.post("/groups")
                 .contentType(MediaType.APPLICATION_JSON)
+                .header("Authorization"," ")
                 .content(mapper.writeValueAsString(group)))
                 .andExpect(status().isOk()).andDo(print());
     }
@@ -87,4 +88,33 @@ class GroupControllerTest {
         mockMvc.perform(MockMvcRequestBuilders.get("/groups/{groupsID}", 10)).andExpect(status().isOk())
                 .andDo(print());
     }
+
+    @Test
+    void updateGroupsTestWithValidData () throws Exception {
+        Group group = new Group();
+        User user1 = userRepository.save(user);
+        group.setGroupName("hello");
+        group.setUserOwner(user1);
+        group.setPrivate(false);
+        groupRepository.save(group);
+        mockMvc = MockMvcBuilders.standaloneSetup(groupsController).build();
+        mockMvc.perform(MockMvcRequestBuilders.put("/groups")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(mapper.writeValueAsString(group)))
+                .andExpect((status().isOk())).andDo(print());
+    }
+
+    @Test
+    void deleteGroupIDTestWithValidData () throws Exception {
+        Group group = new Group();
+        User user1 = userRepository.save(user);
+        group.setGroupName("hello");
+        group.setUserOwner(user1);
+        group.setPrivate(false);
+        groupRepository.save(group);
+        mockMvc = MockMvcBuilders.standaloneSetup(groupsController).build();
+        mockMvc.perform(MockMvcRequestBuilders.delete("/groups/{groupID}", group.getGroupID()))
+                .andExpect((status().isOk())).andDo(print());
+    }
+
 }

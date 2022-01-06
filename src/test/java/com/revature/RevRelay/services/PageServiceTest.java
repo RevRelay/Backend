@@ -3,10 +3,10 @@ package com.revature.RevRelay.services;
 import com.revature.RevRelay.models.Group;
 import com.revature.RevRelay.models.Page;
 import com.revature.RevRelay.models.User;
+import com.revature.RevRelay.repositories.ChatroomRepository;
 import com.revature.RevRelay.repositories.GroupRepository;
 import com.revature.RevRelay.repositories.PageRepository;
 import com.revature.RevRelay.repositories.UserRepository;
-
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -32,9 +32,13 @@ public class PageServiceTest {
 	@Autowired
 	PageService pageService;
 	@Autowired
+	UserService userService;
+	@Autowired
 	UserRepository userRepository;
 	@Autowired
 	GroupRepository groupRepository;
+	@Autowired
+	ChatroomRepository chatroomRepository;
 
 	User user;
 	Group group;
@@ -71,8 +75,8 @@ public class PageServiceTest {
 	public void getAllTest() {
 		pageRepository.deleteAll();
 		groupRepository.deleteAll();
+		chatroomRepository.deleteAll();
 		userRepository.deleteAll();
-
 
 		List<Page> Pages = new ArrayList<>();
 		userRepository.save(user);
@@ -112,9 +116,7 @@ public class PageServiceTest {
 		} catch (Exception e) {
 			page1 = null;
 		}
-
 		assertNull(page1);
-
 	}
 
 	@Test
@@ -122,7 +124,6 @@ public class PageServiceTest {
 		pageRepository.deleteAll();
 		groupRepository.deleteAll();
 		userRepository.deleteAll();
-
 		userRepository.save(user);
 
 		Page page = new Page();
@@ -141,5 +142,32 @@ public class PageServiceTest {
 		Page Page1 = pageService.createPage(page);
 		assertEquals(page, Page1);
 		assertEquals(Page1.getPageID(), pageService.getPageByGroupID(Page1.getGroupOwner().getGroupID()).getPageID());
+	}
+
+	@Test
+	public void getAllFriendsFromUserTest() throws Exception {
+		boolean friendFound = false;
+		//pageRepository.deleteAll();
+		User user = new User();
+		user.setUsername("fakeUser");
+		user.setPassword("fakePassword");
+		user.setEmail("fakeEmail@");
+		user.setDisplayName("fakeDisplayName");
+		userRepository.save(user);
+		User friend = new User();
+		friend.setUsername("fakeUserrr");
+		friend.setPassword("fakePasswordrr");
+		friend.setEmail("fakeEmailrr");
+		friend.setDisplayName("fakeDisplayNamerrr");
+		userRepository.save(friend);
+
+		userService.addFriend(user.getUserID(), friend.getUsername());
+		List<User> friends = pageService.getAllFriendsFromUser(user.getUsername());
+		for (User friend1: friends){
+			if (friend1.getUsername().equals(friend.getUsername())){
+				friendFound = true;
+			}
+		}
+		assertEquals(friendFound, true);
 	}
 }
