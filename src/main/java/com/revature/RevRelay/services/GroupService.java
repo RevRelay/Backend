@@ -196,7 +196,7 @@ public class GroupService {
      * @return
      */
     public Page<Group> findAllMembersByUserID(Integer userID){
-        return groupRepository.findAllGroupByMembersUserIDOrFindAllByUserOwnerUserID(userID,userID,Pageable.unpaged());
+        return groupRepository.findAllGroupByMembersUserIDOrUserOwner_UserID(userID,userID,Pageable.unpaged());
     }
     /**
      * Finds all Groups a userID is associated with. Config the pageable
@@ -205,6 +205,6 @@ public class GroupService {
      * @return
      */
     public Page<Group> findAllMembersByUserID(Integer userID,Pageable pageable){
-        return groupRepository.findAllGroupByMembersUserIDOrFindAllByUserOwnerUserID(userID,userID, pageable);
+        return groupRepository.findAllGroupByMembersUserIDOrUserOwner_UserID(userID,userID, pageable);
     }
 }
