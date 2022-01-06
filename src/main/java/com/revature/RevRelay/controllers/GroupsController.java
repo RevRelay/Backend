@@ -8,6 +8,8 @@ import com.revature.RevRelay.utils.JwtUtil;
 import lombok.NoArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -139,8 +141,23 @@ public class GroupsController {
      * @param groupID
      * @param userID
      */
-    @DeleteMapping("deletemember")
-    public void deleteMember(@RequestHeader("GroupID") Integer groupID, @RequestHeader("UserID") Integer userID) {
+    @DeleteMapping("/deletemember")
+    public ResponseEntity<?> deleteMember(@RequestHeader("GroupID") Integer groupID, @RequestHeader("UserID") Integer userID) {
         groupService.deleteMember(groupID, userID);
+        return ResponseEntity.ok(groupID);
+    }
+
+    /**
+     * Gets all members that a userID is apart of. Meaning a Owner of or a member of
+     * @param userID user to check by
+     * @param pageNumber pageable config
+     * @param pageSize pagable config
+     * @return ResponseEntity with Pageable
+     */
+    @GetMapping("/getallmembers/{userID}")
+    public ResponseEntity<?> getMembers(@PathVariable Integer userID,@RequestParam(value = "pageNumber",required = false) Integer pageNumber,@RequestParam(value = "pageSize",required = false) Integer pageSize){
+        if(pageNumber!=null&&pageSize!=null)
+            return ResponseEntity.ok(groupService.findAllMembersByUserID(userID, PageRequest.of(pageNumber,pageSize)));
+        else return ResponseEntity.ok(groupService.findAllMembersByUserID(userID, Pageable.ofSize(10)));
     }
 }

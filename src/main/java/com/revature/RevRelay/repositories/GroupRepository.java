@@ -20,4 +20,5 @@ public interface GroupRepository extends JpaRepository<Group, Integer> {
     Optional<List<Group>> findByGroupNameContainingIgnoreCase(String displayName);
     Page<Group> findByGroupNameContainingIgnoreCase(String displayName, Pageable pageable);
 
+    Page<Group> findAllGroupByMembersUserIDOrFindAllByUserOwnerUserID(Integer userID,Integer userID2,Pageable pageable);
 }

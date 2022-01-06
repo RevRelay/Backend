@@ -189,4 +189,22 @@ public class GroupService {
         group.setMembers(members);
         groupRepository.save(group);
     }
+
+    /**
+     * Finds all Groups a userID is associated with. Default to dump everything in 1 page
+     * @param userID
+     * @return
+     */
+    public Page<Group> findAllMembersByUserID(Integer userID){
+        return groupRepository.findAllGroupByMembersUserIDOrFindAllByUserOwnerUserID(userID,userID,Pageable.unpaged());
+    }
+    /**
+     * Finds all Groups a userID is associated with. Config the pageable
+     *
+     * @param userID
+     * @return
+     */
+    public Page<Group> findAllMembersByUserID(Integer userID,Pageable pageable){
+        return groupRepository.findAllGroupByMembersUserIDOrFindAllByUserOwnerUserID(userID,userID, pageable);
+    }
 }
