@@ -4,6 +4,7 @@ import com.google.gson.Gson;
 import com.revature.RevRelay.models.User;
 import com.revature.RevRelay.models.dtos.UserDTO;
 import com.revature.RevRelay.models.dtos.UserRegisterAuthRequest;
+import com.revature.RevRelay.models.dtos.UserUpdateDTO;
 import com.revature.RevRelay.services.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
@@ -166,6 +167,12 @@ public class UserController {
     @PutMapping("/email/{userID}")
     public ResponseEntity<?> updateEmail(@PathVariable int userID, @RequestBody String email) {
         return ResponseEntity.ok(userService.updateEmail(userID, email.substring(1, email.length() - 1)));
+    }
+
+    @PutMapping("/update")
+    public ResponseEntity<?> updateAnyInfo(@RequestHeader("Authorization") String token, @RequestBody UserUpdateDTO changedInfoUser){
+        String tokenParsed = token.replace("Bearer", "").trim();
+        return ResponseEntity.ok(userService.updateUser(tokenParsed, changedInfoUser));
     }
 
 }

@@ -2,6 +2,7 @@ package com.revature.RevRelay.services;
 
 import com.revature.RevRelay.models.Page;
 import com.revature.RevRelay.models.dtos.UserDTO;
+import com.revature.RevRelay.models.dtos.UserUpdateDTO;
 import com.revature.RevRelay.repositories.PageRepository;
 import com.revature.RevRelay.repositories.UserRepository;
 import com.revature.RevRelay.models.User;
@@ -17,6 +18,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 
+import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Optional;
 
@@ -188,6 +190,41 @@ public class UserService implements UserDetailsService {
         return new UserDTO(userRepository.save(user));
     }
 
+    /**
+     * Borrows the method from NL, overloaded to take updateUserDTO - AL
+     * See above comment, Doesn't allow for null entries
+     * Method overloads for userUpdate to update a user from the frontend
+     *
+     * @param token   JWT corresponding to a User in the database.
+     * @param userDTO UserDTO deserialized from a Controller query.
+     * @return UserDTO object corresponding to the User after edits.
+     * @throws UsernameNotFoundException If Token fails to find a User
+     */
+    public UserDTO updateUser(String token, UserUpdateDTO userDTO) throws UsernameNotFoundException {
+        User user = loadUserByToken(token);
+        if (userDTO.getEmail() != null) {
+            user.setEmail(userDTO.getEmail());
+        }
+        if (userDTO.getFirstName() != null) {
+            user.setFirstName(userDTO.getFirstName());
+        }
+        if (isValidLastName(userDTO.getLastName())) {
+            user.setLastName(userDTO.getLastName());
+        }
+        if (userDTO.getBirthDate() != null) {
+            Date s = null;
+            try {
+                s = new SimpleDateFormat("yyyy-MM-dd").parse(userDTO.getBirthDate().substring(0, userDTO.getBirthDate().length() - 14));
+            } catch (Exception e) {
+                return null;
+            }
+            user.setBirthDate(s);
+        }
+        if (userDTO.getDisplayName() != null) {
+            user.setDisplayName(userDTO.getDisplayName());
+        }
+        return new UserDTO(userRepository.save(user));
+    }
     /**
      * Updates a User's first name, to be displayed on their profile
      *
