@@ -53,6 +53,7 @@ public class PageServiceTest {
 
 		this.group = new Group();
 		group.setGroupName("fakeGroup");
+//		userRepository.deleteAll();
 	}
 
 	@Test
@@ -148,6 +149,7 @@ public class PageServiceTest {
 	public void getAllFriendsFromUserTest() throws Exception {
 		boolean friendFound = false;
 		//pageRepository.deleteAll();
+		userRepository.deleteAll();
 		User user = new User();
 		user.setUsername("fakeUser");
 		user.setPassword("fakePassword");

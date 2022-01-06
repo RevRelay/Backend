@@ -20,6 +20,7 @@ import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
@@ -42,22 +43,28 @@ public class GroupServiceTest {
 	PostRepository postRepo;
 	@Autowired
 	PageRepository pageRepo;
-	
-	User user;
+
+	private final String testUsername = "fakeUser";
+	private final String testPassword = "testPassword";
+	private final String testEmail = "fakeEmail";
+	private final String testDisplayName = "fakeDisplayName";
+	private User user;
 
 	@BeforeEach
 	public void setup(){
+		userRepository.deleteAll();
+		groupRepository.deleteAll();
 		postRepo.deleteAll();
 		pageRepo.deleteAll();
-		groupRepository.deleteAll();
+
+		this.user = new User();
+		user.setUsername(testUsername);
+		user.setPassword(testPassword);
+		user.setEmail(testEmail);
+		user.setDisplayName(testDisplayName);
 	}
 
 	public GroupServiceTest() {
-		this.user = new User();
-		user.setUsername("fakeUser");
-		user.setPassword("fakePassword");
-		user.setEmail("fakeEmail");
-		user.setDisplayName("fakeDisplayName");
 	}
 
 	@Test
@@ -182,7 +189,7 @@ public class GroupServiceTest {
 		user2.setDisplayName("user2");
 		user2 = userRepository.save(user2);
 		Group group = new Group();
-		group.setUserOwner(user1);
+//		group.setUserOwner(user1);
 		group.setGroupName("name");
 		group = groupRepository.save(group);
 		groupService.addMember(group.getGroupID(),user2.getUserID());
@@ -230,6 +237,7 @@ public class GroupServiceTest {
 		Group group = new Group();
 		group.setUserOwner(user1);
 		group.setGroupName("name");
+		System.out.println(group.getUserOwnerID());
 		group = groupRepository.save(group);
 		groupService.addMember(group.getGroupID(),user2.getUserID());
 		List<User> memberList = groupService.getGroupByGroupID(group.getGroupID()).getMembers();
@@ -253,7 +261,7 @@ public class GroupServiceTest {
 		user2.setDisplayName("user2");
 		user2 = userRepository.save(user2);
 		Group group = new Group();
-		group.setUserOwner(user1);
+		group.setUserOwnerID(user1.getUserID());
 		group.setGroupName("name");
 		group = groupRepository.save(group);
 		groupService.addMember(group.getGroupID(),user2.getUserID());

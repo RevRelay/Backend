@@ -4,9 +4,12 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.hibernate.annotations.Cascade;
 import javax.persistence.*;
 import java.util.List;
 import java.util.Set;
+
+import org.hibernate.annotations.CascadeType;
 
 @Getter
 @Setter
@@ -20,7 +23,8 @@ public class Chatroom {
 	@SequenceGenerator(name = "chatroom_generator", sequenceName = "chatroom_seq")
 	private int chatID;
 
-	@ManyToMany(cascade = CascadeType.MERGE)
+	@ManyToMany(mappedBy= "chatRooms")
+	@Cascade(CascadeType.MERGE)
 	private Set<User> members;
 
 	@Column(nullable = false)

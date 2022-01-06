@@ -12,6 +12,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * Service layer for Group model
@@ -164,14 +165,12 @@ public class GroupService {
     public Group addMember(Integer groupID, Integer userID) {
         Group group = groupRepository.findById(groupID).orElse(null);
         User user = userRepository.findById(userID).orElse(null);
-
-        List<User> members = group.getMembers();
-        members.add(user);
-        group.setMembers((members));
-        System.out.println("The User: "+user);
-        System.out.println("The Group: " + group);
-        groupRepository.flush();
-        return groupRepository.save(group);
+        assert(group!=null && user!=null);
+        List<Group> userGroups = user.getUserGroups();
+        userGroups.add(group);
+        user.setUserGroups(userGroups);
+        userRepository.save(user);
+        return groupRepository.findById(groupID).orElse(null);
     }
 
     /**
@@ -180,17 +179,14 @@ public class GroupService {
      * @param userID loops through groups members and deletes userID
      */
     public void deleteMember(Integer groupID, Integer userID) {
-        Group group = groupRepository.getById(groupID);
-        User user = userRepository.getById(userID);
-
-        List<User> members = group.getMembers();
-
-        for(int i = 0; i < members.size();i++){
-            if(members.get(i).getUserID()==userID)
-                members.remove(i);
-        }
-        group.setMembers(members);
-        groupRepository.save(group);
+        Group group = groupRepository.findById(groupID).orElse(null);
+        User user = userRepository.findById(userID).orElse(null);
+        assert(group!=null && user!=null);
+        List<Group> userGroups = user.getUserGroups();
+        user.setUserGroups(userGroups.stream()
+                .filter((userGroup) ->
+                        userGroup.getGroupID() != group.getGroupID()).collect(Collectors.toList()));
+        userRepository.save(user);
     }
 
     /**
@@ -199,7 +195,7 @@ public class GroupService {
      * @return
      */
     public Page<Group> findAllMembersByUserID(Integer userID){
-        return groupRepository.findAllGroupByMembersUserIDOrUserOwner_UserID(userID,userID,Pageable.unpaged());
+        return groupRepository.findAllGroupByMembersUserIDOrUserOwnerID(userID,userID,Pageable.unpaged());
     }
     /**
      * Finds all Groups a userID is associated with. Config the pageable
@@ -208,6 +204,6 @@ public class GroupService {
      * @return
      */
     public Page<Group> findAllMembersByUserID(Integer userID,Pageable pageable){
-        return groupRepository.findAllGroupByMembersUserIDOrUserOwner_UserID(userID,userID, pageable);
+        return groupRepository.findAllGroupByMembersUserIDOrUserOwnerID(userID,userID, pageable);
     }
 }
