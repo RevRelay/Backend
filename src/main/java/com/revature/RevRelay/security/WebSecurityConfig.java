@@ -23,6 +23,8 @@ import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
+import java.util.Arrays;
+
 import static java.util.Objects.requireNonNull;
 import static org.springframework.http.HttpStatus.FORBIDDEN;
 import static org.springframework.security.config.http.SessionCreationPolicy.STATELESS;
@@ -132,31 +134,33 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
      * @return CorsConfigurationSource configured with applyPermitDefaultValues on
      *         all endpoints.
      */
+
+    /*
     @Bean
     CorsConfigurationSource corsConfigurationSource() {
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
         source.registerCorsConfiguration("/**", new CorsConfiguration().applyPermitDefaultValues());
         return source;
     }
-
+    */
     // Alternate bean for providing CorsConfigurationSource. Necessary for allowing
     // non-default verbs such as delete.
     // As the defaults are plenty, this should not be used, but I'm keeping it just
     // in case we need it. - NL
-    // @Bean
-    // CorsConfigurationSource corsConfigurationSource() {
-    // CorsConfiguration configuration = new CorsConfiguration();
-    // configuration.setAllowedOrigins(Arrays.asList("*"));
-    // configuration.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "PATCH",
-    // "DELETE", "OPTIONS"));
-    // configuration.setAllowedHeaders(Arrays.asList("authorization",
-    // "content-type", "x-auth-token"));
-    // configuration.setExposedHeaders(Arrays.asList("x-auth-token"));
-    // UrlBasedCorsConfigurationSource source = new
-    // UrlBasedCorsConfigurationSource();
-    // source.registerCorsConfiguration("/**", configuration);
-    // return source;
-    // }
+    @Bean
+    CorsConfigurationSource corsConfigurationSource() {
+        CorsConfiguration configuration = new CorsConfiguration();
+        configuration.setAllowedOrigins(Arrays.asList("*"));
+        configuration.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "PATCH",
+        "DELETE", "OPTIONS"));
+        configuration.setAllowedHeaders(Arrays.asList("authorization",
+        "content-type", "x-auth-token"));
+        configuration.setExposedHeaders(Arrays.asList("x-auth-token"));
+        UrlBasedCorsConfigurationSource source = new
+        UrlBasedCorsConfigurationSource();
+        source.registerCorsConfiguration("/**", configuration);
+        return source;
+    }
 
     /**
      * Provides a TokenAuthFilter configured on PROTECTED_URLS using

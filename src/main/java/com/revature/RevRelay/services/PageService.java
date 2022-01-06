@@ -14,10 +14,10 @@ import java.util.List;
 public class PageService {
     PageRepository pageRepository;
     UserRepository userRepository;
-    @Autowired
     /**
      * @param pageRepository to be autowired
      */
+    @Autowired
     public PageService(PageRepository pageRepository, UserRepository userRepository) {
         this.pageRepository = pageRepository;
         this.userRepository = userRepository;
@@ -26,7 +26,6 @@ public class PageService {
     // CREATE
 
     /**
-     *
      * @param page page to be created
      * @return Page the page that is being created
      */
@@ -86,9 +85,18 @@ public class PageService {
         pageRepository.deleteById(pageID);
     }
 
+    /**
+     * This method gets all the friends from a user
+     * @param username of the user you wish to update
+     * @return List of friends
+     * @throws Exception
+     */
     public List<User> getAllFriendsFromUser(String username) throws Exception {
           // return userRepository.
-    User user =userRepository.findByUsername(username).orElseThrow(() -> new Exception("No friends Found"));
+        System.out.println(username);
+        System.out.println("do you see me");
+    User user = userRepository.findByUsername(username).orElseThrow(() -> new Exception("No friends Found"));
+    //
     List<User> friends = user.getFriends();
     return friends;
     }

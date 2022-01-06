@@ -22,6 +22,8 @@ import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
+/* TODO - Add tests for email service */
+
 /**
  * Returns a UserService object, which allows a User to update information on
  * their personal page
@@ -138,16 +140,54 @@ public class UserService implements UserDetailsService {
      *
      * @param token Token with information about the username inside the token
      * @return returns optional user
-     * @throws Exception Throws exception if token does not exist OR optional is
-     *                   null
+     * @throws UsernameNotFoundException Throws exception if token does not exist
+     *                                   OR optional is null
      */
-    public User findByToken(String token) throws Exception {
+    public User loadUserByToken(String token) throws UsernameNotFoundException {
         Optional<User> user = userRepository.findByUsername(jwtUtil.extractUsername(token));
         if (user.isPresent()) {
             return user.get();
         } else {
-            throw new Exception("Token Does Not Correspond to User");
+            throw new UsernameNotFoundException("Token Does Not Correspond to User");
         }
+    }
+
+    /**
+     * Single function for updating a User (identified by a JWT) via a UserDTO.
+     * Updates Username, Email, FirstName, LastName, BirthDate, and DisplayName.
+     * Not suitable for updating a password.
+     * Note that the isValid functions do allow empty strings (for deleting
+     * user information from the database) while not allowing nulls. The exception is
+     * BirthDate, which could be solved in a few ways (very distant past date == delete?).
+     * Invalid inputs are ignored without feedback to the user; possible point
+     * of improvement. - NL
+     *
+     * @param token   JWT corresponding to a User in the database.
+     * @param userDTO UserDTO deserialized from a Controller query.
+     * @return UserDTO object corresponding to the User after edits.
+     * @throws UsernameNotFoundException If Token fails to find a User.
+     */
+    public UserDTO updateUser(String token, UserDTO userDTO) throws UsernameNotFoundException {
+        User user = loadUserByToken(token);
+        if (isValidUsername(userDTO.getUsername())) {
+            user.setUsername(userDTO.getUsername());
+        }
+        if (isValidEmail(userDTO.getEmail())) {
+            user.setEmail(userDTO.getEmail());
+        }
+        if (isValidFirstName(userDTO.getFirstName())) {
+            user.setFirstName(userDTO.getFirstName());
+        }
+        if (isValidLastName(userDTO.getLastName())) {
+            user.setLastName(userDTO.getLastName());
+        }
+        if (isValidBirthDate(userDTO.getBirthDate())) {
+            user.setBirthDate(userDTO.getBirthDate());
+        }
+        if (isValidDisplayName(userDTO.getDisplayName())) {
+            user.setDisplayName(userDTO.getDisplayName());
+        }
+        return new UserDTO(userRepository.save(user));
     }
 
     /**
@@ -178,6 +218,23 @@ public class UserService implements UserDetailsService {
         User user = userRepository.findByUserID(userID).orElse(null);
         if (user != null) {
             user.setLastName(lastName);
+            userRepository.save(user);
+            return true;
+        }
+        return false;
+    }
+
+    /**
+     * Updates a User's last name, to be displayed on their profile
+     *
+     * @param userID   The User's unique ID
+     * @param email The User's desired last name
+     * @return True if the update succeeds, or else false
+     */
+    public boolean updateEmail(int userID, String email) {
+        User user = userRepository.findByUserID(userID).orElse(null);
+        if (user != null) {
+            user.setEmail(email);
             userRepository.save(user);
             return true;
         }
@@ -250,7 +307,7 @@ public class UserService implements UserDetailsService {
     /**
      * Verifies that a username is suitable based on our constraints.
      *
-     * @param username New username prior to hashing and storage to database.
+     * @param username New username.
      * @return True if valid, false if invalid.
      */
     private boolean isValidUsername(String username) {
@@ -270,30 +327,79 @@ public class UserService implements UserDetailsService {
     /**
      * Verifies that a email is suitable based on our constraints.
      *
-     * @param email New email prior to hashing and storage to database.
+     * @param email New email.
      * @return True if valid, false if invalid.
      */
     private boolean isValidEmail(String email) {
         return (!userRepository.existsByEmail(email) && email != null);
     }
 
+    /**
+     * This method allows for allowing friends to be added to a user.
+     * @param userID of user who wishes to add a friend
+     * @param friendUsername the username of the friend.
+     * @return the friend that was added
+     * @throws Exception
+     */
     public User addFriend(int userID, String friendUsername) throws Exception {
         User friend = userRepository.findByUsername(friendUsername).orElseThrow(() -> new Exception("No friend Found"));
         User user = userRepository.findByUserID(userID).orElseThrow(() -> new Exception("No person Found"));
-        if (user.getUsername().equals(friend.getUsername())){
-                return friend;
+        if (user.getUsername().equals(friend.getUsername())) {
+            return friend;
         }
         List<User> friends = user.getFriends();
-        List<User> friendsFriends =friend.getFriends();
+        List<User> friendsFriends = friend.getFriends();
         friendsFriends.add(user);
-        for (User friendInList: friends){
-               if (friendInList.getUsername() == friend.getUsername()){
-                   return friend;
-               }
-        };
+        for (User friendInList : friends) {
+            if (friendInList.getUsername() == friend.getUsername()) {
+                return friend;
+            }
+        }
+        ;
         friends.add(friend);
         user.setFriends(friends);
         userRepository.save(user);
         return friend;
     }
+    /**
+     * Verifies that a firstName is suitable based on our constraints.
+     *
+     * @param firstName New firstName.
+     * @return True if valid, false if invalid.
+     */
+    private boolean isValidFirstName(String firstName) {
+        return (firstName != null);
+    }
+
+    /**
+     * Verifies that a lastName is suitable based on our constraints.
+     *
+     * @param lastName New lastName.
+     * @return True if valid, false if invalid.
+     */
+    private boolean isValidLastName(String lastName) {
+        return (lastName != null);
+    }
+
+    /**
+     * Verifies that a displayName is suitable based on our constraints.
+     *
+     * @param displayName New displayName.
+     * @return True if valid, false if invalid.
+     */
+    private boolean isValidDisplayName(String displayName) {
+        return (displayName != null);
+    }
+
+    /**
+     * Verifies that a birthDate is suitable based on our constraints.
+     *
+     * @param birthDate New displayName.
+     * @return True if valid, false if invalid.
+     */
+    private boolean isValidBirthDate(Date birthDate) {
+        Date minBirthDate = new Date(-2208988800000L); // Jan 1st 1900, 12:00 AM
+        return (birthDate != null && birthDate.after(minBirthDate));
+    }
+
 }

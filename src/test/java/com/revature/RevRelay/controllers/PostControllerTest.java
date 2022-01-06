@@ -1,4 +1,4 @@
-package com.revature.RevRelay.services.controllerTest;
+package com.revature.RevRelay.controllers;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.revature.RevRelay.controllers.PageController;

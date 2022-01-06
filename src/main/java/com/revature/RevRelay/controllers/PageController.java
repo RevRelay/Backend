@@ -6,6 +6,7 @@ import lombok.NoArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
 import java.util.List;
 
 /**
@@ -18,9 +19,6 @@ public class PageController {
     PageService pageService;
 
 
-
-
-
     /**
      * @param pageService autowired pageService
      */
@@ -28,10 +26,6 @@ public class PageController {
     public PageController(PageService pageService) {
         this.pageService = pageService;
     }
-
-
-
-
 
 
     /**
@@ -70,7 +64,7 @@ public class PageController {
     }
 
     /**
-     * @param User id user id to be searched and returned
+     * @param Username to be searched and returned
      * @return Page single page matching provided pageID
      */
     @GetMapping("/friends/{username}")

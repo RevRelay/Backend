@@ -1,4 +1,4 @@
-package com.revature.RevRelay.services.controllerTest;
+package com.revature.RevRelay.controllers;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.revature.RevRelay.controllers.GroupsController;
@@ -59,6 +59,7 @@ class GroupControllerTest {
         mockMvc = MockMvcBuilders.standaloneSetup(groupsController).build();
         mockMvc.perform(MockMvcRequestBuilders.post("/groups")
                 .contentType(MediaType.APPLICATION_JSON)
+                .header("Authorization"," ")
                 .content(mapper.writeValueAsString(group)))
                 .andExpect(status().isOk()).andDo(print());
     }

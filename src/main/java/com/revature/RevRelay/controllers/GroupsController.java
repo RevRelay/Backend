@@ -1,7 +1,10 @@
 package com.revature.RevRelay.controllers;
 
 import com.revature.RevRelay.models.Group;
+import com.revature.RevRelay.models.User;
 import com.revature.RevRelay.services.GroupService;
+import com.revature.RevRelay.services.UserService;
+import com.revature.RevRelay.utils.JwtUtil;
 import lombok.NoArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -28,6 +31,9 @@ TODO: refactor method returns to handle optionals?
 public class GroupsController {
     GroupService groupService;
 
+    UserService userService;
+
+    JwtUtil jwtUtil;
 
     /**
      * Constructor for GroupsController
@@ -35,12 +41,11 @@ public class GroupsController {
      * @param groupService is the service layer for Group
      */
     @Autowired
-    public GroupsController(GroupService groupService) {
+    public GroupsController(GroupService groupService, UserService userService, JwtUtil jwtUtil) {
+        this.jwtUtil = jwtUtil;
+        this.userService = userService;
         this.groupService = groupService;
     }
-
-
-
 
     /**
      * Endpoint for persisting a Group onto the database
@@ -52,7 +57,10 @@ public class GroupsController {
      * @return ResponseEntity<?> contains the response and the newly create group
      */
     @PostMapping
-    public ResponseEntity<?> createGroup(@RequestBody Group group) {
+    public ResponseEntity<?> createGroup(@RequestBody Group group, @RequestHeader("Authorization") String token) {
+        if (token != null && token.length() > 1) {
+            group.setUserOwner(userService.loadUserByToken(token.replace("Bearer", "").trim()));
+        }
         return ResponseEntity.ok(groupService.createGroup(group));
     }
 
@@ -93,7 +101,6 @@ public class GroupsController {
         return groupService.getGroupByGroupID(groupID);
     }
 
-
     /**
      * Endpoint for updating a group with a new group object
      *
@@ -105,7 +112,6 @@ public class GroupsController {
         return groupService.updateGroups(group);
     }
 
-
     /**
      * Endpoint for deleting a group using the groupID
      *
@@ -114,5 +120,27 @@ public class GroupsController {
     @DeleteMapping("/{groupID}")
     public void deleteGroupsByID(@PathVariable Integer groupID) {
         groupService.deleteGroupsByID(groupID);
+    }
+
+    /**
+     * Endpoint for adding members to groups
+     *
+     * @param groupID
+     * @param userID
+     */
+    @PostMapping("/addmember")
+    public void addMember(@RequestHeader("GroupID") Integer groupID, @RequestHeader("UserID") Integer userID) {
+        groupService.addMember(groupID, userID);
+    }
+
+    /**
+     * Endpoint for removing members from groups
+     *
+     * @param groupID
+     * @param userID
+     */
+    @DeleteMapping("deletemember")
+    public void deleteMember(@RequestHeader("GroupID") Integer groupID, @RequestHeader("UserID") Integer userID) {
+        groupService.deleteMember(groupID, userID);
     }
 }

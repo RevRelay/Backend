@@ -3,6 +3,7 @@ package com.revature.RevRelay.services;
 import com.revature.RevRelay.enums.PostType;
 import com.revature.RevRelay.models.Page;
 import com.revature.RevRelay.models.Post;
+import com.revature.RevRelay.repositories.GroupRepository;
 import com.revature.RevRelay.repositories.PageRepository;
 import com.revature.RevRelay.repositories.PostRepository;
 import org.assertj.core.util.DateUtil;
@@ -30,6 +31,8 @@ public class PostServiceTest {
 	PostRepository postRepo;
 	@Autowired
 	PageRepository pageRepo;
+	@Autowired
+	GroupRepository groupRepo;
 
 	PostService service;
 
@@ -37,6 +40,7 @@ public class PostServiceTest {
 	public void setup(){
 		postRepo.deleteAll();
 		pageRepo.deleteAll();
+		groupRepo.deleteAll();
 		service = new PostService(postRepo);
 	}
 	
@@ -74,10 +78,10 @@ public class PostServiceTest {
 	@Test
 	public void findPostByPostPageIDTest(){
 		Page page = new Page(1,"","",false,false,null,null,null);
-		pageRepo.save(page);
+		page = pageRepo.save(page);
 		Post post = new Post(1, PostType.ORIGINAL,"TEST","CONTENT",-1, DateUtil.now(),0,page,null,null);
-		postRepo.save(post);
-		assertEquals("TEST",service.findPostByPostPageID(1).getContent().get(0).getPostTitle());
+		post = postRepo.save(post);
+		assertEquals("TEST",service.findPostByPostPageID(page.getPageID()).getContent().get(0).getPostTitle());
 	}
 	
 	@Test
