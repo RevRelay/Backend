@@ -15,18 +15,17 @@ import java.util.Set;
 @Entity
 public class Chatroom {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.AUTO, generator = "chatroom_generator")
-    @SequenceGenerator(name = "chatroom_generator", sequenceName = "chatroom_seq")
-    private int chatID;
+	@Id
+	@GeneratedValue(strategy = GenerationType.AUTO, generator = "chatroom_generator")
+	@SequenceGenerator(name = "chatroom_generator", sequenceName = "chatroom_seq")
+	private int chatID;
 
-    @ManyToMany(cascade = CascadeType.MERGE)
-    private Set<User> members;
+	@ManyToMany(cascade = CascadeType.MERGE)
+	private Set<User> members;
 
-    @Column(nullable = false)
-    private boolean isPrivate;
+	@Column(nullable = false)
+	private boolean isPrivate;
 
 	@Column(nullable = false)
 	private String roomName;
-
 }
