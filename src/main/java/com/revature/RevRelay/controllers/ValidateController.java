@@ -17,10 +17,10 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping(value = "/validate")
 public class ValidateController {
 
-
 	/**
-	 * if you can hit this endpoint your jwt is still valid
-	 * @return
+	 * If you can hit this endpoint your jwt is still valid
+	 * 
+	 * @return ResponseEntity containing "JWT OKAY"
 	 */
 	@GetMapping
 	public ResponseEntity<?> okayJWTTest(){
