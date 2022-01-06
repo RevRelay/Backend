@@ -6,7 +6,6 @@ import lombok.NoArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
 import java.util.List;
 
 /**
@@ -17,7 +16,6 @@ import java.util.List;
 @RequestMapping(value = "/pages")
 public class PageController {
     PageService pageService;
-
 
     /**
      * @param pageService autowired pageService
@@ -71,6 +69,7 @@ public class PageController {
     public ResponseEntity<?> getAllFriends(@PathVariable String username) throws Exception {
             return ResponseEntity.ok(pageService.getAllFriendsFromUser(username));
     }
+    
     /**
      * @param pageID pageID to be searched and returned
      * @return Page single page matching provided pageID
