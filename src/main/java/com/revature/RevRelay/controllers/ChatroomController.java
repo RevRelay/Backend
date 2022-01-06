@@ -20,7 +20,6 @@ import org.springframework.web.bind.annotation.*;
 public class ChatroomController {
 	private ChatroomService chatroomService;
 
-
 	/**
 	 * Creates Chatroom Controller
 	 * @param chatroomService chatroom service
@@ -49,7 +48,6 @@ public class ChatroomController {
 	public ResponseEntity<?> updateChatroom(@PathVariable Integer chatID,@RequestBody Chatroom chatroom){
 		chatroom.setChatID(chatID);
 		return ResponseEntity.ok(chatroomService.save(chatroom));
-
 	}
 
 	/**
@@ -84,8 +82,8 @@ public class ChatroomController {
 	@PostMapping("/{chatID}/addUser")
 	public ResponseEntity<?> addNewMember(@PathVariable Integer chatID,@RequestParam("userID") int userID){
 		return ResponseEntity.ok(chatroomService.addMember(chatID,userID));
-
 	}
+	
 	/**
 	 * Deletes member from chatroom
 	 * @param chatID chatroom id
