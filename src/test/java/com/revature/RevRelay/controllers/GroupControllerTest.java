@@ -59,6 +59,7 @@ class GroupControllerTest {
         mockMvc = MockMvcBuilders.standaloneSetup(groupsController).build();
         mockMvc.perform(MockMvcRequestBuilders.post("/groups")
                 .contentType(MediaType.APPLICATION_JSON)
+                .header("Authorization"," ")
                 .content(mapper.writeValueAsString(group)))
                 .andExpect(status().isOk()).andDo(print());
     }
