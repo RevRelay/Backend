@@ -1,6 +1,5 @@
 package com.revature.RevRelay.services;
 
-
 import com.revature.RevRelay.models.Chatroom;
 import com.revature.RevRelay.models.User;
 import com.revature.RevRelay.repositories.*;
@@ -12,9 +11,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.TestPropertySource;
-import static org.junit.jupiter.api.Assertions.*;
-
 import java.util.*;
+
+import static org.junit.jupiter.api.Assertions.*;
 
 @AutoConfigureMockMvc
 @TestPropertySource(locations = "classpath:test-application.properties")
@@ -23,6 +22,7 @@ import java.util.*;
 public class ChatroomTest {
 	@Autowired
 	UserRepository userRepository;
+	
 	@Autowired
 	ChatroomRepository chatroomRepository;
 
@@ -33,8 +33,8 @@ public class ChatroomTest {
 		service = new ChatroomService(chatroomRepository,userRepository);
 		chatroomRepository.deleteAll();
 		userRepository.deleteAll();
-
 	}
+	
 	@Test
 	public void findAllTest(){
 		List<Chatroom> chatroomSet = new ArrayList<>();
@@ -43,10 +43,10 @@ public class ChatroomTest {
 			chatroom.setRoomName(i+"");
 			chatroom.setPrivate(false);
 			chatroomSet.add(service.save(chatroom));
-
 		}
 		assertEquals(chatroomSet.size(),service.findAll().getContent().size());
 	}
+	
 	@Test
 	public void findByIDTest(){
 		List<Chatroom> chatroomSet = new ArrayList<>();
@@ -55,11 +55,10 @@ public class ChatroomTest {
 			chatroom.setRoomName(i+"");
 			chatroom.setPrivate(false);
 			chatroomSet.add(service.save(chatroom));
-
 		}
 		assertEquals(chatroomSet.get(1).getRoomName(),service.findByID(chatroomSet.get(1).getChatID()).getRoomName());
-
 	}
+	
 	@Test
 	public void saveTest(){
 		Chatroom chatroom = new Chatroom();
@@ -68,6 +67,7 @@ public class ChatroomTest {
 		chatroom =service.save(chatroom);
 		assertEquals(chatroom.getRoomName(),service.findByID(chatroom.getChatID()).getRoomName());
 	}
+	
 	@Test
 	public void addMemberTest(){
 		User user =userRepository.save(new User(1,"test","test","test","test","test",null,"test",null,null,null,new HashSet<>()));
@@ -76,11 +76,10 @@ public class ChatroomTest {
 		chatroom.setRoomName("TEST");
 		chatroom.setPrivate(false);
 		chatroom =service.save(chatroom);
-
 		chatroom = service.addMember(chatroom.getChatID(),user.getUserID());
 		assertEquals(1,chatroom.getMembers().size());
-
 	}
+	
 	@Test
 	public void removeMemberTest(){
 		User user =userRepository.save(new User(1,"test","test","test","test","test",null,"test",null,null,null,new HashSet<>()));
@@ -89,7 +88,6 @@ public class ChatroomTest {
 		chatroom.setRoomName("TEST");
 		chatroom.setPrivate(false);
 		chatroom =service.save(chatroom);
-
 		chatroom = service.addMember(chatroom.getChatID(),user.getUserID());
 		assertEquals(1,chatroom.getMembers().size());
 		for (User u:chatroom.getMembers()) {
@@ -99,6 +97,7 @@ public class ChatroomTest {
 		chatroom = service.removeMember(chatroom.getChatID(),user.getUserID());
 		assertEquals(0,chatroom.getMembers().size());
 	}
+	
 	@Test
 	public void getChatroomsByMembersTest(){
 		User user =userRepository.save(new User(1,"test","test","test","test","test",null,"test",null,null,null,new HashSet<>()));
@@ -107,10 +106,8 @@ public class ChatroomTest {
 		chatroom.setRoomName("TEST");
 		chatroom.setPrivate(false);
 		chatroom =service.save(chatroom);
-
 		chatroom = service.addMember(chatroom.getChatID(),user.getUserID());
 		assertEquals(1,chatroom.getMembers().size());
-
 		assertEquals(chatroom.getRoomName(),((Chatroom)service.getChatroomsByMembers(user.getUserID()).toArray()[0]).getRoomName());
 	}
 }
