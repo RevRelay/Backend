@@ -148,13 +148,13 @@ public class GroupsController {
     }
 
     /**
-     * Gets all members that a userID is apart of. Meaning a Owner of or a member of
+     * Gets all Groups that a userID is apart of. Meaning a Owner of or a member of
      * @param userID user to check by
      * @param pageNumber pageable config
      * @param pageSize pagable config
      * @return ResponseEntity with Pageable
      */
-    @GetMapping("/getallmembers/{userID}")
+    @GetMapping("/getgroups/{userID}")
     public ResponseEntity<?> getMembers(@PathVariable Integer userID,@RequestParam(value = "pageNumber",required = false) Integer pageNumber,@RequestParam(value = "pageSize",required = false) Integer pageSize){
         if(pageNumber!=null&&pageSize!=null)
             return ResponseEntity.ok(groupService.findAllMembersByUserID(userID, PageRequest.of(pageNumber,pageSize)));
