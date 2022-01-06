@@ -7,7 +7,6 @@ import com.revature.RevRelay.repositories.ChatroomRepository;
 import com.revature.RevRelay.repositories.GroupRepository;
 import com.revature.RevRelay.repositories.PageRepository;
 import com.revature.RevRelay.repositories.UserRepository;
-
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -77,8 +76,6 @@ public class PageServiceTest {
 		chatroomRepository.deleteAll();
 		userRepository.deleteAll();
 
-
-
 		List<Page> Pages = new ArrayList<>();
 		userRepository.save(user);
 		for (int i = 0; i < 100; i++) {
@@ -117,9 +114,7 @@ public class PageServiceTest {
 		} catch (Exception e) {
 			page1 = null;
 		}
-
 		assertNull(page1);
-
 	}
 
 	@Test
@@ -127,7 +122,6 @@ public class PageServiceTest {
 		pageRepository.deleteAll();
 		groupRepository.deleteAll();
 		userRepository.deleteAll();
-
 		userRepository.save(user);
 
 		Page page = new Page();
