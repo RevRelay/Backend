@@ -131,7 +131,7 @@ public class GroupsController {
      * @param userID
      */
     @PostMapping("/addmember")
-    public Group addMember(@RequestHeader("GroupID") Integer groupID, @RequestHeader("UserID") Integer userID) {
+    public Group addMember(@RequestParam("GroupID") Integer groupID, @RequestParam("UserID") Integer userID) {
         System.out.println("***********************SOMETHING\n\n\n\n");
         return groupService.addMember(groupID, userID);
     }
@@ -143,7 +143,7 @@ public class GroupsController {
      * @param userID
      */
     @DeleteMapping("/deletemember")
-    public ResponseEntity<?> deleteMember(@RequestHeader("GroupID") Integer groupID, @RequestHeader("UserID") Integer userID) {
+    public ResponseEntity<?> deleteMember(@RequestParam("GroupID") Integer groupID, @RequestParam("UserID") Integer userID) {
         groupService.deleteMember(groupID, userID);
         return ResponseEntity.ok(groupID);
     }
