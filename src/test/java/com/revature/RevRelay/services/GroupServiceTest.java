@@ -2,10 +2,7 @@ package com.revature.RevRelay.services;
 
 import com.revature.RevRelay.models.Group;
 import com.revature.RevRelay.models.User;
-import com.revature.RevRelay.repositories.GroupRepository;
-import com.revature.RevRelay.repositories.PageRepository;
-import com.revature.RevRelay.repositories.PostRepository;
-import com.revature.RevRelay.repositories.UserRepository;
+import com.revature.RevRelay.repositories.*;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -39,13 +36,14 @@ public class GroupServiceTest {
 	GroupService groupService;
 	@Autowired
 	UserRepository userRepository;
-
-	User user;
-
+	@Autowired
+	ChatroomRepository chatroomRepository;
 	@Autowired
 	PostRepository postRepo;
 	@Autowired
 	PageRepository pageRepo;
+	
+	User user;
 
 	@BeforeEach
 	public void setup(){
@@ -81,6 +79,7 @@ public class GroupServiceTest {
 	@Test
 	public void getAllTest() {
 		groupRepository.deleteAll();
+		chatroomRepository.deleteAll();
 		userRepository.deleteAll();
 		User user1 = userRepository.save(user);
 		List<Group> groups = new ArrayList<>();
@@ -103,6 +102,7 @@ public class GroupServiceTest {
 	@Test
 	public void findAllByOwnerIDTest() {
 		groupRepository.deleteAll();
+		chatroomRepository.deleteAll();
 		userRepository.deleteAll();
 
 		User user1 = userRepository.save(user);
@@ -125,6 +125,7 @@ public class GroupServiceTest {
 	@Test
 	public void findAllByOwnerIDTestPageable() {
 		groupRepository.deleteAll();
+		chatroomRepository.deleteAll();
 		userRepository.deleteAll();
 
 		User user1 = userRepository.save(user);

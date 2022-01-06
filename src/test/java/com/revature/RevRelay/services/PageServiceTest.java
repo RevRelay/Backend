@@ -3,10 +3,10 @@ package com.revature.RevRelay.services;
 import com.revature.RevRelay.models.Group;
 import com.revature.RevRelay.models.Page;
 import com.revature.RevRelay.models.User;
+import com.revature.RevRelay.repositories.ChatroomRepository;
 import com.revature.RevRelay.repositories.GroupRepository;
 import com.revature.RevRelay.repositories.PageRepository;
 import com.revature.RevRelay.repositories.UserRepository;
-
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -37,6 +37,8 @@ public class PageServiceTest {
 	UserRepository userRepository;
 	@Autowired
 	GroupRepository groupRepository;
+	@Autowired
+	ChatroomRepository chatroomRepository;
 
 	User user;
 	Group group;
@@ -73,8 +75,8 @@ public class PageServiceTest {
 	public void getAllTest() {
 		pageRepository.deleteAll();
 		groupRepository.deleteAll();
+		chatroomRepository.deleteAll();
 		userRepository.deleteAll();
-
 
 		List<Page> Pages = new ArrayList<>();
 		userRepository.save(user);
@@ -114,9 +116,7 @@ public class PageServiceTest {
 		} catch (Exception e) {
 			page1 = null;
 		}
-
 		assertNull(page1);
-
 	}
 
 	@Test
@@ -124,7 +124,6 @@ public class PageServiceTest {
 		pageRepository.deleteAll();
 		groupRepository.deleteAll();
 		userRepository.deleteAll();
-
 		userRepository.save(user);
 
 		Page page = new Page();

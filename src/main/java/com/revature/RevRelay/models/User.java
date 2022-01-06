@@ -9,6 +9,7 @@ import com.fasterxml.jackson.annotation.JsonManagedReference;
 import java.util.Collection;
 import java.util.Date;
 import java.util.List;
+import java.util.Set;
 
 /**
  * User model containing all user information. username and password are used
@@ -63,8 +64,8 @@ public class User implements UserDetails {
     @JsonManagedReference(value = "user-page")
     private Page userPage;
 
-    @ManyToMany(cascade = CascadeType.MERGE)
-    private List<Chatroom> chatRooms;
+    @ManyToMany(mappedBy="members",cascade = CascadeType.MERGE)
+    private Set<Chatroom> chatRooms;
 
     @JsonIgnore
     @ManyToMany(cascade = CascadeType.MERGE)
