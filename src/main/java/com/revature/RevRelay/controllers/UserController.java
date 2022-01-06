@@ -150,9 +150,9 @@ public class UserController {
     public ResponseEntity<?> updateBirthDate(@PathVariable int userID, @RequestBody String birthDate) {
         Date s = null;
         try {
-            s = new SimpleDateFormat("yyyy/MM/dd").parse(birthDate.substring(1, birthDate.length() - 1));
+            s = new SimpleDateFormat("yyyy-MM-dd").parse(birthDate.substring(1, birthDate.length() - 15));
         } catch (Exception e) {
-            return null;
+            return ResponseEntity.ok(e.getMessage());
         }
         return ResponseEntity.ok(userService.updateBirthDate(userID, s));
     }
