@@ -38,13 +38,12 @@ public class GroupServiceTest {
 	UserRepository userRepository;
 	@Autowired
 	ChatroomRepository chatroomRepository;
-
-	User user;
-
 	@Autowired
 	PostRepository postRepo;
 	@Autowired
 	PageRepository pageRepo;
+	
+	User user;
 
 	@BeforeEach
 	public void setup(){
