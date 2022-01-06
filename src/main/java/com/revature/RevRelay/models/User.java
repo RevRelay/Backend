@@ -77,6 +77,7 @@ public class User implements UserDetails {
 
     @ManyToMany
     @Cascade(CascadeType.MERGE)
+    @JsonIgnore
     private Set<Chatroom> chatRooms;
 
     @ManyToMany

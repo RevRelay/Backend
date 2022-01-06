@@ -28,7 +28,7 @@ import org.springframework.stereotype.Component;
 @AllArgsConstructor
 @Entity
 @Table(name = "groups")
-public class Group{
+public class Group {
 
     @Autowired
     @Transient
