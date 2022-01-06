@@ -32,6 +32,8 @@ public class PageServiceTest {
 	@Autowired
 	PageService pageService;
 	@Autowired
+	UserService userService;
+	@Autowired
 	UserRepository userRepository;
 	@Autowired
 	GroupRepository groupRepository;
@@ -141,5 +143,32 @@ public class PageServiceTest {
 		Page Page1 = pageService.createPage(page);
 		assertEquals(page, Page1);
 		assertEquals(Page1.getPageID(), pageService.getPageByGroupID(Page1.getGroupOwner().getGroupID()).getPageID());
+	}
+
+	@Test
+	public void getAllFriendsFromUserTest() throws Exception {
+		boolean friendFound = false;
+		//pageRepository.deleteAll();
+		User user = new User();
+		user.setUsername("fakeUser");
+		user.setPassword("fakePassword");
+		user.setEmail("fakeEmail@");
+		user.setDisplayName("fakeDisplayName");
+		userRepository.save(user);
+		User friend = new User();
+		friend.setUsername("fakeUserrr");
+		friend.setPassword("fakePasswordrr");
+		friend.setEmail("fakeEmailrr");
+		friend.setDisplayName("fakeDisplayNamerrr");
+		userRepository.save(friend);
+
+		userService.addFriend(user.getUserID(), friend.getUsername());
+		List<User> friends = pageService.getAllFriendsFromUser(user.getUsername());
+		for (User friend1: friends){
+			if (friend1.getUsername().equals(friend.getUsername())){
+				friendFound = true;
+			}
+		}
+		assertEquals(friendFound, true);
 	}
 }

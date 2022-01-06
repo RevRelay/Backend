@@ -16,8 +16,9 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
-
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 import java.util.Optional;
 
 /* TODO - Add tests for email service */
@@ -333,6 +334,33 @@ public class UserService implements UserDetailsService {
     }
 
     /**
+     * This method allows for allowing friends to be added to a user.
+     * @param userID of user who wishes to add a friend
+     * @param friendUsername the username of the friend.
+     * @return the friend that was added
+     * @throws Exception
+     */
+    public User addFriend(int userID, String friendUsername) throws Exception {
+        User friend = userRepository.findByUsername(friendUsername).orElseThrow(() -> new Exception("No friend Found"));
+        User user = userRepository.findByUserID(userID).orElseThrow(() -> new Exception("No person Found"));
+        if (user.getUsername().equals(friend.getUsername())) {
+            return friend;
+        }
+        List<User> friends = user.getFriends();
+        List<User> friendsFriends = friend.getFriends();
+        friendsFriends.add(user);
+        for (User friendInList : friends) {
+            if (friendInList.getUsername() == friend.getUsername()) {
+                return friend;
+            }
+        }
+        ;
+        friends.add(friend);
+        user.setFriends(friends);
+        userRepository.save(user);
+        return friend;
+    }
+    /**
      * Verifies that a firstName is suitable based on our constraints.
      *
      * @param firstName New firstName.
@@ -372,4 +400,5 @@ public class UserService implements UserDetailsService {
         Date minBirthDate = new Date(-2208988800000L); // Jan 1st 1900, 12:00 AM
         return (birthDate != null && birthDate.after(minBirthDate));
     }
+
 }

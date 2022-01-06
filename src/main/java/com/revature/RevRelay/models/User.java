@@ -1,5 +1,6 @@
 package com.revature.RevRelay.models;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.*;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -64,6 +65,10 @@ public class User implements UserDetails {
 
     @ManyToMany(cascade = CascadeType.MERGE)
     private List<Chatroom> chatRooms;
+
+    @JsonIgnore
+    @ManyToMany(cascade = CascadeType.MERGE)
+    private List<User> friends;
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
