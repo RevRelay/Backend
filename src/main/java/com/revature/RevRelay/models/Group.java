@@ -20,7 +20,7 @@ import java.util.List;
 @AllArgsConstructor
 @Entity
 @Table(name = "groups")
-public class Group{
+public class Group {
 
     // group information
     @Id
@@ -31,7 +31,7 @@ public class Group{
     @Column(nullable = false, unique = true)
     private String groupName;
 
-    @OneToOne(cascade = {CascadeType.MERGE,CascadeType.REMOVE})
+    @OneToOne(cascade = { CascadeType.MERGE })
     @JsonManagedReference(value = "group-page")
     private Page groupPage;
 

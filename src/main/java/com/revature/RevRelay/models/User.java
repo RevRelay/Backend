@@ -55,11 +55,11 @@ public class User implements UserDetails {
     private String displayName;
 
     // User Relations to other models
-    @ManyToMany(mappedBy = "members",cascade = CascadeType.MERGE)
+    @ManyToMany(mappedBy = "members", cascade = CascadeType.MERGE)
     @JsonIgnore
     private List<Group> userGroups;
 
-    @OneToMany(mappedBy="userOwner",cascade = CascadeType.MERGE)
+    @OneToMany(mappedBy = "userOwner", cascade = CascadeType.MERGE)
     @JsonManagedReference
     private List<Group> ownedGroups;
 
@@ -67,7 +67,8 @@ public class User implements UserDetails {
     @JsonManagedReference(value = "user-page")
     private Page userPage;
 
-    @ManyToMany(mappedBy="members",cascade = CascadeType.MERGE)
+    @JsonIgnore
+    @ManyToMany(mappedBy = "members", cascade = CascadeType.MERGE)
     private Set<Chatroom> chatRooms;
 
     @JsonIgnore
