@@ -69,7 +69,7 @@ public class UserController {
      *
      * Returns a UserDTO with all this updated info in the correct format.
      *
-     * @param token JWT of currently logged-in user from Authorization header.
+     * @param token           JWT of currently logged-in user from Authorization header.
      * @param changedInfoUser UserUpdateDTO with email, firstName, lastName, birthDate,and displayName all in String format.
      * @return ResponseEntity containing current user (UserDTO) with their updated info.
      */
