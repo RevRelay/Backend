@@ -166,4 +166,26 @@ public class GroupServiceTest {
 		Group g = groupService.getGroupByGroupID(10000);
 		assertNull(g);
 	}
+//	@Test
+//	public void addMemberTest(){
+//		User user1 = new User();
+//		user1.setUsername("user1");
+//		user1.setPassword("pass");
+//		user1.setEmail("1@2.com");
+//		user1.setDisplayName("user1");
+//		user1 = userRepository.save(user1);
+//		User user2 = new User();
+//		user1.setUsername("user2");
+//		user1.setPassword("pass");
+//		user1.setEmail("2@2.com");
+//		user1.setDisplayName("user2");
+//		user2 = userRepository.save(user2);
+//		Group group = new Group();
+//		group.setUserOwner(user1);
+//		group.setGroupName("name");
+//		group = groupRepository.save(group);
+//		groupService.addMember(group.getGroupID(),user2.getUserID());
+//		List<User> memberList = groupService.getGroupByGroupID(group.getGroupID()).getMembers();
+//		assertEquals(memberList.get(0).getUserID(),user2.getUserID());
+//	}
 }

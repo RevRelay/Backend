@@ -46,14 +46,4 @@ public class Group{
     // group relations to other models
     @ManyToMany(cascade = CascadeType.MERGE)
     private List<User> members;
-
-    @Override
-    public String toString() {
-        return "Group{" +
-                "groupID=" + groupID +
-                ", groupName='" + groupName + '\'' +
-                ", isPrivate=" + isPrivate +
-                ", members=" + members +
-                '}';
-    }
 }
