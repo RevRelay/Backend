@@ -69,8 +69,7 @@ public class PostControllerTest {
         post.setPostOwnerID(1);
         Post post1 = postRepository.save(post);
         mockMvc = MockMvcBuilders.standaloneSetup(postController).build();
-        mockMvc.perform(MockMvcRequestBuilders.get("/posts/{postID}", post1.getPostID())
-                )
+        mockMvc.perform(MockMvcRequestBuilders.get("/posts/{postID}", post1.getPostID()))
                         .andExpect((status().isOk())).andDo(print());
 
     }
@@ -84,8 +83,7 @@ public class PostControllerTest {
         post.setPostOwnerID(1);
         Post post1 = postRepository.save(post);
         mockMvc = MockMvcBuilders.standaloneSetup(postController).build();
-        mockMvc.perform(MockMvcRequestBuilders.get("/posts/page/{postPageID}", 1)
-                )
+        mockMvc.perform(MockMvcRequestBuilders.get("/posts/page/{postPageID}", 1))
                 .andExpect((status().isOk())).andDo(print());
 
     }
@@ -100,8 +98,7 @@ public class PostControllerTest {
         post.setPostOwnerID(1);
         Post post1 = postRepository.save(post);
         mockMvc = MockMvcBuilders.standaloneSetup(postController).build();
-        mockMvc.perform(MockMvcRequestBuilders.get("/posts/user/{postOwnerID}", 1)
-                )
+        mockMvc.perform(MockMvcRequestBuilders.get("/posts/user/{postOwnerID}", 1))
                 .andExpect((status().isOk())).andDo(print());
     }
 
