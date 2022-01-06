@@ -416,4 +416,122 @@ class UserServiceTest {
             assertEquals(testUserDTOOutput.getLastName(), "");
         }
     }
+
+    @Nested
+    public class TestUpdateUserWithUserUpdateDTO {
+
+        String testEmailUpdateUser;
+        String testFirstNameUpdateUser;
+        String testLastNameUpdateUser;
+        String testDisplayNameUpdateUser;
+        String testBirthDateUpdateUser;
+        UserUpdateDTO mockUserUpdateDTO;
+
+        @BeforeEach
+        public void setup() {
+            testEmailUpdateUser = "gemps@arrakis.space";
+            testFirstNameUpdateUser = "Frank";
+            testLastNameUpdateUser = "Herbert";
+            testDisplayNameUpdateUser = "PaulDidNothingWrong";
+            // Apparently using Date instead of Calendar is deprecated for everything but UNIX epoch.
+            testBirthDateUpdateUser = "1900-01-01";
+            mockUserDTO = Mockito.mock(UserDTO.class);
+            when(mockUserUpdateDTO.getEmail()).thenReturn(testEmailUpdateUser);
+            when(mockUserUpdateDTO.getFirstName()).thenReturn(testFirstNameUpdateUser);
+            when(mockUserUpdateDTO.getLastName()).thenReturn(testLastNameUpdateUser);
+            when(mockUserUpdateDTO.getBirthDate()).thenReturn(testBirthDateUpdateUser.getTime());
+            when(mockUserUpdateDTO.getDisplayName()).thenReturn(testDisplayNameUpdateUser);
+            when(mockUserRepository.save(any())).thenReturn(user);
+            when(mockUserRepository.findByUsername(any())).thenReturn(Optional.of(user));
+        }
+
+        @Test
+        void updateUserVariablesTestAllExpectToSucceed() {
+            UserDTO testUserDTOOutput = userService.updateUser("mockToken", mockUserUpdateDTO);
+            assertEquals(testUserDTOOutput.getEmail(), testEmailUpdateUser);
+            assertEquals(testUserDTOOutput.getFirstName(), testFirstNameUpdateUser);
+            assertEquals(testUserDTOOutput.getLastName(), testLastNameUpdateUser);
+            assertEquals(testUserDTOOutput.getBirthDate(), testBirthDateUpdateUser);
+            assertEquals(testUserDTOOutput.getDisplayName(), testDisplayNameUpdateUser);
+        }
+
+        @Test
+        void updateUserVariablesNoUpdateOnEmail() {
+            when(mockUserUpdateDTO.getEmail()).thenReturn(null);
+            UserDTO testUserDTOOutput = userService.updateUser("mockToken", mockUserUpdateDTO);
+            assertEquals(testUserDTOOutput.getEmail(), testEmail);
+            assertEquals(testUserDTOOutput.getFirstName(), testFirstNameUpdateUser);
+            assertEquals(testUserDTOOutput.getLastName(), testLastNameUpdateUser);
+            assertEquals(testUserDTOOutput.getBirthDate(), testBirthDateUpdateUser.getTime());
+            assertEquals(testUserDTOOutput.getDisplayName(), testDisplayNameUpdateUser);
+        }
+
+        @Test
+        void updateUserVariablesNoUpdateOnFirstName() {
+            when(mockUserUpdateDTO.getFirstName()).thenReturn(null);
+            UserDTO testUserDTOOutput = userService.updateUser("mockToken", mockUserUpdateDTO);
+            assertEquals(testUserDTOOutput.getEmail(), testEmailUpdateUser);
+            assertEquals(testUserDTOOutput.getFirstName(), testFirstName);
+            assertEquals(testUserDTOOutput.getLastName(), testLastNameUpdateUser);
+            assertEquals(testUserDTOOutput.getBirthDate(), testBirthDateUpdateUser);
+            assertEquals(testUserDTOOutput.getDisplayName(), testDisplayNameUpdateUser);
+        }
+
+        @Test
+        void updateUserVariablesNoUpdateOnLastName() {
+            when(mockUserUpdateDTO.getLastName()).thenReturn(null);
+            UserDTO testUserDTOOutput = userService.updateUser("mockToken", mockUserUpdateDTO);
+            assertEquals(testUserDTOOutput.getEmail(), testEmailUpdateUser);
+            assertEquals(testUserDTOOutput.getFirstName(), testFirstNameUpdateUser);
+            assertEquals(testUserDTOOutput.getLastName(), testLastName);
+            assertEquals(testUserDTOOutput.getBirthDate(), testBirthDateUpdateUser);
+            assertEquals(testUserDTOOutput.getDisplayName(), testDisplayNameUpdateUser);
+        }
+
+        @Test
+        void updateUserVariablesNoUpdateOnBirthDate() {
+            when(mockUserUpdateDTO.getBirthDate()).thenReturn(null);
+            UserDTO testUserDTOOutput = userService.updateUser("mockToken", mockUserUpdateDTO);
+            assertEquals(testUserDTOOutput.getEmail(), testEmailUpdateUser);
+            assertEquals(testUserDTOOutput.getFirstName(), testFirstNameUpdateUser);
+            assertEquals(testUserDTOOutput.getLastName(), testLastNameUpdateUser);
+            assertEquals(testUserDTOOutput.getBirthDate(), testBirthDate);
+            assertEquals(testUserDTOOutput.getDisplayName(), testDisplayNameUpdateUser);
+        }
+
+        @Test
+        void updateUserVariablesNoUpdateOnDisplayName() {
+            when(mockUserUpdateDTO.getDisplayName()).thenReturn(null);
+            UserDTO testUserDTOOutput = userService.updateUser("mockToken", mockUserUpdateDTO);
+            assertEquals(testUserDTOOutput.getEmail(), testEmailUpdateUser);
+            assertEquals(testUserDTOOutput.getFirstName(), testFirstNameUpdateUser);
+            assertEquals(testUserDTOOutput.getLastName(), testLastNameUpdateUser);
+            assertEquals(testUserDTOOutput.getBirthDate(), testBirthDateUpdateUser);
+            assertEquals(testUserDTOOutput.getDisplayName(), testDisplayName);
+        }
+
+        @Test
+        void updateUserVariablesOnlyUpdateUsername() {
+            when(mockUserUpdateDTO.getEmail()).thenReturn(null);
+            when(mockUserUpdateDTO.getFirstName()).thenReturn(null);
+            when(mockUserUpdateDTO.getLastName()).thenReturn(null);
+            when(mockUserUpdateDTO.getBirthDate()).thenReturn(null);
+            when(mockUserUpdateDTO.getDisplayName()).thenReturn(null);
+            UserDTO testUserDTOOutput = userService.updateUser("mockToken", mockUserUpdateDTO);
+            assertEquals(testUserDTOOutput.getEmail(), testEmail);
+            assertEquals(testUserDTOOutput.getFirstName(), testFirstName);
+            assertEquals(testUserDTOOutput.getLastName(), testLastName);
+            assertEquals(testUserDTOOutput.getBirthDate(), testBirthDate);
+            assertEquals(testUserDTOOutput.getDisplayName(), testDisplayName);
+        }
+
+        @Test
+        void updateUserVariablesSetNameToEmptyString() {
+            when(mockUserDTO.getFirstName()).thenReturn("");
+            when(mockUserDTO.getLastName()).thenReturn("");
+            UserDTO testUserDTOOutput = userService.updateUser("mockToken", mockUserDTO);
+            assertEquals(testUserDTOOutput.getFirstName(), "");
+            assertEquals(testUserDTOOutput.getLastName(), "");
+        }
+    }
 }
