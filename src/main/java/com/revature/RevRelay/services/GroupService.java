@@ -161,14 +161,17 @@ public class GroupService {
      * @param groupID groupID to add a member to
      * @param userID the id of user to add to group
      */
-    public void addMember(Integer groupID, Integer userID) {
-        Group group = groupRepository.getById(groupID);
-        User user = userRepository.getById(userID);
+    public Group addMember(Integer groupID, Integer userID) {
+        Group group = groupRepository.findById(groupID).orElse(null);
+        User user = userRepository.findById(userID).orElse(null);
 
         List<User> members = group.getMembers();
         members.add(user);
         group.setMembers((members));
-        groupRepository.save(group);
+        System.out.println("The User: "+user);
+        System.out.println("The Group: " + group);
+        groupRepository.flush();
+        return groupRepository.save(group);
     }
 
     /**
@@ -188,5 +191,23 @@ public class GroupService {
         }
         group.setMembers(members);
         groupRepository.save(group);
+    }
+
+    /**
+     * Finds all Groups a userID is associated with. Default to dump everything in 1 page
+     * @param userID
+     * @return
+     */
+    public Page<Group> findAllMembersByUserID(Integer userID){
+        return groupRepository.findAllGroupByMembersUserIDOrUserOwner_UserID(userID,userID,Pageable.unpaged());
+    }
+    /**
+     * Finds all Groups a userID is associated with. Config the pageable
+     *
+     * @param userID
+     * @return
+     */
+    public Page<Group> findAllMembersByUserID(Integer userID,Pageable pageable){
+        return groupRepository.findAllGroupByMembersUserIDOrUserOwner_UserID(userID,userID, pageable);
     }
 }

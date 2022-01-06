@@ -4,6 +4,8 @@ import lombok.*;
 import javax.persistence.*;
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
+
+import java.io.Serializable;
 import java.util.List;
 
 /**
@@ -18,7 +20,7 @@ import java.util.List;
 @AllArgsConstructor
 @Entity
 @Table(name = "groups")
-public class Group {
+public class Group{
 
     // group information
     @Id
@@ -42,6 +44,6 @@ public class Group {
     boolean isPrivate;
 
     // group relations to other models
-    @ManyToMany(mappedBy = "userGroups", cascade = CascadeType.MERGE)
+    @ManyToMany(cascade = CascadeType.MERGE)
     private List<User> members;
 }

@@ -6,6 +6,8 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import javax.persistence.*;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
+
+import java.io.Serializable;
 import java.util.Collection;
 import java.util.Date;
 import java.util.List;
@@ -53,7 +55,8 @@ public class User implements UserDetails {
     private String displayName;
 
     // User Relations to other models
-    @ManyToMany(cascade = CascadeType.MERGE)
+    @ManyToMany(mappedBy = "members",cascade = CascadeType.MERGE)
+    @JsonIgnore
     private List<Group> userGroups;
 
     @OneToMany(mappedBy="userOwner",cascade = CascadeType.MERGE)
