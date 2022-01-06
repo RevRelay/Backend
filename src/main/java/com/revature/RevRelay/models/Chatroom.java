@@ -6,6 +6,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import javax.persistence.*;
 import java.util.List;
+import java.util.Set;
 
 @Getter
 @Setter
@@ -19,9 +20,13 @@ public class Chatroom {
     @SequenceGenerator(name = "chatroom_generator", sequenceName = "chatroom_seq")
     private int chatID;
 
-    @ManyToMany(mappedBy = "chatRooms", cascade = CascadeType.MERGE)
-    private List<User> members;
+    @ManyToMany(cascade = CascadeType.MERGE)
+    private Set<User> members;
 
     @Column(nullable = false)
     private boolean isPrivate;
+
+	@Column(nullable = false)
+	private String roomName;
+
 }
