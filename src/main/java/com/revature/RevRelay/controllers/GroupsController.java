@@ -59,7 +59,7 @@ public class GroupsController {
     @PostMapping
     public ResponseEntity<?> createGroup(@RequestBody Group group, @RequestHeader("Authorization") String token) {
         if (token != null && token.length() > 1) {
-            group.setUserOwner(userService.loadUserByUsername(jwtUtil.extractUsername(token.substring(7))));
+            group.setUserOwner(userService.loadUserByToken(token.replace("Bearer", "").trim()));
         }
         return ResponseEntity.ok(groupService.createGroup(group));
     }
