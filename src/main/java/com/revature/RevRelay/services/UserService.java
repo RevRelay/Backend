@@ -2,6 +2,7 @@ package com.revature.RevRelay.services;
 
 import com.revature.RevRelay.models.Page;
 import com.revature.RevRelay.models.dtos.UserDTO;
+import com.revature.RevRelay.models.dtos.UserUpdateDTO;
 import com.revature.RevRelay.repositories.PageRepository;
 import com.revature.RevRelay.repositories.UserRepository;
 import com.revature.RevRelay.models.User;
@@ -16,6 +17,8 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
+
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -190,54 +193,39 @@ public class UserService implements UserDetailsService {
     }
 
     /**
-     * Updates a User's first name, to be displayed on their profile
+     * Borrows the method from NL, overloaded to take updateUserDTO - AL
+     * See above comment, Doesn't allow for null entries
+     * Method overloads for userUpdate to update a user from the frontend
      *
-     * @param userID    The User's unique ID
-     * @param firstName The User's desired first name
-     * @return True if the update succeeds, or else false
+     * @param token   JWT corresponding to a User in the database.
+     * @param userDTO UserDTO deserialized from a Controller query.
+     * @return UserDTO object corresponding to the User after edits.
+     * @throws UsernameNotFoundException If Token fails to find a User
      */
-    public boolean updateFirstName(int userID, String firstName) {
-        User user = userRepository.findByUserID(userID).orElse(null);
-        if (user != null) {
-            user.setFirstName(firstName);
-            userRepository.save(user);
-            return true;
+    public UserDTO updateUser(String token, UserUpdateDTO userDTO) throws UsernameNotFoundException {
+        User user = loadUserByToken(token);
+        if (isUpdateValidEmail(userDTO.getEmail(), user)) {
+            user.setEmail(userDTO.getEmail());
         }
-        return false;
-    }
-
-    /**
-     * Updates a User's last name, to be displayed on their profile
-     *
-     * @param userID   The User's unique ID
-     * @param lastName The User's desired last name
-     * @return True if the update succeeds, or else false
-     */
-    public boolean updateLastName(int userID, String lastName) {
-        User user = userRepository.findByUserID(userID).orElse(null);
-        if (user != null) {
-            user.setLastName(lastName);
-            userRepository.save(user);
-            return true;
+        if (isValidFirstName(userDTO.getFirstName())) {
+            user.setFirstName(userDTO.getFirstName());
         }
-        return false;
-    }
-
-    /**
-     * Updates a User's last name, to be displayed on their profile
-     *
-     * @param userID   The User's unique ID
-     * @param email The User's desired last name
-     * @return True if the update succeeds, or else false
-     */
-    public boolean updateEmail(int userID, String email) {
-        User user = userRepository.findByUserID(userID).orElse(null);
-        if (user != null) {
-            user.setEmail(email);
-            userRepository.save(user);
-            return true;
+        if (isValidLastName(userDTO.getLastName())) {
+            user.setLastName(userDTO.getLastName());
         }
-        return false;
+        if (isValidBirthDate(userDTO.getBirthDate())) {
+            Date s = null;
+            try {
+                s = new SimpleDateFormat("yyyy-MM-dd").parse(userDTO.getBirthDate().substring(0, 10));
+            } catch (Exception e) {
+                return null;
+            }
+            user.setBirthDate(s);
+        }
+        if (isValidDisplayName(userDTO.getDisplayName())) {
+            user.setDisplayName(userDTO.getDisplayName());
+        }
+        return new UserDTO(userRepository.save(user));
     }
 
     /**
@@ -264,41 +252,6 @@ public class UserService implements UserDetailsService {
                 userRepository.save(user);
                 return true;
             }
-        }
-        return false;
-    }
-
-    /**
-     * Updates a User's birthday
-     *
-     * @param userID    The User's unique ID
-     * @param birthDate The User's desired birthday
-     * @return True if the update succeeds, or else false
-     */
-    public boolean updateBirthDate(int userID, Date birthDate) {
-        User user = userRepository.findByUserID(userID).orElse(null);
-        if (user != null) {
-            user.setBirthDate(birthDate);
-            userRepository.save(user);
-            return true;
-        }
-        return false;
-    }
-
-    /**
-     * Updates a User's display name, which will be seen by other Users in chat
-     * rooms/groups
-     *
-     * @param userID      The User's unique ID
-     * @param displayName The User's desired display name
-     * @return True if the update succeeds, or else false
-     */
-    public boolean updateDisplayName(int userID, String displayName) {
-        User user = userRepository.findByUserID(userID).orElse(null);
-        if (user != null) {
-            user.setDisplayName(displayName);
-            userRepository.save(user);
-            return true;
         }
         return false;
     }
@@ -331,6 +284,10 @@ public class UserService implements UserDetailsService {
      */
     private boolean isValidEmail(String email) {
         return (!userRepository.existsByEmail(email) && email != null);
+    }
+
+    private boolean isUpdateValidEmail(String email, User user){
+        return (email == user.getEmail() || isValidEmail(email));
     }
 
     /**
@@ -401,4 +358,13 @@ public class UserService implements UserDetailsService {
         return (birthDate != null && birthDate.after(minBirthDate));
     }
 
+    /**
+     * Verifies that a birthDate is suitable based on our constraints when it is a String.
+     *
+     * @param birthDate New displayName.
+     * @return True if valid, false if invalid.
+     */
+    private boolean isValidBirthDate(String birthDate) {
+        return (birthDate != null);
+    }
 }
