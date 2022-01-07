@@ -452,7 +452,7 @@ class UserServiceTest {
             when(mockUserRepository.findByUsername(any())).thenReturn(Optional.of(user));
         }
 
-//        TBD make a test for the last 2 lines in updateUser that takes a UserUpdateDTO
+//        TODO make a test for the last 2 lines in updateUser that takes a UserUpdateDTO
 //        @Test
 //        void updateUserVariablesTestAllExpectToSucceed() {
 //            UserDTO testUserDTOOutput = userService.updateUser("mockToken", mockUserUpdateDTO);
