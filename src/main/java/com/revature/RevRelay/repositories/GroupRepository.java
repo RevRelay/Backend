@@ -15,7 +15,7 @@ import java.util.Optional;
  */
 @Repository
 public interface GroupRepository extends JpaRepository<Group, Integer> {
-    Page<Group> findGroupsByUserOwnerUserID(Integer userOwnerID, Pageable pageable);
+    Page<Group> findGroupsByUserOwnerID(Integer userOwnerID, Pageable pageable);
 
     Optional<List<Group>> findByGroupNameContainingIgnoreCase(String displayName);
     Page<Group> findByGroupNameContainingIgnoreCase(String displayName, Pageable pageable);

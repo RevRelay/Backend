@@ -100,7 +100,7 @@ public class GroupService {
      * @return Page<Group> is page containing the Groups
      */
     public Page<Group> findAllByUserOwnerID(Integer userOwnerID) {
-        return groupRepository.findGroupsByUserOwnerUserID(userOwnerID, Pageable.unpaged());
+        return groupRepository.findGroupsByUserOwnerID(userOwnerID, Pageable.unpaged());
     }
 
     /**
@@ -115,7 +115,7 @@ public class GroupService {
      * @return Page<Group> is page containing the Groups from a specific page
      */
     public Page<Group> findAllByUserOwnerID(Integer userOwnerID, Pageable pageable) {
-        return groupRepository.findGroupsByUserOwnerUserID(userOwnerID, pageable);
+        return groupRepository.findGroupsByUserOwnerID(userOwnerID, pageable);
     }
 
     /**

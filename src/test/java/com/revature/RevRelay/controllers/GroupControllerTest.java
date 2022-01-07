@@ -62,8 +62,8 @@ class GroupControllerTest {
         chatroomRepository.deleteAll();
     }
 
-    //    @Test
-    @Ignore  // TODO fix test
+        @Test
+//    @Ignore  // TODO fix test
     void createAGroupWithValidCredentials() throws Exception {
         Group group = new Group();
         User user1 = userRepository.save(user);
@@ -89,8 +89,7 @@ class GroupControllerTest {
     }
 
     // READ
-//    @Test
-    @Ignore // TODO fix test
+    @Test
     void getAllGroupsByOwnerIdTest() throws Exception {
         mockMvc = MockMvcBuilders.standaloneSetup(groupsController).build();
         mockMvc.perform(MockMvcRequestBuilders.get("/groups/all/{userOwnerID}", 1)).andExpect(status().isOk())
@@ -120,8 +119,8 @@ class GroupControllerTest {
                 .andExpect((status().isOk())).andDo(print());
     }
 
-    //    @Test
-    @Ignore // TODO fix test
+    @Test
+//    @Ignore // TODO fix test
     void deleteGroupIDTestWithValidData () throws Exception {
         Group group = new Group();
         User user1 = userRepository.save(user);
