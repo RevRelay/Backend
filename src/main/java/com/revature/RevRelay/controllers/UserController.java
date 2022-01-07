@@ -100,7 +100,7 @@ public class UserController {
      * @return response entity 200 signaling successful update
      */
     @PutMapping("/password")
-    public ResponseEntity<?> updatePassword(@PathVariable String token, @RequestBody Map<String, String> json) {
+    public ResponseEntity<?> updatePassword(@RequestHeader("Authorization") String token, @RequestBody Map<String, String> json) {
         String oldPassword = json.get("oldPassword");
         String newPassword = json.get("newPassword");
         String confirmPassword = json.get("confirmPassword");
