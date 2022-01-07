@@ -216,7 +216,7 @@ public class UserService implements UserDetailsService {
         if (isValidBirthDate(userDTO.getBirthDate())) {
             Date s = null;
             try {
-                s = new SimpleDateFormat("yyyy-MM-dd").parse(userDTO.getBirthDate().substring(0, userDTO.getBirthDate().length() - 14));
+                s = new SimpleDateFormat("yyyy-MM-dd").parse(userDTO.getBirthDate().substring(0, 10));
             } catch (Exception e) {
                 return null;
             }
