@@ -76,7 +76,13 @@ public class UserController {
     @PutMapping("/update")
     public ResponseEntity<?> updateAnyInfo(@RequestHeader("Authorization") String token, @RequestBody UserUpdateDTO changedInfoUser){
         String tokenParsed = token.replace("Bearer", "").trim();
-        return ResponseEntity.ok(userService.updateUser(tokenParsed, changedInfoUser));
+        HttpHeaders responseHeaders = new HttpHeaders();
+        responseHeaders.setBearerAuth(tokenParsed);
+        try {
+            return new ResponseEntity<UserDTO>(userService.updateUser(tokenParsed, userDTO), responseHeaders, HttpStatus.ACCEPTED);
+        } catch (UsernameNotFoundException e) {
+            return new ResponseEntity<String>("Current User Not Found", responseHeaders, HttpStatus.NOT_FOUND);
+        }
     }
 
     /**
