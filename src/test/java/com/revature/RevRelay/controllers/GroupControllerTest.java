@@ -60,6 +60,7 @@ class GroupControllerTest {
         user.setDisplayName(testDisplayName);
         userRepository.deleteAll();
         chatroomRepository.deleteAll();
+        groupRepository.deleteAll();
     }
 
         @Test
