@@ -68,7 +68,7 @@ public class UserController {
         HttpHeaders responseHeaders = new HttpHeaders();
         responseHeaders.setBearerAuth(tokenParsed);
         try {
-            return new ResponseEntity<UserDTO>(userService.updateUser(token, userDTO), responseHeaders, HttpStatus.ACCEPTED);
+            return new ResponseEntity<UserDTO>(userService.updateUser(tokenParsed, userDTO), responseHeaders, HttpStatus.ACCEPTED);
         } catch (UsernameNotFoundException e) {
             return new ResponseEntity<String>("Current User Not Found", responseHeaders, HttpStatus.NOT_FOUND);
         }
