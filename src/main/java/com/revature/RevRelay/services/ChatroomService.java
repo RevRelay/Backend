@@ -1,6 +1,7 @@
 package com.revature.RevRelay.services;
 
 import com.revature.RevRelay.models.Chatroom;
+import com.revature.RevRelay.models.Group;
 import com.revature.RevRelay.models.User;
 import com.revature.RevRelay.repositories.ChatroomRepository;
 import com.revature.RevRelay.repositories.UserRepository;
@@ -10,6 +11,8 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.HttpClientErrorException;
+
+import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -60,14 +63,15 @@ public class ChatroomService {
 	 * @return chatroom the user was added to
 	 */
 	public Chatroom addMember(int chatID,int userID){
-		User user = userRepository.findById(userID).orElse(null);
-		assert user!= null;
 		Chatroom chatroom = chatroomRepository.findById(chatID).orElse(null);
-		assert chatroom!=null;
-		Set<User> mems =  chatroom.getMembers();
-		mems.add(user);
-		chatroom.setMembers(mems);
-		return chatroomRepository.save(chatroom);
+		User user = userRepository.findById(userID).orElse(null);
+		assert (chatroom!=null && user!= null);
+		Set<Chatroom> userChatRooms = user.getChatRooms();
+		userChatRooms.add(chatroom);
+		user.setChatRooms(userChatRooms);
+		userRepository.save(user);
+		return chatroomRepository.findById(chatID).orElse(null);
+
 	}
 
 	/**
@@ -77,13 +81,14 @@ public class ChatroomService {
 	 * @return chatroom the user was removed form
 	 */
 	public Chatroom removeMember(int chatID,int userID){
-		User user = userRepository.findById(userID).orElse(null);
-		assert user!= null;
 		Chatroom chatroom = chatroomRepository.findById(chatID).orElse(null);
-		assert chatroom!=null;
-		Set<User> mems =  chatroom.getMembers().stream().filter(x->x.getUserID()!=userID).collect(Collectors.toSet());
-		chatroom.setMembers(mems);
-		return chatroomRepository.save(chatroom);
+		User user = userRepository.findById(userID).orElse(null);
+		assert (chatroom!=null && user!= null);
+		user.setChatRooms(user.getChatRooms().stream()
+				.filter((userChat) ->
+						userChat.getChatID() != chatroom.getChatID()).collect(Collectors.toSet()));
+		userRepository.save(user);
+		return chatroomRepository.findById(chatID).orElse(null);
 	}
 
 	/**

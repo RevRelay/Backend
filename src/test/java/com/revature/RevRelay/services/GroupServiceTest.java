@@ -20,6 +20,7 @@ import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
@@ -42,22 +43,28 @@ public class GroupServiceTest {
 	PostRepository postRepo;
 	@Autowired
 	PageRepository pageRepo;
-	
-	User user;
+
+	private final String testUsername = "fakeUser";
+	private final String testPassword = "testPassword";
+	private final String testEmail = "fakeEmail";
+	private final String testDisplayName = "fakeDisplayName";
+	private User user;
 
 	@BeforeEach
 	public void setup(){
+		userRepository.deleteAll();
+		groupRepository.deleteAll();
 		postRepo.deleteAll();
 		pageRepo.deleteAll();
-		groupRepository.deleteAll();
+
+		this.user = new User();
+		user.setUsername(testUsername);
+		user.setPassword(testPassword);
+		user.setEmail(testEmail);
+		user.setDisplayName(testDisplayName);
 	}
 
 	public GroupServiceTest() {
-		this.user = new User();
-		user.setUsername("fakeUser");
-		user.setPassword("fakePassword");
-		user.setEmail("fakeEmail");
-		user.setDisplayName("fakeDisplayName");
 	}
 
 	@Test
@@ -166,5 +173,102 @@ public class GroupServiceTest {
 		groupService.deleteGroupsByID(group1.getGroupID());
 		Group g = groupService.getGroupByGroupID(10000);
 		assertNull(g);
+	}
+	@Test
+	public void addMemberTest(){
+		User user1 = new User();
+		user1.setUsername("user112");
+		user1.setPassword("pass");
+		user1.setEmail("1@2.com");
+		user1.setDisplayName("user1");
+		user1 = userRepository.save(user1);
+		User user2 = new User();
+		user2.setUsername("user223");
+		user2.setPassword("pass");
+		user2.setEmail("2@2.com");
+		user2.setDisplayName("user2");
+		user2 = userRepository.save(user2);
+		Group group = new Group();
+//		group.setUserOwner(user1);
+		group.setGroupName("name");
+		group = groupRepository.save(group);
+		groupService.addMember(group.getGroupID(),user2.getUserID());
+		List<User> memberList = groupService.getGroupByGroupID(group.getGroupID()).getMembers();
+		assertEquals(memberList.get(0).getUserID(),user2.getUserID());
+	}
+	@Test
+	public void deleteMemberTest(){
+		User user1 = new User();
+		user1.setUsername("user154");
+		user1.setPassword("pass");
+		user1.setEmail("1@2.com");
+		user1.setDisplayName("user1");
+		user1 = userRepository.save(user1);
+		User user2 = new User();
+		user2.setUsername("user2645");
+		user2.setPassword("pass");
+		user2.setEmail("2@2.com");
+		user2.setDisplayName("user2");
+		user2 = userRepository.save(user2);
+		Group group = new Group();
+		group.setUserOwner(user1);
+		group.setGroupName("name");
+		group = groupRepository.save(group);
+		groupService.addMember(group.getGroupID(),user2.getUserID());
+		List<User> memberList = groupService.getGroupByGroupID(group.getGroupID()).getMembers();
+		assertEquals(user2.getUserID(),memberList.get(0).getUserID());
+		groupService.deleteMember(group.getGroupID(),user2.getUserID());
+		assertNull(group.getMembers());
+	}
+	@Test
+	public void findAllMembersByUserIDTest(){
+		User user1 = new User();
+		user1.setUsername("user111");
+		user1.setPassword("pass");
+		user1.setEmail("1@3.com");
+		user1.setDisplayName("user1");
+		user1 = userRepository.save(user1);
+		User user2 = new User();
+		user2.setUsername("user222");
+		user2.setPassword("pass");
+		user2.setEmail("2@3.com");
+		user2.setDisplayName("user2");
+		user2 = userRepository.save(user2);
+		Group group = new Group();
+		group.setUserOwner(user1);
+		group.setGroupName("name");
+		System.out.println(group.getUserOwnerID());
+		group = groupRepository.save(group);
+		groupService.addMember(group.getGroupID(),user2.getUserID());
+		List<User> memberList = groupService.getGroupByGroupID(group.getGroupID()).getMembers();
+		assertEquals(memberList.get(0).getUserID(),user2.getUserID());
+
+		Page<Group> groups = groupService.findAllMembersByUserID(user1.getUserID());
+		assertEquals(group.getGroupID(),groups.getContent().get(0).getGroupID());
+	}
+	@Test
+	public void findAllMembersByUserIDTestPageable(){
+		User user1 = new User();
+		user1.setUsername("user183");
+		user1.setPassword("pass");
+		user1.setEmail("1@4.com");
+		user1.setDisplayName("user1");
+		user1 = userRepository.save(user1);
+		User user2 = new User();
+		user2.setUsername("user224");
+		user2.setPassword("pass");
+		user2.setEmail("2@4.com");
+		user2.setDisplayName("user2");
+		user2 = userRepository.save(user2);
+		Group group = new Group();
+		group.setUserOwnerID(user1.getUserID());
+		group.setGroupName("name");
+		group = groupRepository.save(group);
+		groupService.addMember(group.getGroupID(),user2.getUserID());
+		List<User> memberList = groupService.getGroupByGroupID(group.getGroupID()).getMembers();
+		assertEquals(memberList.get(0).getUserID(),user2.getUserID());
+
+		Page<Group> groups = groupService.findAllMembersByUserID(user1.getUserID(),Pageable.unpaged());
+		assertEquals(group.getGroupID(),groups.getContent().get(0).getGroupID());
 	}
 }

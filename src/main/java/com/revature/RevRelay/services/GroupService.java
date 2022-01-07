@@ -12,6 +12,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * Service layer for Group model
@@ -99,7 +100,7 @@ public class GroupService {
      * @return Page<Group> is page containing the Groups
      */
     public Page<Group> findAllByUserOwnerID(Integer userOwnerID) {
-        return groupRepository.findGroupsByUserOwnerUserID(userOwnerID, Pageable.unpaged());
+        return groupRepository.findGroupsByUserOwnerID(userOwnerID, Pageable.unpaged());
     }
 
     /**
@@ -114,7 +115,7 @@ public class GroupService {
      * @return Page<Group> is page containing the Groups from a specific page
      */
     public Page<Group> findAllByUserOwnerID(Integer userOwnerID, Pageable pageable) {
-        return groupRepository.findGroupsByUserOwnerUserID(userOwnerID, pageable);
+        return groupRepository.findGroupsByUserOwnerID(userOwnerID, pageable);
     }
 
     /**
@@ -161,14 +162,15 @@ public class GroupService {
      * @param groupID groupID to add a member to
      * @param userID the id of user to add to group
      */
-    public void addMember(Integer groupID, Integer userID) {
-        Group group = groupRepository.getById(groupID);
-        User user = userRepository.getById(userID);
-
-        List<User> members = group.getMembers();
-        members.add(user);
-        group.setMembers((members));
-        groupRepository.save(group);
+    public Group addMember(Integer groupID, Integer userID) {
+        Group group = groupRepository.findById(groupID).orElse(null);
+        User user = userRepository.findById(userID).orElse(null);
+        assert(group!=null && user!=null);
+        List<Group> userGroups = user.getUserGroups();
+        userGroups.add(group);
+        user.setUserGroups(userGroups);
+        userRepository.save(user);
+        return groupRepository.findById(groupID).orElse(null);
     }
 
     /**
@@ -177,16 +179,31 @@ public class GroupService {
      * @param userID loops through groups members and deletes userID
      */
     public void deleteMember(Integer groupID, Integer userID) {
-        Group group = groupRepository.getById(groupID);
-        User user = userRepository.getById(userID);
+        Group group = groupRepository.findById(groupID).orElse(null);
+        User user = userRepository.findById(userID).orElse(null);
+        assert(group!=null && user!=null);
+        List<Group> userGroups = user.getUserGroups();
+        user.setUserGroups(userGroups.stream()
+                .filter((userGroup) ->
+                        userGroup.getGroupID() != group.getGroupID()).collect(Collectors.toList()));
+        userRepository.save(user);
+    }
 
-        List<User> members = group.getMembers();
-
-        for(int i = 0; i < members.size();i++){
-            if(members.get(i).getUserID()==userID)
-                members.remove(i);
-        }
-        group.setMembers(members);
-        groupRepository.save(group);
+    /**
+     * Finds all Groups a userID is associated with. Default to dump everything in 1 page
+     * @param userID
+     * @return
+     */
+    public Page<Group> findAllMembersByUserID(Integer userID){
+        return groupRepository.findAllGroupByMembersUserIDOrUserOwnerID(userID,userID,Pageable.unpaged());
+    }
+    /**
+     * Finds all Groups a userID is associated with. Config the pageable
+     *
+     * @param userID
+     * @return
+     */
+    public Page<Group> findAllMembersByUserID(Integer userID,Pageable pageable){
+        return groupRepository.findAllGroupByMembersUserIDOrUserOwnerID(userID,userID, pageable);
     }
 }

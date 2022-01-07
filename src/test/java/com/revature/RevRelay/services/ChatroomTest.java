@@ -31,8 +31,8 @@ public class ChatroomTest {
 	@BeforeEach
 	public void before(){
 		service = new ChatroomService(chatroomRepository,userRepository);
-		chatroomRepository.deleteAll();
 		userRepository.deleteAll();
+		chatroomRepository.deleteAll();
 	}
 	
 	@Test

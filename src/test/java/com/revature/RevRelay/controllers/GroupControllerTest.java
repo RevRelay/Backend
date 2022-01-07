@@ -3,10 +3,14 @@ package com.revature.RevRelay.controllers;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.revature.RevRelay.controllers.GroupsController;
 import com.revature.RevRelay.controllers.UserController;
+import com.revature.RevRelay.models.Chatroom;
 import com.revature.RevRelay.models.Group;
 import com.revature.RevRelay.models.User;
+import com.revature.RevRelay.repositories.ChatroomRepository;
 import com.revature.RevRelay.repositories.GroupRepository;
 import com.revature.RevRelay.repositories.UserRepository;
+import org.junit.Ignore;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
@@ -32,23 +36,35 @@ class GroupControllerTest {
     private GroupsController groupsController;
     @Autowired
     private GroupRepository groupRepository;
+    @Autowired
+    private UserRepository userRepository;
+    @Autowired
+    private ChatroomRepository chatroomRepository;
     private MockMvc mockMvc;
     private ObjectMapper mapper = new ObjectMapper();
-
-    @Autowired
-    UserRepository userRepository;
-
-    User user;
+    private final String testUsername = "fakeUser";
+    private final String testPassword = "testPassword";
+    private final String testEmail = "fakeEmail";
+    private final String testDisplayName = "fakeDisplayName";
+    private User user;
 
     public GroupControllerTest() {
-        this.user = new User();
-        user.setUsername("fakeUser");
-        user.setPassword("fakePassword");
-        user.setEmail("fakeEmail");
-        user.setDisplayName("fakeDisplayName");
     }
 
-    @Test
+    @BeforeEach
+    public void setup() {
+        this.user = new User();
+        user.setUsername(testUsername);
+        user.setPassword(testPassword);
+        user.setEmail(testEmail);
+        user.setDisplayName(testDisplayName);
+        userRepository.deleteAll();
+        chatroomRepository.deleteAll();
+        groupRepository.deleteAll();
+    }
+
+        @Test
+//    @Ignore  // TODO fix test
     void createAGroupWithValidCredentials() throws Exception {
         Group group = new Group();
         User user1 = userRepository.save(user);
@@ -59,7 +75,7 @@ class GroupControllerTest {
         mockMvc = MockMvcBuilders.standaloneSetup(groupsController).build();
         mockMvc.perform(MockMvcRequestBuilders.post("/groups")
                 .contentType(MediaType.APPLICATION_JSON)
-                .header("Authorization"," ")
+                .header("Authorization", " ")
                 .content(mapper.writeValueAsString(group)))
                 .andExpect(status().isOk()).andDo(print());
     }
@@ -90,7 +106,7 @@ class GroupControllerTest {
     }
 
     @Test
-    void updateGroupsTestWithValidData () throws Exception {
+    void updateGroupsTestWithValidData() throws Exception {
         Group group = new Group();
         User user1 = userRepository.save(user);
         group.setGroupName("hello");
@@ -99,15 +115,17 @@ class GroupControllerTest {
         groupRepository.save(group);
         mockMvc = MockMvcBuilders.standaloneSetup(groupsController).build();
         mockMvc.perform(MockMvcRequestBuilders.put("/groups")
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(mapper.writeValueAsString(group)))
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(mapper.writeValueAsString(group)))
                 .andExpect((status().isOk())).andDo(print());
     }
 
     @Test
+//    @Ignore // TODO fix test
     void deleteGroupIDTestWithValidData () throws Exception {
         Group group = new Group();
         User user1 = userRepository.save(user);
+
         group.setGroupName("hello");
         group.setUserOwner(user1);
         group.setPrivate(false);

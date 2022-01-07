@@ -45,6 +45,11 @@ public class PageServiceTest {
 
 	@BeforeEach
 	public void test() {
+		pageRepository.deleteAll();
+		groupRepository.deleteAll();
+		chatroomRepository.deleteAll();
+		userRepository.deleteAll();
+
 		this.user = new User();
 		user.setUsername("fakeUser");
 		user.setPassword("fakePassword");
@@ -53,6 +58,7 @@ public class PageServiceTest {
 
 		this.group = new Group();
 		group.setGroupName("fakeGroup");
+//		userRepository.deleteAll();
 	}
 
 	@Test
@@ -73,10 +79,6 @@ public class PageServiceTest {
 
 	@Test
 	public void getAllTest() {
-		pageRepository.deleteAll();
-		groupRepository.deleteAll();
-		chatroomRepository.deleteAll();
-		userRepository.deleteAll();
 
 		List<Page> Pages = new ArrayList<>();
 		userRepository.save(user);
@@ -96,7 +98,6 @@ public class PageServiceTest {
 
 	@Test
 	public void updatePagesTestTest() {
-		pageRepository.deleteAll();
 		System.out.println(pageRepository);
 		Page Page = new Page();
 		Page.setDescription("TEST");
@@ -121,9 +122,6 @@ public class PageServiceTest {
 
 	@Test
 	public void getPageByUserOwnerIDTest() {
-		pageRepository.deleteAll();
-		groupRepository.deleteAll();
-		userRepository.deleteAll();
 		userRepository.save(user);
 
 		Page page = new Page();
@@ -148,6 +146,7 @@ public class PageServiceTest {
 	public void getAllFriendsFromUserTest() throws Exception {
 		boolean friendFound = false;
 		//pageRepository.deleteAll();
+		userRepository.deleteAll();
 		User user = new User();
 		user.setUsername("fakeUser");
 		user.setPassword("fakePassword");
@@ -163,8 +162,8 @@ public class PageServiceTest {
 
 		userService.addFriend(user.getUserID(), friend.getUsername());
 		List<User> friends = pageService.getAllFriendsFromUser(user.getUsername());
-		for (User friend1: friends){
-			if (friend1.getUsername().equals(friend.getUsername())){
+		for (User friend1 : friends) {
+			if (friend1.getUsername().equals(friend.getUsername())) {
 				friendFound = true;
 			}
 		}
