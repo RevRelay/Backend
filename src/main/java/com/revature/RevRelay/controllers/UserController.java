@@ -94,16 +94,21 @@ public class UserController {
      * Updates a user's password using the userID as the identifier, user needs to
      * input old password, new password, and confirm new password again
      *
-     * @param userID userId of user being updated
+     * @param token token of user being updated
      * @param json   json object of password array, old password and two new
      *               passwords
      * @return response entity 200 signaling successful update
      */
-    @PutMapping("/password/{userID}")
-    public ResponseEntity<?> updatePassword(@PathVariable int userID, @RequestBody Map<String, String> json) {
+    @PutMapping("/password")
+    public ResponseEntity<?> updatePassword(@PathVariable String token, @RequestBody Map<String, String> json) {
         String oldPassword = json.get("oldPassword");
         String newPassword = json.get("newPassword");
         String confirmPassword = json.get("confirmPassword");
-        return ResponseEntity.ok(userService.updatePassword(userID, oldPassword, newPassword, confirmPassword));
+        return ResponseEntity.ok(userService.updatePassword(
+                userService.loadUserByToken(token.replace("Bearer", "").trim()).getUserID(),
+                oldPassword,
+                newPassword,
+                confirmPassword)
+        );
     }
 }
