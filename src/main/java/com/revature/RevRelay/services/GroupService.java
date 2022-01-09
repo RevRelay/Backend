@@ -57,14 +57,13 @@ public class GroupService {
     public Group createGroup(Group group) {
         com.revature.RevRelay.models.Page p = new com.revature.RevRelay.models.Page();
         p.setDescription("Empty Description");
-        p.setBannerURL("");
+        p.setBannerURL("https://i.imgur.com/jFU9RkE.jpeg");
         p.setPrivate(true);
         p.setGroupPage(true);
 		group = groupRepository.save(group);
+		addMember(group.getGroupID(),group.getUserOwnerID());
         p.setGroupOwner(group);
-
         group.setGroupPage(pageRepository.save(p));
-
         return groupRepository.save(group);
     }
 

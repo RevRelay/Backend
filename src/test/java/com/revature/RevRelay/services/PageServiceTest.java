@@ -45,7 +45,9 @@ public class PageServiceTest {
 
 	@BeforeEach
 	public void test() {
+		userRepository.deleteAll();
 		pageRepository.deleteAll();
+
 		groupRepository.deleteAll();
 		chatroomRepository.deleteAll();
 		userRepository.deleteAll();
