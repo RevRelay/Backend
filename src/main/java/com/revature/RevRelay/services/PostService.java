@@ -5,11 +5,13 @@ import com.revature.RevRelay.models.Post;
 import com.revature.RevRelay.repositories.PostRepository;
 import lombok.NoArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.crossstore.ChangeSetPersister;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Set;
 import java.util.concurrent.atomic.AtomicInteger;
 
 /**
@@ -180,5 +182,19 @@ public class PostService {
 		posts.forEach(post -> {if(delete(post)) count.getAndIncrement();});
 		System.out.println("Deleted "+count+" Posts");
 		return count.get();
+	}
+
+	public Post upVotePost(Integer postID,Integer userID, Boolean up) throws Exception {
+		Post post = postRepository.findById(postID).orElseThrow(()->new Exception("Post Not Found"));
+		Set<Integer> uVoters = post.getUpVoters();
+		Set<Integer> dVoters = post.getDownVoters();
+		if (up){
+			dVoters.remove(userID);
+			if (!uVoters.remove(userID)) uVoters.add(userID);
+		} else {
+			uVoters.remove(userID);
+			if (!dVoters.remove(userID)) dVoters.add(userID);
+		}
+		return postRepository.save(post);
 	}
 }
