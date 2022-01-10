@@ -6,6 +6,7 @@ import lombok.*;
 import org.hibernate.annotations.Cascade;
 import javax.persistence.*;
 import java.util.List;
+import java.util.Set;
 
 import org.hibernate.annotations.CascadeType;
 
@@ -54,7 +55,7 @@ public class Page {
     @OneToMany(mappedBy = "postPage")
     @Cascade({CascadeType.MERGE, CascadeType.DELETE})
     @JsonManagedReference(value = "page-post")
-    private List<Post> posts;
+    private Set<Post> posts;
 
 
 	public Page(User user){

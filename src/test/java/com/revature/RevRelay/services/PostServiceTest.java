@@ -34,14 +34,20 @@ public class PostServiceTest {
 	@Autowired
 	GroupRepository groupRepo;
 
+	@Autowired
+	PageService pageService;
+	@Autowired
+	GroupService groupService;
+
 	PostService service;
 
 	@BeforeEach
 	public void setup(){
-		postRepo.deleteAll();
-		pageRepo.deleteAll();
-		groupRepo.deleteAll();
 		service = new PostService(postRepo);
+		service.deleteAll();
+		pageService.deleteAll();
+		groupService.deleteAll();
+
 	}
 	
 	@Test

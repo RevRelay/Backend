@@ -9,6 +9,9 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+import java.util.concurrent.atomic.AtomicInteger;
+
 /**
  * Service layer for the Post model
  *
@@ -147,4 +150,35 @@ public class PostService {
     public void deletePostByPostID(Integer postID) {
         postRepository.deleteById(postID);
     }
+
+	/**
+	 * deletes all posts and sub posts
+	 * @param post to delete
+	 * @return boolean of deleted page
+	 */
+	public boolean delete(Post post) {
+		Post postToDelete = postRepository.findById(post.getPostID()).orElse(null);
+		if (postToDelete==null) return false;
+		postToDelete.setPostPage(null);
+		postToDelete.setParent(null);
+		List<Post> postList = postToDelete.getChildren();
+		postToDelete.setChildren(null);
+
+		postToDelete = postRepository.save(postToDelete);
+		postList.forEach(this::delete);
+
+		postRepository.delete(postToDelete);
+		return true;
+	}
+	/**
+	 * Deletes all posts
+	 * @return count of deleted posts
+	 */
+	public int deleteAll(){
+		AtomicInteger count = new AtomicInteger(0);
+		List<com.revature.RevRelay.models.Post> posts = postRepository.findAll();
+		posts.forEach(post -> {if(delete(post)) count.getAndIncrement();});
+		System.out.println("Deleted "+count+" Posts");
+		return count.get();
+	}
 }
