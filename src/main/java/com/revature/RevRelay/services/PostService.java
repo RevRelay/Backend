@@ -188,7 +188,7 @@ public class PostService {
 	 * Upvote/Downvotes a post or toggles no vote
 	 * @param postID post to vote on
 	 * @param userID user who is posting
-	 * @param up wether to up vote or downvote
+	 * @param up whether to up vote or downvote
 	 * @return Post that was voted on
 	 */
 	public Post upVotePost(Integer postID,Integer userID, Boolean up) throws Exception {
