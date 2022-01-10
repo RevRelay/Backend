@@ -263,9 +263,10 @@ public class GroupServiceTest {
 		group = groupRepository.save(group);
 		groupService.addMember(group.getGroupID(),user2.getUserID());
 		Set<User> memberList = groupService.getGroupByGroupID(group.getGroupID()).getMembers();
+		System.out.println(memberList.stream().findFirst().get());
 		assertEquals(memberList.stream().findFirst().get().getUserID(),user2.getUserID());
 
-		Page<Group> groups = groupService.findAllMembersByUserID(user1.getUserID());
+		Page<Group> groups = groupService.findAllMembersByUserID(user2.getUserID());
 		assertEquals(group.getGroupID(),groups.getContent().get(0).getGroupID());
 	}
 	@Test
@@ -288,9 +289,10 @@ public class GroupServiceTest {
 		group = groupRepository.save(group);
 		groupService.addMember(group.getGroupID(),user2.getUserID());
 		Set<User> memberList = groupService.getGroupByGroupID(group.getGroupID()).getMembers();
+		System.out.println(memberList.stream().findFirst().get());
 		assertEquals(memberList.stream().findFirst().get().getUserID(),user2.getUserID());
 
-		Page<Group> groups = groupService.findAllMembersByUserID(user1.getUserID(),Pageable.unpaged());
+		Page<Group> groups = groupService.findAllMembersByUserID(user2.getUserID(),Pageable.unpaged());
 		assertEquals(group.getGroupID(),groups.getContent().get(0).getGroupID());
 	}
 }
