@@ -183,7 +183,14 @@ public class PostService {
 		System.out.println("Deleted "+count+" Posts");
 		return count.get();
 	}
-
+	
+	/**
+	 * Upvote/Downvotes a post or toggles no vote
+	 * @param postID post to vote on
+	 * @param userID user who is posting
+	 * @param up wether to up vote or downvote
+	 * @return Post that was voted on
+	 */
 	public Post upVotePost(Integer postID,Integer userID, Boolean up) throws Exception {
 		Post post = postRepository.findById(postID).orElseThrow(()->new Exception("Post Not Found"));
 		Set<Integer> uVoters = post.getUpVoters();
