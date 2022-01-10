@@ -375,7 +375,7 @@ public class UserService implements UserDetailsService {
     }
 
 	/**
-	 * IM SICK AND TIRED OF CONSTRAIN ERRORS THIS WILL FIX THEM
+	 * IM SICK AND TIRED OF CONSTRAINT ERRORS THIS WILL FIX THEM
 	 * @param user user to delete
 	 * @return if delete was successfully completed
 	 */
