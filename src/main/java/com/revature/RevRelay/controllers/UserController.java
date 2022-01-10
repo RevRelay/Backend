@@ -5,6 +5,7 @@ import com.revature.RevRelay.models.User;
 import com.revature.RevRelay.models.dtos.UserDTO;
 import com.revature.RevRelay.models.dtos.UserRegisterAuthRequest;
 import com.revature.RevRelay.models.dtos.UserUpdateDTO;
+import com.revature.RevRelay.services.PostService;
 import com.revature.RevRelay.services.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
@@ -26,11 +27,12 @@ import java.util.Map;
 @RequestMapping(value = "/users")
 public class UserController {
 
-    // used for converting json object and parse to string
-    Gson g = new Gson();
+    private UserService userService;
 
     @Autowired
-    private UserService userService;
+    public UserController(UserService userService) {
+        this.userService = userService;
+    }
 
     /**
      * Creates a new user and persists to database using userService layer
