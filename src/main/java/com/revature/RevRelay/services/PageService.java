@@ -101,10 +101,8 @@ public class PageService {
      * @return List of friends
      * @throws Exception
      */
+
     public Set<FriendDTO> getAllFriendsFromUser(String username) throws Exception {
-          // return userRepository.
-        System.out.println(username);
-        System.out.println("do you see me");
         User user = userRepository.findByUsername(username).orElseThrow(() -> new Exception("No friends Found"));
         Set<User> intermediateFriends = user.getFriends();
 		Set<FriendDTO> friends = new HashSet<>();

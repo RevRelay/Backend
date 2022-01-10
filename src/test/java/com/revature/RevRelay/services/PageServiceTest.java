@@ -156,15 +156,15 @@ public class PageServiceTest {
 		user.setPassword("fakePassword");
 		user.setEmail("fakeEmail@");
 		user.setDisplayName("fakeDisplayName");
-		userRepository.save(user);
+		user = userRepository.save(user);
 		User friend = new User();
 		friend.setUsername("fakeUserrr");
 		friend.setPassword("fakePasswordrr");
 		friend.setEmail("fakeEmailrr");
 		friend.setDisplayName("fakeDisplayNamerrr");
-		userRepository.save(friend);
+		friend = userRepository.save(friend);
 
-		userService.addFriend(user.getUserID(), friend.getUsername());
+		userService.toggleFriend(user.getUserID(), friend.getUsername());
 		Set<FriendDTO> friends = pageService.getAllFriendsFromUser(user.getUsername());
 		for (FriendDTO friend1 : friends) {
 			if (friend1.getDisplayName().equals(friend.getDisplayName())) {

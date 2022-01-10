@@ -300,28 +300,44 @@ public class UserService implements UserDetailsService {
     }
 
     /**
-     * This method allows for allowing friends to be added to a user.
-     * @param userID of user who wishes to add a friend
+     * This method allows for adding and removing friends from one's friend list.
+     * @param userID of user adding or removing a friend
      * @param friendUsername the username of the friend.
      * @return the friend that was added
-     * @throws Exception
+     * @throws UsernameNotFoundException if either the active user or the friend isn't found in the database.
      */
-    public User addFriend(int userID, String friendUsername) throws Exception {
-        User friend = userRepository.findByUsername(friendUsername).orElseThrow(() -> new Exception("No friend Found"));
-        User user = userRepository.findByUserID(userID).orElseThrow(() -> new Exception("No person Found"));
+    public User toggleFriend(int userID, String friendUsername) throws UsernameNotFoundException {
+        User friend = userRepository.findByUsername(friendUsername).orElseThrow(() -> new UsernameNotFoundException("No friend Found"));
+        User user = userRepository.findByUserID(userID).orElseThrow(() -> new UsernameNotFoundException("No person Found"));
         if (user.getUsername().equals(friend.getUsername())) {
             return friend;
         }
-        Set<User> yourFriendsSet = user.getFriends();
-		Set<User> otherFriendsSet = friend.getFriends();
-		if (!otherFriendsSet.contains(user))
-			otherFriendsSet.add(user);
-		if (!yourFriendsSet.contains(friend))
-			yourFriendsSet.add(friend);
-        user.setFriends(yourFriendsSet);
-		friend.setFriends(otherFriendsSet);
+        Set<User> userFriendsSet = user.getFriends();
+		Set<User> friendFriendsSet = friend.getFriends();
+        if (userFriendsSet.contains(friend)) {
+            userFriendsSet.remove(friend);
+            friendFriendsSet.remove(user);
+        }
+        else {
+            userFriendsSet.add(friend);
+            friendFriendsSet.add(user);
+        }
+        user.setFriends(userFriendsSet);
+		friend.setFriends(friendFriendsSet);
         userRepository.save(user);
+        userRepository.save(friend);
         return friend;
+    }
+
+    /**
+     * Friend toggle function taking a token for the current user instead of a UserID.
+     * @param token JWT corresponding to the user adding a friend.
+     * @param friendUsername Username of the friend being added.
+     * @return User object of the added friend.
+     * @throws UsernameNotFoundException if either the active user or the friend isn't found in the database.
+     */
+    public User toggleFriend(String token, String friendUsername) throws UsernameNotFoundException {
+        return toggleFriend(loadUserByToken(token).getUserID(), friendUsername);
     }
     /**
      * Verifies that a firstName is suitable based on our constraints.

@@ -81,7 +81,7 @@ public class User implements UserDetails {
     private Set<Chatroom> chatRooms;
 
     @ManyToMany
-    @Cascade(CascadeType.MERGE)
+    @Cascade({CascadeType.DETACH})
     @JsonIgnore
     private Set<User> friends;
 
