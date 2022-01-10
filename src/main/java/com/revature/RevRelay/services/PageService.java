@@ -4,12 +4,15 @@ import com.revature.RevRelay.models.Group;
 import com.revature.RevRelay.models.Page;
 import com.revature.RevRelay.models.Post;
 import com.revature.RevRelay.models.User;
+import com.revature.RevRelay.models.dtos.FriendDTO;
 import com.revature.RevRelay.models.dtos.PageDTO;
 import com.revature.RevRelay.repositories.PageRepository;
 import com.revature.RevRelay.repositories.UserRepository;
 import lombok.NoArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import java.util.concurrent.atomic.AtomicInteger;
@@ -98,12 +101,16 @@ public class PageService {
      * @return List of friends
      * @throws Exception
      */
-    public Set<User> getAllFriendsFromUser(String username) throws Exception {
+    public Set<FriendDTO> getAllFriendsFromUser(String username) throws Exception {
           // return userRepository.
         System.out.println(username);
         System.out.println("do you see me");
         User user = userRepository.findByUsername(username).orElseThrow(() -> new Exception("No friends Found"));
-        Set<User> friends = user.getFriends();
+        Set<User> intermediateFriends = user.getFriends();
+		Set<FriendDTO> friends = new HashSet<>();
+		for (User friend: intermediateFriends) {
+			friends.add(new FriendDTO(friend));
+		}
         return friends;
     }
 
