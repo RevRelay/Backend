@@ -1,6 +1,7 @@
 package com.revature.RevRelay.controllers;
 
 import com.revature.RevRelay.models.Page;
+import com.revature.RevRelay.models.dtos.PageDTO;
 import com.revature.RevRelay.services.PageService;
 import lombok.NoArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -88,8 +89,13 @@ public class PageController {
      * @return Page single page with the updated values
      */
     @PutMapping
-    public Page updatePage(@RequestBody Page page) {
-        return pageService.updatePage(page);
+    public ResponseEntity<?>  updatePage(@RequestBody PageDTO page) {
+        try{
+			return ResponseEntity.ok(pageService.updateFromDTO(page));
+		} catch (Exception e){
+			return ResponseEntity.notFound().build();
+		}
+
     }
 
     /**

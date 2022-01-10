@@ -4,6 +4,7 @@ import com.revature.RevRelay.models.Group;
 import com.revature.RevRelay.models.Page;
 import com.revature.RevRelay.models.Post;
 import com.revature.RevRelay.models.User;
+import com.revature.RevRelay.models.dtos.PageDTO;
 import com.revature.RevRelay.repositories.PageRepository;
 import com.revature.RevRelay.repositories.UserRepository;
 import lombok.NoArgsConstructor;
@@ -106,9 +107,21 @@ public class PageService {
         return friends;
     }
 
+	/** updates page using dto
+	 * @param dto dto to get data from
+	 * @return updated page
+	 */
+	public Page updateFromDTO(PageDTO dto) throws Exception {
+		Page p = pageRepository.findById(dto.getPageID()).orElseThrow(()->new Exception("Page Not Found"));
+		p.setBannerURL(dto.getBannerURL());
+		p.setPrivate(dto.isPrivate());
+		p.setDescription(dto.getDescription());
+		return pageRepository.save(p);
+	}
+
 	/**
 	 * Clears Constraints and Deletes Page
-	 * @param page page to Delete
+	 * @param pageToDelete page to Delete
 	 * @return boolean of if page is deleted
 	 */
 	public boolean delete(Page pageToDelete) {
