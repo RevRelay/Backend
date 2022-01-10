@@ -10,6 +10,7 @@ import com.fasterxml.jackson.annotation.JsonManagedReference;
 
 import java.io.Serializable;
 import java.util.List;
+import java.util.Set;
 
 import org.hibernate.annotations.CascadeType;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -62,7 +63,7 @@ public class Group {
     // group relations to other models
     @ManyToMany(mappedBy = "userGroups")
     @Cascade(CascadeType.DETACH)
-    private List<User> members;
+    private Set<User> members;
 
     public void setUserOwner(User user) {
         this.userOwnerID = user.getUserID();

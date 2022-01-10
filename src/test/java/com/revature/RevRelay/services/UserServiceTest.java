@@ -27,7 +27,12 @@ import static org.mockito.Mockito.when;
 
 class UserServiceTest {
     UserRepository mockUserRepository;
-	PageRepository mockPageRepository;
+
+	PageService mockPageService;
+	GroupService mockGroupService;
+	ChatroomService mockChatroomService;
+
+
     PasswordEncoder passwordEncoder;
     JwtUtil mockJwtUtil;
     PasswordEncoder mockPasswordEncoder;
@@ -55,9 +60,11 @@ class UserServiceTest {
         //Making a mock passwordEncoder
         mockPasswordEncoder = Mockito.mock(PasswordEncoder.class);
 		//Making a mock pageRepository
-		mockPageRepository = Mockito.mock(PageRepository.class);
+		mockPageService = Mockito.mock(PageService.class);
+		mockGroupService = Mockito.mock(GroupService.class);
+		mockChatroomService = Mockito.mock(ChatroomService.class);
         //Setting up the userservice
-        userService = new UserService(mockUserRepository, mockJwtUtil, mockPasswordEncoder,mockPageRepository);
+        userService = new UserService(mockUserRepository, mockJwtUtil, mockPasswordEncoder,mockPageService,mockGroupService,mockChatroomService);
         //Used with creating User
         userRegisterAuthRequest = new UserRegisterAuthRequest();
         userRegisterAuthRequest.setUsername("notNull");
@@ -96,7 +103,7 @@ class UserServiceTest {
     //Test User creation. Should return user and then user should equal user
     @Test
     void userServiceConstructor() {
-        UserService userServiceTestEquality = new UserService(mockUserRepository, mockJwtUtil, mockPasswordEncoder,mockPageRepository);
+        UserService userServiceTestEquality = new UserService(mockUserRepository, mockJwtUtil, mockPasswordEncoder,mockPageService,mockGroupService,mockChatroomService);
         assertTrue(userServiceTestEquality.getUserRepository()==mockUserRepository
                 &&userServiceTestEquality.getJwtUtil()==mockJwtUtil
                 &&userServiceTestEquality.getPasswordEncoder()==mockPasswordEncoder);
@@ -106,7 +113,7 @@ class UserServiceTest {
     @Test
     void createUser() {
         when(mockUserRepository.save(any())).thenReturn(user);
-		when(mockPageRepository.save(any())).thenReturn(null);
+		when(mockPageService.createPage(any())).thenReturn(null);
         when(mockUserRepository.existsByUsername(any())).thenReturn(false);
         when(mockUserRepository.existsByEmail(any())).thenReturn(false);
         try{

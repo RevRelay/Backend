@@ -1,8 +1,11 @@
 package com.revature.RevRelay.services;
 
+import com.revature.RevRelay.models.Chatroom;
+import com.revature.RevRelay.models.Group;
 import com.revature.RevRelay.models.Page;
 import com.revature.RevRelay.models.dtos.UserDTO;
 import com.revature.RevRelay.models.dtos.UserUpdateDTO;
+import com.revature.RevRelay.repositories.GroupRepository;
 import com.revature.RevRelay.repositories.PageRepository;
 import com.revature.RevRelay.repositories.UserRepository;
 import com.revature.RevRelay.models.User;
@@ -18,11 +21,11 @@ import org.springframework.stereotype.Service;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 
+import javax.transaction.Transactional;
+import java.io.Console;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
+import java.util.concurrent.atomic.AtomicInteger;
 
 /* TODO - Add tests for email service */
 
@@ -36,7 +39,11 @@ import java.util.Optional;
 @Setter
 public class UserService implements UserDetailsService {
 
-    private PageRepository pageRepository;
+    private PageService pageService;
+	private GroupService groupService;
+	private ChatroomService chatroomService;
+
+
     private UserRepository userRepository;
     private JwtUtil jwtUtil;
     private PasswordEncoder passwordEncoder;
@@ -49,11 +56,13 @@ public class UserService implements UserDetailsService {
      * @param passwordEncoder PasswordEncoder object autowired
      */
     @Autowired
-    UserService(UserRepository userRepository, JwtUtil jwtUtil, PasswordEncoder passwordEncoder, PageRepository pageRepository) {
+    UserService(UserRepository userRepository, JwtUtil jwtUtil, PasswordEncoder passwordEncoder, PageService pageService, GroupService groupRepository,ChatroomService chatroomService) {
         this.userRepository = userRepository;
         this.jwtUtil = jwtUtil;
         this.passwordEncoder = passwordEncoder;
-        this.pageRepository = pageRepository;
+        this.pageService = pageService;
+		this.groupService = groupRepository;
+		this.chatroomService = chatroomService;
     }
 
     /**
@@ -101,7 +110,7 @@ public class UserService implements UserDetailsService {
             user.setPassword(passwordEncoder.encode(userAuthRequest.getPassword()));
             user = userRepository.save(user);
             Page p = new Page(user);
-            pageRepository.save(p);
+            pageService.createPage(p);
             user.setUserPage(p);
             return userRepository.save(user);
         }
@@ -303,17 +312,14 @@ public class UserService implements UserDetailsService {
         if (user.getUsername().equals(friend.getUsername())) {
             return friend;
         }
-        List<User> friends = user.getFriends();
-        List<User> friendsFriends = friend.getFriends();
-        friendsFriends.add(user);
-        for (User friendInList : friends) {
-            if (friendInList.getUsername() == friend.getUsername()) {
-                return friend;
-            }
-        }
-        ;
-        friends.add(friend);
-        user.setFriends(friends);
+        Set<User> yourFriendsSet = user.getFriends();
+		Set<User> otherFriendsSet = friend.getFriends();
+		if (!otherFriendsSet.contains(user))
+			otherFriendsSet.add(user);
+		if (!yourFriendsSet.contains(friend))
+			yourFriendsSet.add(friend);
+        user.setFriends(yourFriendsSet);
+		friend.setFriends(otherFriendsSet);
         userRepository.save(user);
         return friend;
     }
@@ -367,4 +373,63 @@ public class UserService implements UserDetailsService {
     private boolean isValidBirthDate(String birthDate) {
         return (birthDate != null);
     }
+
+	/**
+	 * IM SICK AND TIRED OF CONSTRAINT ERRORS THIS WILL FIX THEM
+	 * @param user user to delete
+	 * @return if delete was successfully completed
+	 */
+	@Transactional
+	public boolean delete(User user){
+		User userToDelete = userRepository.findById(user.getUserID()).orElse(null);
+		if (userToDelete ==null)
+			return false;
+		Page userPageToDelete = userToDelete.getUserPage();
+
+		pageService.delete(userPageToDelete);
+		userToDelete.setUserPage(null);
+		Set<Group> groupsToDelete = userToDelete.getOwnedGroups();
+		userToDelete.setOwnedGroups(null);
+		userToDelete = userRepository.save(userToDelete);
+		groupsToDelete.forEach(group -> groupService.delete(group));
+		Set<Group> groupsToRemoveUser = userToDelete.getUserGroups();
+		userToDelete.setUserGroups(null);
+		userToDelete = userRepository.save(userToDelete);
+		User finalUserToDelete = userToDelete;
+		groupsToRemoveUser.forEach(group -> groupService.deleteMember(group.getGroupID(), finalUserToDelete.getUserID()));
+		Set<Chatroom> removeUserFromChatroom = userToDelete.getChatRooms();
+		userToDelete.setChatRooms(null);
+		userToDelete = userRepository.save(userToDelete);
+		User finalUserToDelete1 = userToDelete;
+		removeUserFromChatroom.forEach(chatroom -> chatroomService.removeMember(chatroom.getChatID(), finalUserToDelete1.getUserID()));
+
+		Set<User> removeFriendSet = userToDelete.getFriends();
+		System.out.println(removeFriendSet.size());
+		userToDelete.setFriends(null);
+		userToDelete = userRepository.save(userToDelete);
+
+		User finalUserToDelete2 = userToDelete;
+		removeFriendSet.forEach(friend-> {
+			Set<User> u = friend.getFriends();
+			u.removeIf(user1 -> user1.getUserID()== finalUserToDelete2.getUserID());
+			friend.setFriends(u);
+			userRepository.save(friend);
+		});
+
+
+
+		userRepository.delete(userToDelete);
+		return true;
+	}
+	/**
+	 * Deletes all users
+	 * @return count of deleted users
+	 */
+	public int deleteAll(){
+		AtomicInteger count = new AtomicInteger(0);
+		List<com.revature.RevRelay.models.User> users = userRepository.findAll();
+		users.forEach(user -> {if(delete(user)) count.getAndIncrement();});
+		System.out.println("Deleted "+count+" User");
+		return count.get();
+	}
 }

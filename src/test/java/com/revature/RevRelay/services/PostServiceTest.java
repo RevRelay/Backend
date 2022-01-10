@@ -34,14 +34,20 @@ public class PostServiceTest {
 	@Autowired
 	GroupRepository groupRepo;
 
+	@Autowired
+	PageService pageService;
+	@Autowired
+	GroupService groupService;
+
 	PostService service;
 
 	@BeforeEach
 	public void setup(){
-		postRepo.deleteAll();
-		pageRepo.deleteAll();
-		groupRepo.deleteAll();
 		service = new PostService(postRepo);
+		service.deleteAll();
+		pageService.deleteAll();
+		groupService.deleteAll();
+
 	}
 	
 	@Test
@@ -52,14 +58,14 @@ public class PostServiceTest {
 	
 	@Test
 	public void  createPostTest(){
-		Post post = new Post(0, PostType.ORIGINAL,"TEST","CONTENT",-1, DateUtil.now(),0,null,null,null);
+		Post post = new Post(0, PostType.ORIGINAL,"TEST","CONTENT",null,null, DateUtil.now(),0,null,null,null);
 		service.createPost(post);
 		assertEquals("TEST", postRepo.getById(post.getPostID()).getPostTitle());
 	}
 	
 	@Test
 	public void  findPostByIDTest() throws Exception {
-		Post post = new Post(0, PostType.ORIGINAL,"TEST","CONTENT",-1, DateUtil.now(),0,null,null,null);
+		Post post = new Post(0, PostType.ORIGINAL,"TEST","CONTENT",null,null, DateUtil.now(),0,null,null,null);
 		postRepo.save(post);
 		assertEquals("TEST",service.findPostByPostID(post.getPostID()).getPostTitle());
 	}
@@ -79,7 +85,7 @@ public class PostServiceTest {
 	public void findPostByPostPageIDTest(){
 		Page page = new Page(1,"","",false,false,null,null,null);
 		page = pageRepo.save(page);
-		Post post = new Post(1, PostType.ORIGINAL,"TEST","CONTENT",-1, DateUtil.now(),0,page,null,null);
+		Post post = new Post(1, PostType.ORIGINAL,"TEST","CONTENT",null,null, DateUtil.now(),0,page,null,null);
 		post = postRepo.save(post);
 		assertEquals("TEST",service.findPostByPostPageID(page.getPageID()).getContent().get(0).getPostTitle());
 	}
@@ -88,28 +94,28 @@ public class PostServiceTest {
 	public void findPostByPostPageIDTestPageable(){
 		Page page = new Page(1,"","",false,false,null,null,null);
 		Page p2 = pageRepo.save(page);
-		Post post = new Post(1, PostType.ORIGINAL,"TEST","CONTENT",-1, DateUtil.now(),0,p2,null,null);
+		Post post = new Post(1, PostType.ORIGINAL,"TEST","CONTENT",null,null, DateUtil.now(),0,p2,null,null);
 		postRepo.save(post);
 		assertEquals("TEST",service.findPostByPostPageID(p2.getPageID(), Pageable.unpaged()).getContent().get(0).getPostTitle());
 	}
 	
 	@Test
 	public void findPostByPostOwnerIDTest(){
-		Post post = new Post(1, PostType.ORIGINAL,"TEST","CONTENT",-1, DateUtil.now(),0,null,null,null);
+		Post post = new Post(1, PostType.ORIGINAL,"TEST","CONTENT",null,null, DateUtil.now(),0,null,null,null);
 		postRepo.save(post);
 		assertEquals("TEST",service.findPostByPostOwnerID(0).getContent().get(0).getPostTitle());
 	}
 	
 	@Test
 	public void findPostByPostOwnerIDTestPageable(){
-		Post post = new Post(1, PostType.ORIGINAL,"TEST","CONTENT",-1, DateUtil.now(),0,null,null,null);
+		Post post = new Post(1, PostType.ORIGINAL,"TEST","CONTENT",null,null, DateUtil.now(),0,null,null,null);
 		postRepo.save(post);
 		assertEquals("TEST",service.findPostByPostOwnerID(0,Pageable.unpaged()).getContent().get(0).getPostTitle());
 	}
 	
 	@Test
 	public void updatePostTest() throws Exception {
-		Post post = new Post(1, PostType.ORIGINAL,"TEST","CONTENT",-1, DateUtil.now(),0,null,null,null);
+		Post post = new Post(1, PostType.ORIGINAL,"TEST","CONTENT",null,null, DateUtil.now(),0,null,null,null);
 		Post post2 = service.createPost(post);
 
 		post2.setPostContent("TEST2");
@@ -120,7 +126,7 @@ public class PostServiceTest {
 	
 	@Test
 	public void deletePostByPostIDTest() throws Exception {
-		Post post = new Post(1, PostType.ORIGINAL,"TEST","CONTENT",-1, DateUtil.now(),0,null,null,null);
+		Post post = new Post(1, PostType.ORIGINAL,"TEST","CONTENT",null,null,DateUtil.now(),0,null,null,null);
 		Post post2 = service.createPost(post);
 		service.deletePostByPostID(post2.getPostID());
 

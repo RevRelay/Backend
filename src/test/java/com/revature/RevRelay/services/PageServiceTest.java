@@ -3,6 +3,7 @@ package com.revature.RevRelay.services;
 import com.revature.RevRelay.models.Group;
 import com.revature.RevRelay.models.Page;
 import com.revature.RevRelay.models.User;
+import com.revature.RevRelay.models.dtos.UserRegisterAuthRequest;
 import com.revature.RevRelay.repositories.ChatroomRepository;
 import com.revature.RevRelay.repositories.GroupRepository;
 import com.revature.RevRelay.repositories.PageRepository;
@@ -19,6 +20,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.test.context.TestPropertySource;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -34,6 +36,8 @@ public class PageServiceTest {
 	@Autowired
 	UserService userService;
 	@Autowired
+	GroupService groupService;
+	@Autowired
 	UserRepository userRepository;
 	@Autowired
 	GroupRepository groupRepository;
@@ -45,10 +49,13 @@ public class PageServiceTest {
 
 	@BeforeEach
 	public void test() {
-		pageRepository.deleteAll();
-		groupRepository.deleteAll();
+		userService.deleteAll();
+		groupService.deleteAll();
+		pageService.deleteAll();
+
+
 		chatroomRepository.deleteAll();
-		userRepository.deleteAll();
+		userService.deleteAll();
 
 		this.user = new User();
 		user.setUsername("fakeUser");
@@ -81,14 +88,14 @@ public class PageServiceTest {
 	public void getAllTest() {
 
 		List<Page> Pages = new ArrayList<>();
-		userRepository.save(user);
 		for (int i = 0; i < 100; i++) {
 			Page g = new Page();
 			g.setDescription(i + "");
-			g.setUserOwner(user);
+			g.setUserOwner(null);
 			g.setPrivate(false);
+			g = pageService.createPage(g);
 			Pages.add(g);
-			pageService.createPage(g);
+
 		}
 		List<Page> p1 = pageService.getAll();
 		for (int i = 0; i < 100; i++) {
@@ -122,24 +129,20 @@ public class PageServiceTest {
 
 	@Test
 	public void getPageByUserOwnerIDTest() {
-		userRepository.save(user);
-
-		Page page = new Page();
-		page.setUserOwner(user);
-		Page Page1 = pageService.createPage(page);
-		assertEquals(Page1.getPageID(), pageService.getPageByUserOwnerUserID(Page1.getUserOwner().getUserID())
+		user = userService.createUser(new UserRegisterAuthRequest(user.getUsername(),user.getEmail(),user.getDisplayName(), user.getPassword()));
+		Page page = user.getUserPage();
+		assertEquals(page.getPageID(), pageService.getPageByUserOwnerUserID(page.getUserOwner().getUserID())
 				.getPageID());
 	}
 
 	@Test
 	public void getPageByGroupIDTest() {
 		pageRepository.deleteAll();
-		groupRepository.save(group);
-		Page page = new Page();
-		page.setGroupOwner(group);
-		Page Page1 = pageService.createPage(page);
-		assertEquals(page, Page1);
-		assertEquals(Page1.getPageID(), pageService.getPageByGroupID(Page1.getGroupOwner().getGroupID()).getPageID());
+		userRepository.save(user);
+		group.setUserOwnerID(user.getUserID());
+		groupService.createGroup(group);
+		Page page = group.getGroupPage();
+		assertEquals(page.getPageID(), pageService.getPageByGroupID(page.getGroupOwner().getGroupID()).getPageID());
 	}
 
 	@Test
@@ -161,12 +164,13 @@ public class PageServiceTest {
 		userRepository.save(friend);
 
 		userService.addFriend(user.getUserID(), friend.getUsername());
-		List<User> friends = pageService.getAllFriendsFromUser(user.getUsername());
+		Set<User> friends = pageService.getAllFriendsFromUser(user.getUsername());
 		for (User friend1 : friends) {
 			if (friend1.getUsername().equals(friend.getUsername())) {
 				friendFound = true;
+				break;
 			}
 		}
-		assertEquals(friendFound, true);
+		assertTrue(friendFound);
 	}
 }

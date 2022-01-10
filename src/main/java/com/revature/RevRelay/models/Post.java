@@ -10,7 +10,9 @@ import lombok.*;
 import org.hibernate.annotations.Cascade;
 import javax.persistence.*;
 import java.util.Date;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import org.hibernate.annotations.CascadeType;
 
@@ -43,8 +45,10 @@ public class Post {
 	@Column(nullable = false)
 	private String postContent;
 
-	@Column(nullable = false)
-	private int postLikes;
+	@ElementCollection
+	Set<Integer> upVoters = new HashSet<>();
+	@ElementCollection
+	Set<Integer> downVoters= new HashSet<>();
 
     @Column(nullable = false)
     private Date postTime;
@@ -75,7 +79,6 @@ public class Post {
                 ", postType=" + postType +
                 ", postTitle='" + postTitle + '\'' +
                 ", postContent='" + postContent + '\'' +
-                ", postLikes=" + postLikes +
                 ", postTime=" + postTime +
                 ", postOwnerID=" + postOwnerID +
                 '}';

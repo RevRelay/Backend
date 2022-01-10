@@ -3,7 +3,6 @@ package com.revature.RevRelay.services;
 import com.revature.RevRelay.models.Group;
 import com.revature.RevRelay.models.User;
 import com.revature.RevRelay.repositories.GroupRepository;
-import com.revature.RevRelay.repositories.PageRepository;
 import com.revature.RevRelay.repositories.UserRepository;
 import lombok.NoArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,6 +11,8 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Set;
+import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Collectors;
 
 /**
@@ -29,9 +30,11 @@ public class GroupService {
 
     GroupRepository groupRepository;
 
-	PageRepository pageRepository;
+	PageService pageService;
+
 
     UserRepository userRepository;
+
 
     /**
      * Constructor for GroupService
@@ -39,10 +42,10 @@ public class GroupService {
      * @param groupRepository is the data layer for the Group model
      */
     @Autowired
-    public GroupService(GroupRepository groupRepository,UserRepository userRepository,PageRepository pageRepository) {
+    public GroupService(GroupRepository groupRepository,UserRepository userRepository,PageService pageService) {
         this.groupRepository = groupRepository;
         this.userRepository = userRepository;
-		this.pageRepository = pageRepository;
+		this.pageService = pageService;
     }
 
     /**
@@ -57,14 +60,14 @@ public class GroupService {
     public Group createGroup(Group group) {
         com.revature.RevRelay.models.Page p = new com.revature.RevRelay.models.Page();
         p.setDescription("Empty Description");
-        p.setBannerURL("");
+        p.setBannerURL("https://i.imgur.com/jFU9RkE.jpeg");
         p.setPrivate(true);
         p.setGroupPage(true);
 		group = groupRepository.save(group);
+		addMember(group.getGroupID(),group.getUserOwnerID());
         p.setGroupOwner(group);
-
-        group.setGroupPage(pageRepository.save(p));
-
+        group.setGroupPage(pageService.createPage(p));
+		System.out.println(group.getGroupPage().getGroupOwner().getGroupID());
         return groupRepository.save(group);
     }
 
@@ -154,7 +157,7 @@ public class GroupService {
      * @param groupID is the ID of the group to remove
      */
     public void deleteGroupsByID(Integer groupID) {
-        groupRepository.deleteById(groupID);
+        delete(groupRepository.findById(groupID).orElse(null));
     }
 
     /**
@@ -166,7 +169,7 @@ public class GroupService {
         Group group = groupRepository.findById(groupID).orElse(null);
         User user = userRepository.findById(userID).orElse(null);
         assert(group!=null && user!=null);
-        List<Group> userGroups = user.getUserGroups();
+        Set<Group> userGroups = user.getUserGroups();
         userGroups.add(group);
         user.setUserGroups(userGroups);
         userRepository.save(user);
@@ -182,10 +185,10 @@ public class GroupService {
         Group group = groupRepository.findById(groupID).orElse(null);
         User user = userRepository.findById(userID).orElse(null);
         assert(group!=null && user!=null);
-        List<Group> userGroups = user.getUserGroups();
+        Set<Group> userGroups = user.getUserGroups();
         user.setUserGroups(userGroups.stream()
                 .filter((userGroup) ->
-                        userGroup.getGroupID() != group.getGroupID()).collect(Collectors.toList()));
+                        userGroup.getGroupID() != group.getGroupID()).collect(Collectors.toSet()));
         userRepository.save(user);
     }
 
@@ -206,4 +209,41 @@ public class GroupService {
     public Page<Group> findAllMembersByUserID(Integer userID,Pageable pageable){
         return groupRepository.findAllGroupByMembersUserIDOrUserOwnerID(userID,userID, pageable);
     }
+
+	/**
+	 * Deletes group by breaking constraints first
+	 * @param group to be deleted
+	 * @return boolean if group deleted
+	 */
+	public boolean delete(Group group) {
+		group = groupRepository.findById(group.getGroupID()).orElse(null);
+		if (group == null) return false;
+		System.out.println(group.getUserOwnerID());
+		group.setUserOwnerID(0);
+		com.revature.RevRelay.models.Page page = group.getGroupPage();
+		group.setGroupPage(null);
+		group = groupRepository.save(group);
+		pageService.delete(page);
+		Set<User> members = group.getMembers();
+		group.setMembers(null);
+		group = groupRepository.save(group);
+		Group finalGroup = group;
+		members.forEach(member-> deleteMember(finalGroup.getGroupID(), member.getUserID()));
+		group = groupRepository.save(group);
+
+		groupRepository.delete(group);
+		return true;
+	}
+
+	/**
+	 * Deletes all groups
+	 * @return count of deleted groups
+	 */
+	public int deleteAll(){
+		AtomicInteger count = new AtomicInteger(0);
+		List<Group> groups = groupRepository.findAll();
+		groups.forEach(group -> {if(delete(group)) count.getAndIncrement();});
+		System.out.println("Deleted "+count+" Groups");
+		return count.get();
+	}
 }

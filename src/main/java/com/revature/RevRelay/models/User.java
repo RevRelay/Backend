@@ -63,12 +63,12 @@ public class User implements UserDetails {
     @ManyToMany
     @Cascade(CascadeType.MERGE)
     @JsonIgnore
-    private List<Group> userGroups;
+    private Set<Group> userGroups;
 
     @OneToMany
-    @Cascade({CascadeType.ALL})
+    @Cascade({CascadeType.MERGE})
 //    @JsonManagedReference
-    private List<Group> ownedGroups;
+    private Set<Group> ownedGroups;
 
     @OneToOne
     @Cascade({CascadeType.MERGE, CascadeType.REMOVE, CascadeType.DELETE})
@@ -83,7 +83,7 @@ public class User implements UserDetails {
     @ManyToMany
     @Cascade(CascadeType.MERGE)
     @JsonIgnore
-    private List<User> friends;
+    private Set<User> friends;
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {

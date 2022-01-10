@@ -51,7 +51,21 @@ public class PostController {
         }
     }
 
-    /**
+	/**
+	 * upvote/downvote or unvote a post
+	 * @param postID of the corresponding post
+	 * @return the valid post, or status 404 if the ID is invalid
+	 */
+	@PutMapping("/{postID}/vote")
+	public ResponseEntity<?> upvotePost(@PathVariable Integer postID, @RequestParam("userID") Integer userID, @RequestParam("upvote") Boolean upvote) {
+		try {
+			return ResponseEntity.ok(postService.upVotePost(postID,userID,upvote));
+		} catch (Exception e) {
+			return ResponseEntity.status(404).body(e.getMessage());
+		}
+	}
+
+	/**
      * get all the posts associated with a page ID
      * @param postPageID ID of the page associated with the posts
      * @return a paggable of all the posts associated with the queried page
