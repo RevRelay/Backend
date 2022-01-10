@@ -5,6 +5,7 @@ import com.revature.RevRelay.models.User;
 import com.revature.RevRelay.models.dtos.UserDTO;
 import com.revature.RevRelay.models.dtos.UserRegisterAuthRequest;
 import com.revature.RevRelay.models.dtos.UserUpdateDTO;
+import com.revature.RevRelay.services.PostService;
 import com.revature.RevRelay.services.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
@@ -26,11 +27,12 @@ import java.util.Map;
 @RequestMapping(value = "/users")
 public class UserController {
 
-    // used for converting json object and parse to string
-    Gson g = new Gson();
+    private UserService userService;
 
     @Autowired
-    private UserService userService;
+    public UserController(UserService userService) {
+        this.userService = userService;
+    }
 
     /**
      * Creates a new user and persists to database using userService layer
@@ -83,6 +85,18 @@ public class UserController {
         } catch (UsernameNotFoundException e) {
             return new ResponseEntity<String>("Current User Not Found", responseHeaders, HttpStatus.NOT_FOUND);
         }
+    }
+
+    /**
+     * This endpoint handles adding a friend to your firends list.
+     * @param userID the id of the user that will add a friend.
+     * @param username the user that wil be added as a user.
+     * @return response entity 200 signaling successful update
+     */
+    @PostMapping("/addFriend/{userID}")
+    public ResponseEntity addFriend(@PathVariable int userID, @RequestParam String username) throws Exception {
+
+        return ResponseEntity.ok(userService.addFriend(userID, username));
     }
 
     /**
