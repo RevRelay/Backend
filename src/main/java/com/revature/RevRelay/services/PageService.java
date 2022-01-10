@@ -99,12 +99,8 @@ public class PageService {
      * @throws Exception
      */
     public Set<User> getAllFriendsFromUser(String username) throws Exception {
-          // return userRepository.
-        System.out.println(username);
-        System.out.println("do you see me");
         User user = userRepository.findByUsername(username).orElseThrow(() -> new Exception("No friends Found"));
-        Set<User> friends = user.getFriends();
-        return friends;
+		return user.getFriends();
     }
 
 	/** updates page using dto

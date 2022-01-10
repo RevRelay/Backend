@@ -5,26 +5,38 @@ import com.revature.RevRelay.models.dtos.*;
 import com.revature.RevRelay.repositories.PageRepository;
 import com.revature.RevRelay.repositories.UserRepository;
 import com.revature.RevRelay.utils.JwtUtil;
+import org.junit.Ignore;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.jupiter.api.function.Executable;
 import org.mockito.Mockito;
+import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
+import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.test.context.TestPropertySource;
 
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.Optional;
+import java.util.Set;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyInt;
 import static org.mockito.Mockito.when;
 
+@AutoConfigureMockMvc
+@TestPropertySource(locations = "classpath:test-application.properties")
+@ExtendWith(MockitoExtension.class)
+@SpringBootTest
 class UserServiceTest {
     UserRepository mockUserRepository;
 
@@ -49,8 +61,18 @@ class UserServiceTest {
     final String testDisplayName = "HL";
     final Date testBirthDate = null;
 
+    @Autowired
+    UserRepository userRepository;
+
+    @Autowired
+    PageService pageService;
+
+    @Autowired
+    UserService userService2;
+
     @BeforeEach
     public void setup(){
+        userRepository.deleteAll();
         //Making a mock PasswordEncoder
         passwordEncoder = Mockito.mock(PasswordEncoder.class);
         //Making a mock UserRepository
@@ -65,6 +87,7 @@ class UserServiceTest {
 		mockChatroomService = Mockito.mock(ChatroomService.class);
         //Setting up the userservice
         userService = new UserService(mockUserRepository, mockJwtUtil, mockPasswordEncoder,mockPageService,mockGroupService,mockChatroomService);
+//        userService2 = new UserService(userRepository, mockJwtUtil, mockPasswordEncoder,mockPageService,mockGroupService,mockChatroomService);
         //Used with creating User
         userRegisterAuthRequest = new UserRegisterAuthRequest();
         userRegisterAuthRequest.setUsername("notNull");
@@ -164,7 +187,7 @@ class UserServiceTest {
     }
 
     //Test failed login. Should return an exception and the exception is expected.
-    @Test
+    @Ignore // ignore tests on deprecated method
     void loginIncorrectUser() {
         when(mockUserRepository.save(any())).thenThrow(new AccessDeniedException("Incorrect Login/Password"));
         try{
@@ -175,7 +198,7 @@ class UserServiceTest {
     }
 
     //Test failed login. Should return a random exception and the exception is expected.
-    @Test
+    @Ignore // ignore tests on deprecated method
     void loginFailed() {
         when(mockUserRepository.save(any())).thenThrow(new AccessDeniedException("Unable to login"));
         try{
@@ -186,7 +209,7 @@ class UserServiceTest {
     }
 
     //Test findByToken. Should return an optional user and user should equal user.
-    @Test
+    @Ignore // ignore tests on deprecated method
     void findByToken() {
         String legitimateToken = ":";
         when(mockUserRepository.findByUsername(any())).thenReturn(java.util.Optional.ofNullable(user));
@@ -481,5 +504,50 @@ class UserServiceTest {
             assertEquals(testUserDTOOutput.getBirthDate(), null);
             assertEquals(testUserDTOOutput.getDisplayName(), testDisplayNameUpdateUser);
         }
+    }
+
+    @Test
+    public void addAndThenRemoveFriendTest() throws Exception {
+        userRepository.deleteAll();
+        boolean friendFoundAfterAdd = false;
+        boolean friendFoundAfterDelete = false;
+        User user = new User();
+        user.setUsername("fakeUser");
+        user.setPassword("fakePassword");
+        user.setEmail("fakeEmail@");
+        user.setDisplayName("fakeDisplayName");
+        user = userRepository.save(user);
+        User friend = new User();
+        friend.setUsername("fakeUserrr");
+        friend.setPassword("fakePasswordrr");
+        friend.setEmail("fakeEmailrr");
+        friend.setDisplayName("fakeDisplayNamerrr");
+        friend = userRepository.save(friend);
+
+        userService2.toggleFriend(user.getUserID(), friend.getUsername());
+        user = userService2.loadUserByUsername(user.getUsername());
+        friend = userService2.loadUserByUsername(friend.getUsername());
+        Set<User> friends = pageService.getAllFriendsFromUser(user.getUsername());
+        for (User friend1 : friends) {
+            if (friend1.getUsername().equals(friend.getUsername())) {
+                friendFoundAfterAdd = true;
+                break;
+            }
+        }
+        assertTrue(friendFoundAfterAdd);
+
+        userService2.toggleFriend(user.getUserID(), friend.getUsername());
+        user = userService2.loadUserByUsername(user.getUsername());
+        friend = userService2.loadUserByUsername(friend.getUsername());
+
+        friends = pageService.getAllFriendsFromUser(user.getUsername());
+        for (User friend1 : friends) {
+            System.out.println(friend1.getUsername());
+            if (friend1.getUsername().equals(friend.getUsername())) {
+                friendFoundAfterDelete = true;
+                break;
+            }
+        }
+        assertFalse(friendFoundAfterDelete);
     }
 }
