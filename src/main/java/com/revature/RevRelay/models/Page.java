@@ -52,7 +52,7 @@ public class Page {
     @JsonBackReference(value = "group-page")
     private Group groupOwner;
 
-    @OneToMany(mappedBy = "postPage")
+    @OneToMany(fetch = FetchType.EAGER,mappedBy = "postPage")
     @Cascade({CascadeType.MERGE, CascadeType.DELETE})
     @JsonManagedReference(value = "page-post")
     private Set<Post> posts;
