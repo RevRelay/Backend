@@ -22,7 +22,10 @@ import static org.junit.jupiter.api.Assertions.*;
 public class ChatroomTest {
 	@Autowired
 	UserRepository userRepository;
-	
+
+	@Autowired
+	UserService userService;
+
 	@Autowired
 	ChatroomRepository chatroomRepository;
 
@@ -31,8 +34,8 @@ public class ChatroomTest {
 	@BeforeEach
 	public void before(){
 		service = new ChatroomService(chatroomRepository,userRepository);
+		userService.deleteAll();
 		chatroomRepository.deleteAll();
-		userRepository.deleteAll();
 	}
 	
 	@Test

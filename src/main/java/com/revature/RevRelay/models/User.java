@@ -2,14 +2,21 @@ package com.revature.RevRelay.models;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.*;
+import org.hibernate.annotations.Cascade;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
+
 import javax.persistence.*;
+
 import com.fasterxml.jackson.annotation.JsonManagedReference;
+
+import java.io.Serializable;
 import java.util.Collection;
 import java.util.Date;
 import java.util.List;
 import java.util.Set;
+
+import org.hibernate.annotations.CascadeType;
 
 /**
  * User model containing all user information. username and password are used
@@ -53,23 +60,30 @@ public class User implements UserDetails {
     private String displayName;
 
     // User Relations to other models
-    @ManyToMany(cascade = CascadeType.MERGE)
-    private List<Group> userGroups;
+    @ManyToMany
+    @Cascade(CascadeType.MERGE)
+    @JsonIgnore
+    private Set<Group> userGroups;
 
-    @OneToMany(mappedBy="userOwner",cascade = CascadeType.MERGE)
-    @JsonManagedReference
-    private List<Group> ownedGroups;
+    @OneToMany
+    @Cascade({CascadeType.MERGE})
+//    @JsonManagedReference
+    private Set<Group> ownedGroups;
 
-    @OneToOne(cascade = CascadeType.MERGE)
+    @OneToOne
+    @Cascade({CascadeType.MERGE, CascadeType.REMOVE, CascadeType.DELETE})
     @JsonManagedReference(value = "user-page")
     private Page userPage;
 
-    @ManyToMany(mappedBy="members",cascade = CascadeType.MERGE)
+    @ManyToMany
+    @Cascade(CascadeType.MERGE)
+    @JsonIgnore
     private Set<Chatroom> chatRooms;
 
+    @ManyToMany
+    @Cascade(CascadeType.MERGE)
     @JsonIgnore
-    @ManyToMany(cascade = CascadeType.MERGE)
-    private List<User> friends;
+    private Set<User> friends;
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
@@ -78,7 +92,7 @@ public class User implements UserDetails {
 
     /**
      * Methods used for Spring Security for a secure user login
-     * 
+     *
      * @return booleans for corresponding security functions
      */
     @Override

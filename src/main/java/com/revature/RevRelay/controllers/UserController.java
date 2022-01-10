@@ -4,6 +4,7 @@ import com.google.gson.Gson;
 import com.revature.RevRelay.models.User;
 import com.revature.RevRelay.models.dtos.UserDTO;
 import com.revature.RevRelay.models.dtos.UserRegisterAuthRequest;
+import com.revature.RevRelay.models.dtos.UserUpdateDTO;
 import com.revature.RevRelay.services.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
@@ -43,7 +44,6 @@ public class UserController {
         return ResponseEntity.ok(userService.createUser(user));
     }
 
-
     /**
      * Returns a UserDTO representing the logged-in user via JWT.
      *
@@ -62,13 +62,24 @@ public class UserController {
         }
     }
 
-    @PutMapping("/current")
-    ResponseEntity<?> updateCurrent(@RequestHeader("Authorization") String token, @RequestBody UserDTO userDTO) {
+    /**
+     * Takes in a UserUpdateDTO with email, firstName, lastName, birthDate,and displayName all in String format.
+     * In the userSerivice the date is converted from a String into a date. All info from the UserUpdateDTO is used to
+     * update the current user information.
+     *
+     * Returns a UserDTO with all this updated info in the correct format.
+     *
+     * @param token JWT of currently logged-in user from Authorization header.
+     * @param changedInfoUser UserUpdateDTO with email, firstName, lastName, birthDate,and displayName all in String format.
+     * @return ResponseEntity containing current user (UserDTO) with their updated info.
+     */
+    @PutMapping("/update")
+    public ResponseEntity<?> updateAnyInfo(@RequestHeader("Authorization") String token, @RequestBody UserUpdateDTO changedInfoUser){
         String tokenParsed = token.replace("Bearer", "").trim();
         HttpHeaders responseHeaders = new HttpHeaders();
         responseHeaders.setBearerAuth(tokenParsed);
         try {
-            return new ResponseEntity<UserDTO>(userService.updateUser(tokenParsed, userDTO), responseHeaders, HttpStatus.ACCEPTED);
+            return new ResponseEntity<UserDTO>(userService.updateUser(tokenParsed, changedInfoUser), responseHeaders, HttpStatus.ACCEPTED);
         } catch (UsernameNotFoundException e) {
             return new ResponseEntity<String>("Current User Not Found", responseHeaders, HttpStatus.NOT_FOUND);
         }
@@ -86,98 +97,24 @@ public class UserController {
     }
 
     /**
-     * Updates a user's first name using the userID as the identifier
-     *
-     * @param userID    userId of first name being changed
-     * @param firstName user information being changed
-     * @return response entity 200 signaling successful update
-     */
-    @PutMapping("/firstName/{userID}")
-    public ResponseEntity<?> updateFirstName(@PathVariable int userID, @RequestBody String firstName) {
-        return ResponseEntity.ok(userService.updateFirstName(userID, firstName.substring(1, firstName.length() - 1)));
-    }
-
-    /**
-     * Updates a user's last name using the userID as the identifier
-     *
-     * @param userID   userId of user being updated
-     * @param lastName user information being changed
-     * @return response entity 200 signaling successful update
-     */
-    @PutMapping("/lastName/{userID}")
-    public ResponseEntity<?> updateLastName(@PathVariable int userID, @RequestBody String lastName) {
-        return ResponseEntity.ok(userService.updateLastName(userID, lastName.substring(1, lastName.length() - 1)));
-    }
-
-    /**
      * Updates a user's password using the userID as the identifier, user needs to
-     * input old password,
-     * new password, and confirm new password again
+     * input old password, new password, and confirm new password again
      *
-     * @param userID userId of user being updated
+     * @param token token of user being updated
      * @param json   json object of password array, old password and two new
      *               passwords
      * @return response entity 200 signaling successful update
      */
-    @PutMapping("/password/{userID}")
-    public ResponseEntity<?> updatePassword(@PathVariable int userID, @RequestBody Map<String, String> json) {
+    @PutMapping("/password")
+    public ResponseEntity<?> updatePassword(@RequestHeader("Authorization") String token, @RequestBody Map<String, String> json) {
         String oldPassword = json.get("oldPassword");
         String newPassword = json.get("newPassword");
         String confirmPassword = json.get("confirmPassword");
-        return ResponseEntity.ok(userService.updatePassword(userID, oldPassword, newPassword, confirmPassword));
-    }
-
-    /**
-     * Updates a user's display name using the userID as the identifier
-     *
-     * @param userID      userId of user being updated
-     * @param displayName user information being changed
-     * @return response entity 200 signaling successful update
-     */
-    @PutMapping("/displayName/{userID}")
-    public ResponseEntity<?> updateDisplayName(@PathVariable int userID, @RequestBody String displayName) {
-        return ResponseEntity.ok(userService.updateDisplayName(userID, displayName.substring(1, displayName.length() - 1)));
-    }
-
-    /**
-     * Updates a user's birthday using the userID as the identifier
-     *
-     * @param userID    userId of user being updated
-     * @param birthDate user information being changed
-     * @return response entity 200 signaling successful update
-     */
-    @PutMapping("/birthDate/{userID}")
-    public ResponseEntity<?> updateBirthDate(@PathVariable int userID, @RequestBody String birthDate) {
-        Date s = null;
-        try {
-            s = new SimpleDateFormat("yyyy/MM/dd").parse(birthDate.substring(1, birthDate.length() - 1));
-        } catch (Exception e) {
-            return null;
-        }
-        return ResponseEntity.ok(userService.updateBirthDate(userID, s));
-    }
-
-    /**
-     * This endpoint handles adding a friend to your firends list.
-     * @param userID the id of the user that will add a friend.
-     * @param username the user that wil be added as a user.
-     * @return response entity 200 signaling successful update
-     */
-    @PostMapping("/addFriend/{userID}")
-    public ResponseEntity addFriend(@PathVariable int userID, @RequestParam String username) throws Exception {
-
-        return ResponseEntity.ok(userService.addFriend(userID, username));
-    }
-
-    /*
-     * Updates a user's email using the userID as the identifier
-     *
-     * @param userID userId of user being updated
-     * @param email  user information being changed
-     * @return response entity 200 signaling successful update
-     */
-    @PutMapping("/email/{userID}")
-    public ResponseEntity<?> updateEmail(@PathVariable int userID, @RequestBody String email) {
-        return ResponseEntity.ok(userService.updateEmail(userID, email.substring(1, email.length() - 1)));
+        return ResponseEntity.ok(userService.updatePassword(
+                userService.loadUserByToken(token.replace("Bearer", "").trim()).getUserID(),
+                oldPassword,
+                newPassword,
+                confirmPassword)
+        );
     }
 }

@@ -1,10 +1,21 @@
 package com.revature.RevRelay.models;
 
+import com.revature.RevRelay.repositories.UserRepository;
+import com.revature.RevRelay.services.UserService;
 import lombok.*;
 import javax.persistence.*;
+import org.hibernate.annotations.Cascade;
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
+
+import java.io.Serializable;
 import java.util.List;
+import java.util.Set;
+
+import org.hibernate.annotations.CascadeType;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
+
 
 /**
  * Group Model
@@ -20,6 +31,10 @@ import java.util.List;
 @Table(name = "groups")
 public class Group {
 
+    @Autowired
+    @Transient
+    UserRepository userRepository;
+
     // group information
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO, generator = "group_generator")
@@ -29,19 +44,32 @@ public class Group {
     @Column(nullable = false, unique = true)
     private String groupName;
 
-    @OneToOne(cascade = {CascadeType.MERGE,CascadeType.REMOVE})
+    @OneToOne
+    @Cascade({CascadeType.MERGE, CascadeType.DELETE})
     @JsonManagedReference(value = "group-page")
     private Page groupPage;
 
-    @ManyToOne(cascade = CascadeType.MERGE)
-    @JoinColumn(name = "userOwnerID")
-    @JsonBackReference
-    private User userOwner;
+//    @ManyToOne
+//    //@Cascade({CascadeType.MERGE, CascadeType.DETACH})
+//    @JoinColumn(name = "userOwnerID")
+//    @JsonBackReference
+//    private User userOwner;
+    @Column
+    private int userOwnerID;
 
     @Column(nullable = false)
     boolean isPrivate;
 
     // group relations to other models
-    @ManyToMany(mappedBy = "userGroups", cascade = CascadeType.MERGE)
-    private List<User> members;
+    @ManyToMany(mappedBy = "userGroups")
+    @Cascade(CascadeType.DETACH)
+    private Set<User> members;
+
+    public void setUserOwner(User user) {
+        this.userOwnerID = user.getUserID();
+    }
+
+//    public User getUserOwner() {
+//        return userRepository.findById(userOwnerId).orElse(null);
+//    }
 }

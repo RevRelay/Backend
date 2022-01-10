@@ -3,8 +3,12 @@ package com.revature.RevRelay.models;
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import lombok.*;
+import org.hibernate.annotations.Cascade;
 import javax.persistence.*;
 import java.util.List;
+import java.util.Set;
+
+import org.hibernate.annotations.CascadeType;
 
 /**
  * Page Model
@@ -38,17 +42,20 @@ public class Page {
     @Column(nullable = false)
     private boolean isGroupPage;
 
-    @OneToOne(cascade = CascadeType.MERGE)
+    @OneToOne
+    @Cascade(CascadeType.MERGE)
     @JsonBackReference(value = "user-page")
     private User userOwner;
 
-    @OneToOne(cascade = {CascadeType.MERGE,CascadeType.REMOVE})
+    @OneToOne
+    @Cascade({CascadeType.MERGE, CascadeType.DELETE})
     @JsonBackReference(value = "group-page")
     private Group groupOwner;
 
-    @OneToMany(mappedBy = "postPage", cascade = {CascadeType.MERGE,CascadeType.REMOVE})
+    @OneToMany(mappedBy = "postPage")
+    @Cascade({CascadeType.MERGE, CascadeType.DELETE})
     @JsonManagedReference(value = "page-post")
-    private List<Post> posts;
+    private Set<Post> posts;
 
 
 	public Page(User user){

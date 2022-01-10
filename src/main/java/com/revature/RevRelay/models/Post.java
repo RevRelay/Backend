@@ -7,9 +7,14 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 
 import com.revature.RevRelay.enums.PostType;
 import lombok.*;
+import org.hibernate.annotations.Cascade;
 import javax.persistence.*;
 import java.util.Date;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
+
+import org.hibernate.annotations.CascadeType;
 
 /**
  * Post Model
@@ -40,8 +45,10 @@ public class Post {
 	@Column(nullable = false)
 	private String postContent;
 
-	@Column(nullable = false)
-	private int postLikes;
+	@ElementCollection
+	Set<Integer> upVoters = new HashSet<>();
+	@ElementCollection
+	Set<Integer> downVoters= new HashSet<>();
 
     @Column(nullable = false)
     private Date postTime;
@@ -50,15 +57,18 @@ public class Post {
     private int postOwnerID;
 
     // post relationships to other models
-    @ManyToOne(cascade = CascadeType.MERGE) // TODO I may be causing issues ;)
+    @ManyToOne // TODO I may be causing issues ;)
+    @Cascade(CascadeType.MERGE)
     @JsonBackReference(value = "page-post")
     private Page postPage;
 
-    @ManyToOne(cascade = CascadeType.MERGE)
+    @ManyToOne
+    @Cascade(CascadeType.MERGE)
     @JsonBackReference(value = "post-post")
     private Post parent;
 
-    @OneToMany(mappedBy = "parent", cascade = CascadeType.MERGE)
+    @OneToMany(mappedBy = "parent")
+    @Cascade(CascadeType.MERGE)
     @JsonManagedReference(value = "post-post")
     private List<Post> children;
 
@@ -69,7 +79,6 @@ public class Post {
                 ", postType=" + postType +
                 ", postTitle='" + postTitle + '\'' +
                 ", postContent='" + postContent + '\'' +
-                ", postLikes=" + postLikes +
                 ", postTime=" + postTime +
                 ", postOwnerID=" + postOwnerID +
                 '}';
