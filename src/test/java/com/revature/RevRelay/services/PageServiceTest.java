@@ -3,6 +3,7 @@ package com.revature.RevRelay.services;
 import com.revature.RevRelay.models.Group;
 import com.revature.RevRelay.models.Page;
 import com.revature.RevRelay.models.User;
+import com.revature.RevRelay.models.dtos.FriendDTO;
 import com.revature.RevRelay.models.dtos.UserRegisterAuthRequest;
 import com.revature.RevRelay.repositories.ChatroomRepository;
 import com.revature.RevRelay.repositories.GroupRepository;
@@ -164,9 +165,9 @@ public class PageServiceTest {
 		userRepository.save(friend);
 
 		userService.addFriend(user.getUserID(), friend.getUsername());
-		Set<User> friends = pageService.getAllFriendsFromUser(user.getUsername());
-		for (User friend1 : friends) {
-			if (friend1.getUsername().equals(friend.getUsername())) {
+		Set<FriendDTO> friends = pageService.getAllFriendsFromUser(user.getUsername());
+		for (FriendDTO friend1 : friends) {
+			if (friend1.getDisplayName().equals(friend.getDisplayName())) {
 				friendFound = true;
 				break;
 			}
