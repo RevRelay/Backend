@@ -61,7 +61,7 @@ public class Group {
     boolean isPrivate;
 
     // group relations to other models
-    @ManyToMany(mappedBy = "userGroups")
+    @ManyToMany(fetch = FetchType.EAGER,mappedBy = "userGroups")
     @Cascade(CascadeType.DETACH)
     private Set<User> members;
 
