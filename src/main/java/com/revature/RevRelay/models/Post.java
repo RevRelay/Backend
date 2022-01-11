@@ -53,6 +53,9 @@ public class Post {
     @Column(nullable = false)
     private Date postTime;
 
+	@Column
+	private String postAuthor;
+
     @Column(nullable = false)
     private int postOwnerID;
 
@@ -83,4 +86,6 @@ public class Post {
                 ", postOwnerID=" + postOwnerID +
                 '}';
     }
+
+
 }
