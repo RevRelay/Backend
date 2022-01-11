@@ -36,8 +36,14 @@ public class PostController {
      * @return status 200, post successfully created
      */
     @PostMapping
-    public ResponseEntity<Post> createPost(@RequestBody Post post) {
-        return ResponseEntity.ok(postService.createPost(post));
+    public ResponseEntity<?> createPost(@RequestHeader("Authorization") String token,@RequestBody Post post) {
+		String tokenParsed = token.replace("Bearer", "").trim();
+		try {
+			post.setPostAuthor(userService.loadUserByToken(tokenParsed).getDisplayName());
+			return ResponseEntity.ok(postService.createPost(post));
+		} catch (Exception e) {
+			return ResponseEntity.status(404).body(e.getMessage());
+		}
     }
 
     /**
