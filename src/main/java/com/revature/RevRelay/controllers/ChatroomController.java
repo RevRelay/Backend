@@ -5,6 +5,7 @@ import com.revature.RevRelay.models.Group;
 import com.revature.RevRelay.services.ChatroomService;
 import lombok.NoArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -61,6 +62,19 @@ public class ChatroomController {
 		if (chatroom==null)
 			return ResponseEntity.notFound().build();
 		return ResponseEntity.ok(chatroom);
+	}
+
+	/**
+	 *
+	 * @param userID
+	 * @return
+	 */
+	@GetMapping("/member/{userID}")
+	public ResponseEntity<?> getAllByUserID(@PathVariable Integer userID){
+		Page<Chatroom> chatrooms = chatroomService.findAllChatsByUserID(userID);
+		if (chatrooms==null)
+			return ResponseEntity.notFound().build();
+		return ResponseEntity.ok(chatrooms);
 	}
 
 	/**
