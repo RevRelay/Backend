@@ -6,11 +6,17 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
 
+/**
+ * Search Result Item Model
+ *
+ * For a Page gives only the information needed when searching results.
+ * This includes the search result id, the type being either if it is a user or a group,
+ * the display name of the page, and the pageID.
+ */
 @Getter
 @Setter
 @AllArgsConstructor
 public class SearchResultItem {
-
     private int id;
     private SearchResultItemTypes type;
     private String name;
@@ -28,9 +34,7 @@ public class SearchResultItem {
         this.name = group.getGroupName();
     }
 
-
     public enum SearchResultItemTypes {
         USER,GROUP
     }
-
 }

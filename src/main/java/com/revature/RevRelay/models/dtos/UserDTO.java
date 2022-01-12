@@ -1,4 +1,5 @@
 package com.revature.RevRelay.models.dtos;
+
 import com.revature.RevRelay.models.Page;
 import com.revature.RevRelay.models.User;
 import lombok.AllArgsConstructor;
@@ -7,6 +8,11 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import java.util.Date;
 
+/**
+ * UserDTO model
+ *
+ * Includes almost all param for a user.Used so that password is not sent to the front end.
+ */
 @Getter
 @Setter
 @AllArgsConstructor
