@@ -102,6 +102,11 @@ public class ChatroomService {
 		return user.getChatRooms();
 	}
 
+	/**
+	 *
+	 * @param userID
+	 * @return
+	 */
 	public Page<Chatroom> findAllChatsByUserID(Integer userID) {
 		return chatroomRepository.findAllByMembersUserID(userID,Pageable.unpaged());
 	}

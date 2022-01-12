@@ -1,6 +1,5 @@
 package com.revature.RevRelay.controllers;
 
-import com.revature.RevRelay.models.Post;
 import com.revature.RevRelay.models.User;
 import com.revature.RevRelay.models.dtos.UserLoginAuthRequest;
 import com.revature.RevRelay.models.dtos.UserAuthResponse;
@@ -9,7 +8,6 @@ import com.revature.RevRelay.security.TokenAuthProvider;
 import com.revature.RevRelay.services.UserService;
 import com.revature.RevRelay.utils.JwtUtil;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -60,10 +58,8 @@ public class PublicUserController {
      */
     @PostMapping(value = "/login")
     public ResponseEntity<?> login(@RequestBody UserLoginAuthRequest userAuthRequest) {
-        //Refactor tokenAuthProvider to call Login for users
         try {
-            tokenAuthProvider.authenticate(
-                    new UsernamePasswordAuthenticationToken(userAuthRequest.getUsername(), userAuthRequest.getPassword())
+            tokenAuthProvider.authenticate(new UsernamePasswordAuthenticationToken(userAuthRequest.getUsername(), userAuthRequest.getPassword())
             );
         } catch (BadCredentialsException e) {
             return new ResponseEntity<String>("Incorrect username or password", new HttpHeaders(), HttpStatus.BAD_REQUEST);

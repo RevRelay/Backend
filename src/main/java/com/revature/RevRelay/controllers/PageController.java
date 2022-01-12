@@ -19,7 +19,9 @@ public class PageController {
     PageService pageService;
 
     /**
-     * @param pageService autowired pageService
+     * Constructor for the GroupsController.
+     *
+     * @param pageService The service layer for Pages.
      */
     @Autowired
     public PageController(PageService pageService) {
@@ -28,8 +30,10 @@ public class PageController {
 
 
     /**
-     * @param page to be created
-     * @return ResponseEntity<Page> Returns the created Page is successful
+     * Creates a page.
+     *
+     * @param page The information for a page to be created
+     * @return ResponseEntity<Page> Returns the created Page.
      */
     @PostMapping
     public ResponseEntity<Page> createPage(@RequestBody Page page) {
@@ -37,7 +41,9 @@ public class PageController {
     }
 
     /**
-     * @return List<Page> of all pages
+     * Gets a List of all Pages.
+     *
+     * @return List<Page> List of all Pages.
      */
     @GetMapping("/all")
     public List<Page> getAll() {
@@ -45,8 +51,10 @@ public class PageController {
     }
 
     /**
-     * @param userOwnerID userOwnerID to be searched and returned
-     * @return Page single page matching provided userOwnerID
+     * Gets the page owned by a user by userOwnerID.
+     *
+     * @param userOwnerID The user that owns the Page by userOwnerID.
+     * @return A single Page owned by a user with the matching the provided userOwnerID.
      */
     @GetMapping("/users/{userOwnerID}")
     public Page getPageByUserOwnerUserID(@PathVariable Integer userOwnerID) {
@@ -54,8 +62,10 @@ public class PageController {
     }
 
     /**
-     * @param groupID to be searched and returned
-     * @return Page single page matching provided groupID
+     * Gets the page owned by a group by groupID.
+     *
+     * @param groupID The group that owns the Page by groupID.
+     * @return A single Page owned by a group with the matching provided groupID.
      */
     @GetMapping("/groups/{groupID}")
     public Page getPageByGroupOwnerID(@PathVariable Integer groupID) {
@@ -63,8 +73,10 @@ public class PageController {
     }
 
     /**
-     * @param Username to be searched and returned
-     * @return Page single page matching provided pageID
+     * Gets the Set of all the friends of a user by username.
+     *
+     * @param username The username of the user we are getting the friends of.
+     * @return Set of all the friends of the user by username.
      */
     @GetMapping("/friends/{username}")
     public ResponseEntity<?> getAllFriends(@PathVariable String username) throws Exception {
@@ -72,8 +84,10 @@ public class PageController {
     }
     
     /**
-     * @param pageID pageID to be searched and returned
-     * @return Page single page matching provided pageID
+     * Gets a Page by its pageID.
+     *
+     * @param pageID The pageID of the page what is wanted.
+     * @return A single Page with the matching pageID provided.
      */
     @GetMapping("/{pageID}")
     public ResponseEntity<?> getPageByPageID(@PathVariable Integer pageID) {
@@ -85,11 +99,13 @@ public class PageController {
     }
 
     /**
-     * @param page the page to be updated
-     * @return Page single page with the updated values
+     * Updates a Page with the given page information.
+     *
+     * @param page The page with the information to be updated to.
+     * @return A single Page with the updated values.
      */
     @PutMapping
-    public ResponseEntity<?>  updatePage(@RequestBody PageDTO page) {
+    public ResponseEntity<?> updatePage(@RequestBody PageDTO page) {
         try{
 			return ResponseEntity.ok(pageService.updateFromDTO(page));
 		} catch (Exception e){
@@ -99,7 +115,9 @@ public class PageController {
     }
 
     /**
-     * @param pageID the pageID to be deleted from database
+     * Deletes a Page with the given pageID.
+     *
+     * @param pageID The pageID of the page to be deleted from the database.
      */
     @DeleteMapping("/{pageID}")
     public void deletePageByID(@PathVariable Integer pageID) {

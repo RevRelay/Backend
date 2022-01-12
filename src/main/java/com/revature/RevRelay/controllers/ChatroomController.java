@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.*;
 
 /**
  * Controller endpoints for Chatroom model
-
+ *
  * @author Ryan Haynes (Intern Devops Engineer)
  * @version 1.17
  */
@@ -22,8 +22,9 @@ public class ChatroomController {
 	private ChatroomService chatroomService;
 
 	/**
-	 * Creates Chatroom Controller
-	 * @param chatroomService chatroom service
+	 * Creates the Chatroom Controller.
+	 *
+	 * @param chatroomService The service layer for chatrooms.
 	 */
 	@Autowired
 	public ChatroomController(ChatroomService chatroomService){
@@ -31,8 +32,9 @@ public class ChatroomController {
 	}
 
 	/**
-	 * Gets all chatrooms
-	 * @return Pageable of all Chatrooms
+	 * Gets all chatrooms.
+	 *
+	 * @return Pageable of all Chatrooms.
 	 */
 	@GetMapping
 	public ResponseEntity<?> getAllChatroom(){
@@ -40,10 +42,11 @@ public class ChatroomController {
 	}
 
 	/**
-	 * Updates existing Chatroom
-	 * @param chatID chatroom id to update
-	 * @param chatroom new data
-	 * @return updated chatroom
+	 * Updates the existing Chatroom with the given ID.
+	 *
+	 * @param chatID The chatID to for the chatroom to be updated.
+	 * @param chatroom New chatroom data.
+	 * @return Updated chatroom.
 	 */
 	@PutMapping("/{chatID}")
 	public ResponseEntity<?> updateChatroom(@PathVariable Integer chatID,@RequestBody Chatroom chatroom){
@@ -52,9 +55,10 @@ public class ChatroomController {
 	}
 
 	/**
-	 * Gets chatroom by id
-	 * @param chatID chatroom id
-	 * @return chatroom
+	 * Gets the chatroom by its ID.
+	 *
+	 * @param chatID The chatroom ID.
+	 * @return Returns the chatroom with the given chatID. If none exists then it returns a 404 response.
 	 */
 	@GetMapping("/{chatID}")
 	public ResponseEntity<?> getByID(@PathVariable Integer chatID){
@@ -65,9 +69,10 @@ public class ChatroomController {
 	}
 
 	/**
+	 * Gets all chatrooms for a given user by their userID.
 	 *
-	 * @param userID
-	 * @return
+	 * @param userID The current user's userID.
+	 * @return Returns pageable of all chats a user with the given userID. If none exists then it returns a 404 response.
 	 */
 	@GetMapping("/member/{userID}")
 	public ResponseEntity<?> getAllByUserID(@PathVariable Integer userID){
@@ -78,9 +83,10 @@ public class ChatroomController {
 	}
 
 	/**
-	 * Creates new chatroom
-	 * @param chatroom chatroom data
-	 * @return new chatroom
+	 * Creates new chatroom.
+	 *
+	 * @param chatroom The chatroom's information.
+	 * @return The newly created chatroom.
 	 */
 	@PostMapping
 	public ResponseEntity<?> createNew(@RequestBody Chatroom chatroom){
@@ -88,10 +94,11 @@ public class ChatroomController {
 	}
 
 	/**
-	 * Adds new member to chatroom
-	 * @param chatID chatroom id
-	 * @param userID users id
-	 * @return chatroom with new member
+	 * Adds a new member to chatroom.
+	 *
+	 * @param chatID The chatroom's chatID in which you are adding members.
+	 * @param userID The user's userID you are adding to the chatroom.
+	 * @return The chatroom with a new member.
 	 */
 	@PostMapping("/{chatID}/addUser")
 	public ResponseEntity<?> addNewMember(@PathVariable Integer chatID,@RequestParam("userID") int userID){
@@ -99,10 +106,11 @@ public class ChatroomController {
 	}
 	
 	/**
-	 * Deletes member from chatroom
-	 * @param chatID chatroom id
-	 * @param userID user id
-	 * @return chatroom without members
+	 * Deletes a member from chatroom by their userID.
+	 *
+	 * @param chatID The chatroom's chatID in which you are removing members.
+	 * @param userID The user's userID you are removing from the chatroom.
+	 * @return The chatroom without the given member.
 	 */
 	@PostMapping("/{chatID}/removeUser")
 	public ResponseEntity<?> removeMember(@PathVariable Integer chatID,@RequestParam("userID") int userID){

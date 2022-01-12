@@ -1,11 +1,8 @@
 package com.revature.RevRelay.controllers;
 
-import com.google.gson.Gson;
-import com.revature.RevRelay.models.User;
 import com.revature.RevRelay.models.dtos.UserDTO;
 import com.revature.RevRelay.models.dtos.UserRegisterAuthRequest;
 import com.revature.RevRelay.models.dtos.UserUpdateDTO;
-import com.revature.RevRelay.services.PostService;
 import com.revature.RevRelay.services.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
@@ -13,10 +10,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.web.bind.annotation.*;
-
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.Date;
 import java.util.Map;
 
 /**
@@ -29,20 +22,24 @@ public class UserController {
 
     private UserService userService;
 
+    /**
+     * Creates the User Controller.
+     *
+     * @param userService The service layer for users.
+     */
     @Autowired
     public UserController(UserService userService) {
         this.userService = userService;
     }
 
     /**
-     * Creates a new user and persists to database using userService layer
+     * Creates a new user and persists to database using userService layer.
      *
-     * @param user user being created
+     * @param user The user being created.
      * @return response entity 200 signaling successful creation
      */
     @PostMapping
     public ResponseEntity<?> createUser(@RequestBody UserRegisterAuthRequest user) {
-
         return ResponseEntity.ok(userService.createUser(user));
     }
 
@@ -89,6 +86,7 @@ public class UserController {
 
     /**
      * This endpoint handles adding a friend to your friends list.
+     *
      * @param username the user that wil be added as a user.
      * @return response entity 200 signaling successful update
      */
@@ -119,7 +117,7 @@ public class UserController {
      * input old password, new password, and confirm new password again
      *
      * @param token token of user being updated
-     * @param json   json object of password array, old password and two new
+     * @param json   JSON object of password array, old password and two new
      *               passwords
      * @return response entity 200 signaling successful update
      */

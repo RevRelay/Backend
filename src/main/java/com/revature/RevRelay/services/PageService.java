@@ -97,11 +97,11 @@ public class PageService {
 
     /**
      * This method gets all the friends from a user
+	 *
      * @param username of the user you wish to update
      * @return List of friends
      * @throws Exception
      */
-
     public Set<FriendDTO> getAllFriendsFromUser(String username) throws Exception {
         User user = userRepository.findByUsername(username).orElseThrow(() -> new Exception("No friends Found"));
         Set<User> intermediateFriends = user.getFriends();

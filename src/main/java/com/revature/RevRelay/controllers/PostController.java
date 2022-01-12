@@ -24,6 +24,12 @@ public class PostController {
     private PostService postService;
     private UserService userService;
 
+    /**
+     * Constructor for the GroupsController.
+     *
+     * @param postService The service layer for Posts.
+     * @param userService The service layer for Users.
+     */
     @Autowired
     public PostController(PostService postService, UserService userService) {
         this.postService = postService;
@@ -31,9 +37,11 @@ public class PostController {
     }
 
     /**
-     * create a post
-     * @param post the fresh post we want created
-     * @return status 200, post successfully created
+     * Creates a post with the given information.
+     *
+     * @param post A post with its information.
+     * @return  If a post has a display name, then it returns the Post with the given inform.
+     *          If not, then it returns a 404 status.
      */
     @PostMapping
     public ResponseEntity<?> createPost(@RequestHeader("Authorization") String token,@RequestBody Post post) {
@@ -47,9 +55,10 @@ public class PostController {
     }
 
     /**
-     * get a SINGULAR post directly by its ID
-     * @param postID of the corresponding post
-     * @return the valid post, or status 404 if the ID is invalid
+     * Gets a single Post with the given postID.
+     * @param postID The postID for the post to be retrieved.
+     * @return  If the postID exists then it returns the requested Post with the requested postID.
+     *          If not, then returns a 404 status.
      */
     @GetMapping("/{postID}")
     public ResponseEntity<?> findPostByPostID(@PathVariable Integer postID) {
@@ -61,9 +70,11 @@ public class PostController {
     }
 
 	/**
-	 * upvote/downvote or unvote a post
-	 * @param postID of the corresponding post
-	 * @return the valid post, or status 404 if the ID is invalid
+	 * Allows a user to upvote or downvote a Post by a postID.
+	 * @param postID The postID for the post to be retrieved.
+	 * @return  If the postID exists then it returns the requested Post with the
+     *          new vote total with the given postID.
+     *          If not, then returns a 404 status.
 	 */
 	@PutMapping("/{postID}/vote")
 	public ResponseEntity<?> upvotePost(@RequestHeader("Authorization") String token,
@@ -78,9 +89,10 @@ public class PostController {
 	}
 
 	/**
-     * get all the posts associated with a page ID
-     * @param postPageID ID of the page associated with the posts
-     * @return a paggable of all the posts associated with the queried page
+     * Gets all the posts associated with a page by postPageID.
+     *
+     * @param postPageID The ID of the page associated with the posts.
+     * @return A pageable of all the posts associated with the queried page.
      */
     @GetMapping("/page/{postPageID}")
     public Page<Post> findPostByPostPageID(@PathVariable Integer postPageID) {
@@ -89,9 +101,10 @@ public class PostController {
     // TODO: overload ^ to accept pageable parameters
 
     /**
-     * get all the posts associated with an owner ID
-     * @param postOwnerID ID of the user associated with the posts
-     * @return a paggable of all the posts associated with the queried user
+     * Gets all the posts associated with an owner by postOwnerID.
+     *
+     * @param postOwnerID The ID of the user associated with the posts.
+     * @return a pageable of all the posts associated with the queried user.
      */
     @GetMapping("/user/{postOwnerID}")
     public Page<Post> findPostByPostOwnerID(@PathVariable Integer postOwnerID) {
@@ -100,9 +113,11 @@ public class PostController {
     // TODO: overload ^ to accept pageable parameters
 
     /**
-     * update a post
-     * @param post the new post we're passing in via. the HTTP Request Body
-     * @return status 200, post successfully updated
+     * Update a post with the given post information.
+     *
+     * @param post the new post we are passing in.
+     * @return  Updates the post with the given info then it returns the requested
+     *          Post with the new vote total with the given postID.
      */
     @PutMapping
     public ResponseEntity<Post> updatePost(@RequestBody Post post) {
@@ -110,12 +125,11 @@ public class PostController {
     }
 
     /**
-     * delete a SINGULAR post
-     * @param postID ID of the associated post
+     * Delete a single post by postID.
+     * @param postID The postID of the post to be deleted.
      */
     @DeleteMapping("/{postID}")
     public void deletePostByPostID(@PathVariable Integer postID) {
         postService.deletePostByPostID(postID);
     }
-
 }

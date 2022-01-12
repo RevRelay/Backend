@@ -32,5 +32,4 @@ public class PageDTO {
 	private String description;
 	private String bannerURL;
 	private boolean isPrivate;
-
 }

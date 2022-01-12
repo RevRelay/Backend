@@ -40,9 +40,11 @@ public class GroupsController {
     JwtUtil jwtUtil;
 
     /**
-     * Constructor for GroupsController
-     * 
-     * @param groupService is the service layer for Group
+     * Constructor for the GroupsController.
+     *
+     * @param groupService The service layer for Groups.
+     * @param userService The service layer for Users.
+     * @param jwtUtil ---
      */
     @Autowired
     public GroupsController(GroupService groupService, UserService userService, JwtUtil jwtUtil) {
@@ -52,13 +54,13 @@ public class GroupsController {
     }
 
     /**
-     * Endpoint for persisting a Group onto the database
+     * Endpoint for persisting a Group onto the database.
      * 
-     * Receives JSON and maps it into a new Group object. The Group object is passed
-     * to the service layer to be persisted
+     * Receives JSON and maps it into a new Group object if there is a token of the right form.
+     * The Group object is passed to the service layer to be persisted.
      * 
-     * @param group is the Group object mapped from JSON
-     * @return ResponseEntity<?> contains the response and the newly create group
+     * @param group The Group object mapped from JSON
+     * @return ResponseEntity<?> contains the response and the newly create group.
      */
     @PostMapping
     public ResponseEntity<?> createGroup(@RequestBody Group group, @RequestHeader("Authorization") String token) {
@@ -69,15 +71,13 @@ public class GroupsController {
     }
 
     /**
-     * Endpoint for retrieving Groups from database by their owner
+     * Endpoint for retrieving Groups from database by their owner.
      * 
      * Takes in a path variable, userOwnerID, and queries the database for every
-     * group which is owned by that userID
+     * group which is owned by that userID.
      * 
-     * @param userOwnerID is the ID of the owner to query the database for
-     * @return Page<Group> is a pageable containing all the results of the query. It
-     *         isTo
-     *         be parsed on the front-end
+     * @param userOwnerID The userID of the owner to query the database for.
+     * @return Page<Group> A pageable containing all the results of the query.
      */
     @GetMapping("/all/{userOwnerID}")
     public Page<Group> getGroupByUserOwnerID(@PathVariable Integer userOwnerID) {
@@ -85,9 +85,9 @@ public class GroupsController {
     }
 
     /**
-     * Endpoint for retrieving all group
+     * Endpoint for retrieving all groups
      *
-     * @return Page<Group> all the pages of a group
+     * @return Page<Group> A pageable containing all the groups.
      */
     @GetMapping("/all")
     public Page<Group> getAll() {
@@ -95,10 +95,10 @@ public class GroupsController {
     }
 
     /**
-     * Endpoint of retrieving a group using the groupID
+     * Endpoint of retrieving a group using its groupID.
      *
-     * @param groupID id corresponding to group being retrieved
-     * @return Group
+     * @param groupID The groupID corresponding to group being retrieved.
+     * @return The group with the given groupID.
      */
     @GetMapping("/{groupID}")
     public Group getGroupsByGroupID(@PathVariable Integer groupID) {
@@ -106,10 +106,10 @@ public class GroupsController {
     }
 
     /**
-     * Endpoint for updating a group with a new group object
+     * Endpoint for updating a group with a new group object.
      *
-     * @param group new group object being updated
-     * @return Group that is updated
+     * @param group The new group object being updated.
+     * @return Group with the upated info updated.
      */
     @PutMapping
     public Group updateGroups(@RequestBody Group group) {
@@ -117,9 +117,9 @@ public class GroupsController {
     }
 
     /**
-     * Endpoint for deleting a group using the groupID
+     * Endpoint for deleting a group using its groupID.
      *
-     * @param groupID
+     * @param groupID The group's groupID that is to be deleted.
      */
     @DeleteMapping("/{groupID}")
     public void deleteGroupsByID(@PathVariable Integer groupID) {
@@ -127,10 +127,11 @@ public class GroupsController {
     }
 
     /**
-     * Endpoint for adding members to groups
+     * Endpoint for adding members to groups.
      *
-     * @param groupID
-     * @param userID
+     * @param groupID The groupID that a member is being added to.
+     * @param userID The userID of the member being added to the group.
+     * @return The group with the added member with the given userID.
      */
     @PostMapping("/addmember")
     public Group addMember(@RequestParam("GroupID") Integer groupID, @RequestParam("UserID") Integer userID) {
@@ -139,10 +140,11 @@ public class GroupsController {
     }
 
     /**
-     * Endpoint for removing members from groups
+     * Endpoint for removing members from groups by userID.
      *
-     * @param groupID
-     * @param userID
+     * @param groupID The groupID that a member is being removed from.
+     * @param userID The userID of the member being removed from the group.
+     * @return The group with the member with the given userID removed.
      */
     @DeleteMapping("/deletemember")
     public ResponseEntity<?> deleteMember(@RequestParam("GroupID") Integer groupID, @RequestParam("UserID") Integer userID) {
@@ -151,15 +153,17 @@ public class GroupsController {
     }
 
     /**
-     * Gets all Groups that a userID is apart of. Meaning a Owner of or a member of
-     * @param userID user to check by
-     * @param pageNumber pageable config
-     * @param pageSize pagable config
-     * @return ResponseEntity with Pageable
+     * Gets all Groups that a user with a given userID is a part of (Owner or Member).
+     *
+     * @param userID The userID of the given user we are getting all groups of.
+     * @param pageNumber pageable config of the current page number.
+     * @param pageSize pageable config of the current page size aka the number of responses listed on the page.
+     * @return ResponseEntity with a pageable with the requested page number and page size.
+     *          If no page number and size if given it sets this to page 1 with a page size of 10.
      */
     @GetMapping("/getgroups/{userID}")
     public ResponseEntity<?> getMembers(@PathVariable Integer userID,@RequestParam(value = "pageNumber",required = false) Integer pageNumber,@RequestParam(value = "pageSize",required = false) Integer pageSize){
-        if(pageNumber!=null&&pageSize!=null)
+        if(pageNumber!=null && pageSize!=null)
             return ResponseEntity.ok(groupService.findAllMembersByUserID(userID, PageRequest.of(pageNumber,pageSize)));
         else return ResponseEntity.ok(groupService.findAllMembersByUserID(userID, Pageable.ofSize(10)));
     }

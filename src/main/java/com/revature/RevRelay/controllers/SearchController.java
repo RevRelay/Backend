@@ -19,6 +19,10 @@ public class SearchController {
 
     private final SearchService searchService;
 
+    /**
+     * Constructor for the SearchController.
+     * @param searchService The service layer for Search.
+     */
     @Autowired
     public SearchController(SearchService searchService) {
         super();
@@ -36,9 +40,7 @@ public class SearchController {
      * @return An array containing the full set of matching SearchResultItems.
      */
     @GetMapping(value = "/name/{searchTerm}")
-    public ResponseEntity<?> searchUsersAndGroupsByName(@PathVariable String searchTerm,
-                                                        @RequestParam Optional<Integer> pageStart,
-                                                        @RequestParam Optional<Integer> pageSize) {
+    public ResponseEntity<?> searchUsersAndGroupsByName(@PathVariable String searchTerm, @RequestParam Optional<Integer> pageStart, @RequestParam Optional<Integer> pageSize) {
         if (pageStart.isPresent() && pageSize.isPresent()) {
             return ResponseEntity.ok(searchService.SearchAllByName(searchTerm, PageRequest.of(pageStart.get(),pageSize.get())));
         } else {
