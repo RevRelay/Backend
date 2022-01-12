@@ -101,4 +101,8 @@ public class ChatroomService {
 		assert user!=null;
 		return user.getChatRooms();
 	}
+
+	public Page<Chatroom> findAllChatsByUserID(Integer userID) {
+		return chatroomRepository.findAllByMembersUserID(userID,Pageable.unpaged());
+	}
 }
