@@ -36,7 +36,7 @@ public class SearchController {
      * @return An array containing the full set of matching SearchResultItems.
      */
     @GetMapping(value = "/name/{searchTerm}")
-    public ResponseEntity<?> searchUsersAndGroupsByName(@PathVariable String searchTerm,
+    public ResponseEntity<?> searchUsersAndGroupsByName(@RequestHeader("Authorization") String token,@PathVariable String searchTerm,
                                                         @RequestParam Optional<Integer> pageStart,
                                                         @RequestParam Optional<Integer> pageSize) {
         if (pageStart.isPresent() && pageSize.isPresent()) {

@@ -44,6 +44,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
             // this allows public pages including user creation and login
             new AntPathRequestMatcher("/public/**"));
 
+
     /**
      * Builds a RequestMatcher for PROTECTED_URLS by negation of the list of
      * PUBLIC_URLS.

@@ -32,7 +32,7 @@ public class PageController {
      * @return ResponseEntity<Page> Returns the created Page is successful
      */
     @PostMapping
-    public ResponseEntity<Page> createPage(@RequestBody Page page) {
+    public ResponseEntity<Page> createPage(@RequestHeader("Authorization") String token,@RequestBody Page page) {
         return ResponseEntity.ok(pageService.createPage(page));
     }
 
@@ -40,7 +40,7 @@ public class PageController {
      * @return List<Page> of all pages
      */
     @GetMapping("/all")
-    public List<Page> getAll() {
+    public List<Page> getAll(@RequestHeader("Authorization") String token) {
         return pageService.getAll();
     }
 
@@ -49,7 +49,7 @@ public class PageController {
      * @return Page single page matching provided userOwnerID
      */
     @GetMapping("/users/{userOwnerID}")
-    public Page getPageByUserOwnerUserID(@PathVariable Integer userOwnerID) {
+    public Page getPageByUserOwnerUserID(@RequestHeader("Authorization") String token,@PathVariable Integer userOwnerID) {
         return pageService.getPageByUserOwnerUserID(userOwnerID);
     }
 
@@ -58,7 +58,7 @@ public class PageController {
      * @return Page single page matching provided groupID
      */
     @GetMapping("/groups/{groupID}")
-    public Page getPageByGroupOwnerID(@PathVariable Integer groupID) {
+    public Page getPageByGroupOwnerID(@RequestHeader("Authorization") String token,@PathVariable Integer groupID) {
         return pageService.getPageByGroupID(groupID);
     }
 
@@ -67,7 +67,7 @@ public class PageController {
      * @return Page single page matching provided pageID
      */
     @GetMapping("/friends/{username}")
-    public ResponseEntity<?> getAllFriends(@PathVariable String username) throws Exception {
+    public ResponseEntity<?> getAllFriends(@RequestHeader("Authorization") String token,@PathVariable String username) throws Exception {
             return ResponseEntity.ok(pageService.getAllFriendsFromUser(username));
     }
     
@@ -76,7 +76,7 @@ public class PageController {
      * @return Page single page matching provided pageID
      */
     @GetMapping("/{pageID}")
-    public ResponseEntity<?> getPageByPageID(@PathVariable Integer pageID) {
+    public ResponseEntity<?> getPageByPageID(@RequestHeader("Authorization") String token,@PathVariable Integer pageID) {
         try {
             return ResponseEntity.ok(pageService.getPageByPageID(pageID));
         } catch (Exception e) {
@@ -89,7 +89,7 @@ public class PageController {
      * @return Page single page with the updated values
      */
     @PutMapping
-    public ResponseEntity<?>  updatePage(@RequestBody PageDTO page) {
+    public ResponseEntity<?>  updatePage(@RequestHeader("Authorization") String token,@RequestBody PageDTO page) {
         try{
 			return ResponseEntity.ok(pageService.updateFromDTO(page));
 		} catch (Exception e){
@@ -102,7 +102,7 @@ public class PageController {
      * @param pageID the pageID to be deleted from database
      */
     @DeleteMapping("/{pageID}")
-    public void deletePageByID(@PathVariable Integer pageID) {
+    public void deletePageByID(@RequestHeader("Authorization") String token,@PathVariable Integer pageID) {
         pageService.deletePageByID(pageID);
     }
 }

@@ -41,7 +41,7 @@ public class UserController {
      * @return response entity 200 signaling successful creation
      */
     @PostMapping
-    public ResponseEntity<?> createUser(@RequestBody UserRegisterAuthRequest user) {
+    public ResponseEntity<?> createUser(@RequestHeader("Authorization") String token,@RequestBody UserRegisterAuthRequest user) {
 
         return ResponseEntity.ok(userService.createUser(user));
     }
@@ -110,7 +110,7 @@ public class UserController {
      * @return response entity 200 signaling successful creation
      */
     @GetMapping("/{userID}")
-    public ResponseEntity<?> findByUserID(@PathVariable int userID) {
+    public ResponseEntity<?> findByUserID(@RequestHeader("Authorization") String token,@PathVariable int userID) {
         return ResponseEntity.ok(userService.loadUserDTOByUserID(userID));
     }
 

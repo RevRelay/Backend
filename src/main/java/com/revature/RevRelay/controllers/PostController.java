@@ -52,7 +52,7 @@ public class PostController {
      * @return the valid post, or status 404 if the ID is invalid
      */
     @GetMapping("/{postID}")
-    public ResponseEntity<?> findPostByPostID(@PathVariable Integer postID) {
+    public ResponseEntity<?> findPostByPostID(@RequestHeader("Authorization") String token,@PathVariable Integer postID) {
         try {
             return ResponseEntity.ok(postService.findPostByPostID(postID));
         } catch (Exception e) {
@@ -83,7 +83,7 @@ public class PostController {
      * @return a paggable of all the posts associated with the queried page
      */
     @GetMapping("/page/{postPageID}")
-    public Page<Post> findPostByPostPageID(@PathVariable Integer postPageID) {
+    public Page<Post> findPostByPostPageID(@RequestHeader("Authorization") String token,@PathVariable Integer postPageID) {
         return postService.findPostByPostPageID(postPageID);
     }
     // TODO: overload ^ to accept pageable parameters
@@ -94,7 +94,7 @@ public class PostController {
      * @return a paggable of all the posts associated with the queried user
      */
     @GetMapping("/user/{postOwnerID}")
-    public Page<Post> findPostByPostOwnerID(@PathVariable Integer postOwnerID) {
+    public Page<Post> findPostByPostOwnerID(@RequestHeader("Authorization") String token,@PathVariable Integer postOwnerID) {
         return postService.findPostByPostOwnerID(postOwnerID);
     }
     // TODO: overload ^ to accept pageable parameters
@@ -105,7 +105,7 @@ public class PostController {
      * @return status 200, post successfully updated
      */
     @PutMapping
-    public ResponseEntity<Post> updatePost(@RequestBody Post post) {
+    public ResponseEntity<Post> updatePost(@RequestHeader("Authorization") String token,@RequestBody Post post) {
         return ResponseEntity.ok(postService.updatePost(post));
     }
 
@@ -114,7 +114,7 @@ public class PostController {
      * @param postID ID of the associated post
      */
     @DeleteMapping("/{postID}")
-    public void deletePostByPostID(@PathVariable Integer postID) {
+    public void deletePostByPostID(@RequestHeader("Authorization") String token,@PathVariable Integer postID) {
         postService.deletePostByPostID(postID);
     }
 

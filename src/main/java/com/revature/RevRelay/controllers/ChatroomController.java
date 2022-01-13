@@ -45,7 +45,7 @@ public class ChatroomController {
 	 * @return updated chatroom
 	 */
 	@PutMapping("/{chatID}")
-	public ResponseEntity<?> updateChatroom(@PathVariable Integer chatID,@RequestBody Chatroom chatroom){
+	public ResponseEntity<?> updateChatroom(@RequestHeader("Authorization") String token,@PathVariable Integer chatID,@RequestBody Chatroom chatroom){
 		chatroom.setChatID(chatID);
 		return ResponseEntity.ok(chatroomService.save(chatroom));
 	}
@@ -56,7 +56,7 @@ public class ChatroomController {
 	 * @return chatroom
 	 */
 	@GetMapping("/{chatID}")
-	public ResponseEntity<?> getByID(@PathVariable Integer chatID){
+	public ResponseEntity<?> getByID(@RequestHeader("Authorization") String token,@PathVariable Integer chatID){
 		Chatroom chatroom = chatroomService.findByID(chatID);
 		if (chatroom==null)
 			return ResponseEntity.notFound().build();
@@ -69,7 +69,7 @@ public class ChatroomController {
 	 * @return new chatroom
 	 */
 	@PostMapping
-	public ResponseEntity<?> createNew(@RequestBody Chatroom chatroom){
+	public ResponseEntity<?> createNew(@RequestHeader("Authorization") String token,@RequestBody Chatroom chatroom){
 		return ResponseEntity.ok(chatroomService.save(chatroom));
 	}
 
@@ -80,7 +80,7 @@ public class ChatroomController {
 	 * @return chatroom with new member
 	 */
 	@PostMapping("/{chatID}/addUser")
-	public ResponseEntity<?> addNewMember(@PathVariable Integer chatID,@RequestParam("userID") int userID){
+	public ResponseEntity<?> addNewMember(@RequestHeader("Authorization") String token,@PathVariable Integer chatID,@RequestParam("userID") int userID){
 		return ResponseEntity.ok(chatroomService.addMember(chatID,userID));
 	}
 	
@@ -91,7 +91,7 @@ public class ChatroomController {
 	 * @return chatroom without members
 	 */
 	@PostMapping("/{chatID}/removeUser")
-	public ResponseEntity<?> removeMember(@PathVariable Integer chatID,@RequestParam("userID") int userID){
+	public ResponseEntity<?> removeMember(@RequestHeader("Authorization") String token,@PathVariable Integer chatID,@RequestParam("userID") int userID){
 		return ResponseEntity.ok(chatroomService.removeMember(chatID,userID));
 	}
 }

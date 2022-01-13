@@ -3,6 +3,7 @@ package com.revature.RevRelay.controllers;
 import lombok.NoArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -23,7 +24,7 @@ public class ValidateController {
 	 * @return
 	 */
 	@GetMapping
-	public ResponseEntity<?> okayJWTTest(){
+	public ResponseEntity<?> okayJWTTest(@RequestHeader("Authorization") String token){
 		return ResponseEntity.ok("JWT OKAY");
 	}
 }

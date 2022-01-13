@@ -80,7 +80,7 @@ public class GroupsController {
      *         be parsed on the front-end
      */
     @GetMapping("/all/{userOwnerID}")
-    public Page<Group> getGroupByUserOwnerID(@PathVariable Integer userOwnerID) {
+    public Page<Group> getGroupByUserOwnerID(@RequestHeader("Authorization") String token,@PathVariable Integer userOwnerID) {
         return groupService.findAllByUserOwnerID(userOwnerID);
     }
 
@@ -101,7 +101,7 @@ public class GroupsController {
      * @return Group
      */
     @GetMapping("/{groupID}")
-    public Group getGroupsByGroupID(@PathVariable Integer groupID) {
+    public Group getGroupsByGroupID(@RequestHeader("Authorization") String token,@PathVariable Integer groupID) {
         return groupService.getGroupByGroupID(groupID);
     }
 
@@ -112,7 +112,7 @@ public class GroupsController {
      * @return Group that is updated
      */
     @PutMapping
-    public Group updateGroups(@RequestBody Group group) {
+    public Group updateGroups(@RequestHeader("Authorization") String token,@RequestBody Group group) {
         return groupService.updateGroups(group);
     }
 
@@ -122,7 +122,7 @@ public class GroupsController {
      * @param groupID
      */
     @DeleteMapping("/{groupID}")
-    public void deleteGroupsByID(@PathVariable Integer groupID) {
+    public void deleteGroupsByID(@RequestHeader("Authorization") String token,@PathVariable Integer groupID) {
         groupService.deleteGroupsByID(groupID);
     }
 
@@ -133,7 +133,7 @@ public class GroupsController {
      * @param userID
      */
     @PostMapping("/addmember")
-    public Group addMember(@RequestParam("GroupID") Integer groupID, @RequestParam("UserID") Integer userID) {
+    public Group addMember(@RequestHeader("Authorization") String token,@RequestParam("GroupID") Integer groupID, @RequestParam("UserID") Integer userID) {
         System.out.println("***********************SOMETHING\n\n\n\n");
         return groupService.addMember(groupID, userID);
     }
@@ -145,7 +145,7 @@ public class GroupsController {
      * @param userID
      */
     @DeleteMapping("/deletemember")
-    public ResponseEntity<?> deleteMember(@RequestParam("GroupID") Integer groupID, @RequestParam("UserID") Integer userID) {
+    public ResponseEntity<?> deleteMember(@RequestHeader("Authorization") String token,@RequestParam("GroupID") Integer groupID, @RequestParam("UserID") Integer userID) {
         groupService.deleteMember(groupID, userID);
         return ResponseEntity.ok(groupID);
     }
@@ -158,7 +158,7 @@ public class GroupsController {
      * @return ResponseEntity with Pageable
      */
     @GetMapping("/getgroups/{userID}")
-    public ResponseEntity<?> getMembers(@PathVariable Integer userID,@RequestParam(value = "pageNumber",required = false) Integer pageNumber,@RequestParam(value = "pageSize",required = false) Integer pageSize){
+    public ResponseEntity<?> getMembers(@RequestHeader("Authorization") String token,@PathVariable Integer userID,@RequestParam(value = "pageNumber",required = false) Integer pageNumber,@RequestParam(value = "pageSize",required = false) Integer pageSize){
         if(pageNumber!=null&&pageSize!=null)
             return ResponseEntity.ok(groupService.findAllMembersByUserID(userID, PageRequest.of(pageNumber,pageSize)));
         else return ResponseEntity.ok(groupService.findAllMembersByUserID(userID, Pageable.ofSize(10)));
